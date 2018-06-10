@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table class="mytb">
+    <tr>
+        <th>评委</th>
+        <th>作品</th>
+        <th>选题</th>
+        <th>科学性</th>
+        <th>创新性</th>
+        <th>难/易程度</th>
+        <th>价值及效果</th>
+        <th>文档质量及答辩效果</th>
+        <th>总分</th>
+        <th>状态</th>
+    </tr>
+    <tr>
+        <th>pingwei2</th>
+        <th>作品2</th>
+        <th>10</th>
+        <th>15</th>
+        <th>20</th>
+        <th>25</th>
+        <th>20</th>
+        <th>15</th>
+        <th>90</th>
+        <th>第一次编辑</th>
+    </tr>
+    <tr>
+        <th>pingwei1</th>
+        <th>作品1</th>
+        <th>10</th>
+        <th>15</th>
+        <th>20</th>
+        <th>25</th>
+        <th>20</th>
+        <th>15</th>
+        <th>90</th>
+        <th>第一次编辑</th>
+    </tr>
+    <tr>
+        <th>pingwei3</th>
+        <th>作品3</th>
+        <th>10</th>
+        <th>15</th>
+        <th>20</th>
+        <th>25</th>
+        <th>20</th>
+        <th>15</th>
+        <th>90</th>
+        <th>第一次编辑</th>
+    </tr>
+    <tr>
+        <th>pingwei1</th>
+        <th>作品1</th>
+        <th>10</th>
+        <th>15</th>
+        <th>20</th>
+        <th>25</th>
+        <th>20</th>
+        <th>15</th>
+        <th>90</th>
+        <th>第二次编辑</th>
+    </tr>
+</table>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-5"
+                 style="position: relative;transform: translateY(20%);text-align: right;">
+                <label>评委:</label>
+            </div>
+            <div class="col-md-7">
+                <input class="form-control default-date-picker" size="16"
+                       type="text" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-5"
+                 style="position: relative;transform: translateY(20%);text-align: right;">
+                <label>评委:</label>
+            </div>
+            <div class="col-md-7">
+                <input class="form-control default-date-picker" size="16"
+                       type="text" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-5"
+                 style="position: relative;transform: translateY(20%);text-align: right;">
+                <label>评委:</label>
+            </div>
+            <div class="col-md-7">
+                <input class="form-control default-date-picker" size="16"
+                       type="text" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-5"
+                 style="position: relative;transform: translateY(20%);text-align: right;">
+                <label>评委:</label>
+            </div>
+            <div class="col-md-7">
+                <input class="form-control default-date-picker" size="16"
+                       type="text" value="" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-5" style="margin-top: 20px;">
+    <button class="btn btn-primary btn-lg" type="button">开始预测</button>
+</div>
+
+
+
+<!--footer section start-->
+<footer>
+    <div class="container">
+        <div class="row" style="text-align: center;">
+            <div class="col-xs-12">
+                <p style="position:relative;margin-top: 2px;">Copyright©2018.GDUT.All rights reserved</p>
+                <p>Contact information:
+                    <!--<a style="background-color: rgba(0,0,0,0.6);"-->
+                    <!--href="mailto:llcheng@gdut.edu.cn">-->
+                    <!--<i class="fa fa-envelope-o fa-fw"></i>-->
+                    <!--llcheng@gdut.edu.cn</a>.-->
+                </p>
+            </div>
+
+        </div>
+    </div>
+</footer>
+<!--//    footer section end-->
+<script>
+
+    $(function() {
+
+//简单登录操作
+        $("#doLogin").click(function (e) {
+            $userName = $("#userName").val();
+            $passWord = $("#password").val();
+            $model = $("#model").val();
+            alert($userName+$passWord+$model);
+            $.post("/userlogin",
+                {
+                    "userName" : $userName,
+                    "passWord" : $passWord
+                },
+                function(data,status){
+                    if(data.result == 1){
+                        setCookie('user',$userName,7);
+                        setCookie('pswd',$passWord,7);
+                        setCookie('model',$model,7);
+                        window.location.href ="/index.html";
+                    }
+                    else{
+                        alert("账号或密码不存在！\n数据: \n" + data.result + "\n状态: " + status);
+                    }
+                });
+
+//            $.get("/hello",
+//                function(data,status){
+//                alert("Data: " + data + "\nStatus: " + status);
+//            });
+
+//
+//            $.ajax({
+//                type : "POST",
+//                url : "/userlogin",
+//                data : {
+//                    "userName" : $userName,
+//                    "passWord" : $passWord
+//                },
+//                dataType : "json",
+//                success : function(data) {
+//                    var status = data.result;
+//                    alert("ajax success ！随便填写");
+//                    if (status == 1) {
+//                        setCookie('user',$userName,7);
+//                        setCookie('pswd',$passWord,7);
+//                        setCookie('model',$model,7);
+//                        window.location.href ="/index.html";
+//                    } else {
+//                        alert("提示",'账号密码不能为空！随便填写');
+//                    }
+//                }
+//            });
+        });
+    });
+
+</script>
+
+
+
+
+
+<div class="row">
+    <div class="col-md-1" style="text-align: left;">
+        <span>评委:</span>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+</div>
+
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>评委</th>
+        <th>作品</th>
+        <th>选题</th>
+        <th>科学性</th>
+        <th>创新性</th>
+        <th>难/易程度</th>
+        <th>价值及效果</th>
+        <th>文档质量及答辩效果</th>
+    </tr>
+    </thead>
+    <tbody >
+    <tr>
+        <td>
+
+        </td>
+        <td>
+            <select id="select-works" class="form-control">
+                <option th:each="works,iterStat:${worksList}"
+                        th:value="${works}"
+                        th:text="${works}"></option>
+            </select>
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+        <td>
+            <input class="form-control" size="16"
+                   type="text" value="" />
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+<div class="row">
+    <div class="col-md-12" style="text-align: center;">
+        <button class="btn btn-primary" type="button">新增记录</button>
+    </div>
+</div>
+
+
+<!--历史添加记录 start-->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel">
+            <header class="panel-heading">
+                添加过的记录
+                <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+             </span>
+            </header>
+            <div class="panel-body">
+                <div class="adv-table">
+                    <table class="display table table-bordered table-striped" id="dynamic-table">
+                        <thead>
+                        <tr>
+                            <th>评委</th>
+                            <th>作品</th>
+                            <th>选题</th>
+                            <th>科学性</th>
+                            <th>创新性</th>
+                            <th>难/易程度</th>
+                            <th>价值及效果</th>
+                            <th>文档质量及答辩效果</th>
+                            <th>总分</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="score,iterStat:${scoreList}">
+                            <td th:text="${score.pid}">pingwei1</td>
+                            <td th:text="${score.proId}">作品1</td>
+                            <td th:text="${score.option1}">10</td>
+                            <td th:text="${score.option2}">15</td>
+                            <td th:text="${score.option3}">20</td>
+                            <td th:text="${score.option4}">25</td>
+                            <td th:text="${score.option5}">20</td>
+                            <td th:text="${score.option6}">15</td>
+                            <td th:text="${score.totalScore}">90</td>
+                            <td th:text="|第${score.editTimes}次编辑|">第二次编辑</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<!--历史添加记录 end-->
+
+
+<!--body wrapper start-->
+<div class="wrapper">
+    <div class="row">
+        <div class="col-md-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <span>添加记录</span>
+                    <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                            </span>
+                </header>
+                <div class="panel-body">
+                    <table style="margin-bottom: 20px;">
+                        <thead>
+                        <tr>
+                            <th>评委：</th>
+                            <th>
+                                <select id="select-pingwei" class="form-control" style="width: 150px;">
+                                    <option th:each="pingwei,iterStat:${pingweiList}"
+                                            th:value="${pingwei}"
+                                            th:text="${pingwei}"></option>
+                                    <option>pingwei1</option>
+                                    <option>pingwei4</option>
+                                    <option>pingwei2</option>
+                                    <option>pingwei3</option>
+                                </select>
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </section>
+            <!--param setting end-->
+        </div>
+    </div>
+    <!--添加记录 end-->
+
+</div>
+<!--body wrapper end-->
+<script>
+    $.ajax({
+        type: "POST",
+        url: "/score/add",
+        data: {
+            "pid": pid,
+            "proId": jqInputs[0],
+            "option1": jqInputs[1],
+            "option2": jqInputs[2],
+            "option3": jqInputs[3],
+            "option4": jqInputs[4],
+            "option5": jqInputs[5],
+            "option6": jqInputs[6],
+            "model": model,
+            "editor": editor
+        },
+        dataType: "json",
+        success: function (data) {
+
+            //$.messager.alert("提示", data.role);
+            if (data.result == "1") {
+                $.messager.alert("提示", '添加数据成功');
+            } else {
+                $.messager.alert("提示", '添加数据失败');
+            }
+        }
+    });
+
+
+    $.ajax({
+        url : 'your url',
+        data:{name:value},
+        cache : false,
+        async : false,
+        type : "POST",
+        dataType : 'json',
+        success : function (result){
+
+            m1.show();
+        }
+    });
+</script>
+</body>
+</html>

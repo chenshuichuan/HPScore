@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="ThemeBucket">
+  <link rel="shortcut icon" href="#" type="image/png">
+
+  <title>Blank Page</title>
+
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-responsive.css" rel="stylesheet">
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="sticky-header">
+
+<section>
+    <!-- left side start-->
+    <div class="left-side sticky-left-side">
+        <!--logo and iconic logo start-->
+        <div class="logo">
+            <a href="index.html">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        <img src="images/logo_icon.png" alt="">
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <p style="padding-top: 10px;">计分系统</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- <div class="text-center">
+             <a href="index.html">
+                 &lt;!&ndash;<img src="images/logo_icon.png" alt="">&ndash;&gt;
+
+             </a>
+         </div>-->
+        <!--logo and iconic logo end-->
+
+        <div class="left-side-inner">
+            <!--sidebar nav start-->
+            <ul class="nav nav-pills nav-stacked custom-nav">
+                <li id="home">
+                    <a href="index.html">
+                        <i class="fa fa-home"></i>
+                        <span>计分系统</span>
+                    </a>
+                </li>
+                <li id="record"><a href="record.html"><i class="fa fa-th-list"></i> <span>评分录入</span></a>
+                <li id="count"><a href="count.html"><i class="fa fa-laptop"></i> <span>计算最终相对分</span></a>
+                <li id="exception"><a href="exception.html"><i class="fa fa-book"></i> <span>异常操作管理</span></a>
+                <li id="about"><a href="#"><i class="fa fa-tasks"></i> <span>关于</span></a>
+                <li id="login"><a href="login.html"><i class="fa fa-sign-in"></i> <span>Login</span></a></li>
+
+            </ul>
+            <!--sidebar nav end-->
+            <div>
+
+            </div>
+        </div>
+    </div>
+    <!-- left side end-->
+
+    <!-- main content start-->
+    <div class="main-content">
+        <!-- header section start-->
+        <div class="header-section" style="border-bottom: rgba(0,0,0,0.39) solid 1px;">
+            <!--toggle button start-->
+            <a class="toggle-btn"><i class="fa fa-bars"></i></a>
+            <!--toggle button end-->
+            <!--title start-->
+            <div style="width: 80%;margin-top: 15px;text-align: center;">
+                <span id="head-title"  style="font-size:30px;margin-left: 200px;"></span>
+                <div id="click" style="float:right;"></div>
+            </div>
+            <!--title end-->
+        </div>
+        <!-- header section end-->
+
+        <!--body wrapper start-->
+        <div class="wrapper">
+
+            <!--预测参数 start-->
+            <div class="row">
+                <div class="col-md-12">
+                    <!--param setting start-->
+                    <section class="panel">
+                        <header class="panel-heading">
+                            预测参数设置
+                            <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                            </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="row">
+                                                <div class="col-md-5"
+                                                     style="position: relative;transform: translateY(20%);text-align: right;">
+                                                    <label>股票数量:</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="text" id="amount" class="form-control">
+                                                    <div id="slider-range-max"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row next_param">
+                                                <div class="col-md-5">
+
+                                                </div>
+                                                <div class="col-md-7">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row">
+                                                <div class="col-md-5"
+                                                     style="position: relative;transform: translateY(20%);text-align: right;">
+                                                    <label>起始日期:</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input class="form-control default-date-picker" size="16"
+                                                           type="text" value="" readonly/>
+                                                </div>
+                                            </div>
+                                            <div class="row next_param">
+                                                <div class="col-md-5"
+                                                     style="position: relative;transform: translateY(20%);text-align: right;">
+                                                    <label>结束日期:</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input class="form-control default-date-picker" size="16"
+                                                           type="text" value="" readonly/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <label>聚类族数:</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="text" class="form-control" id="inputEmail1"
+                                                           placeholder="15">
+                                                </div>
+                                            </div>
+                                            <div class="row next_param">
+                                                <div class="col-md-5">
+                                                    <label>预测天数:</label>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="text" class="form-control" id="inputEmail1"
+                                                           placeholder="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5" style="margin-top: 20px;">
+                                    <button class="btn btn-primary btn-lg" type="button">开始预测</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!--param setting end-->
+                </div>
+            </div>
+            <!--预测参数 end-->
+
+            <!--最优组合结果 start-->
+            <div class="row">
+                <div class="col-md-4">
+                    <!--more statistics box start-->
+                    <div class="panel" style="background-color: #000000;height: 530px;">
+                        <div class="panel-body" >
+                            <p style="padding-left:5px;color: #ffffff;font-size: 16px;">最优组合结果</p>
+                            <section class="panel">
+                                <div class="panel-body stockListPanel">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>聚类类别</th>
+                                            <th>股票代码</th>
+                                            <th>股票名称</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td>@fat</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td colspan="2">Larry the Bird</td>
+                                            <td>@twitter</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Jane Doe</td>
+                                            <td>Mosa</td>
+                                            <td>@twitter</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Jane Doe</td>
+                                            <td>Mosa</td>
+                                            <td>@twitter</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+
+                        </div>
+                    </div>
+                    <!--more statistics box end-->
+                </div>
+                <div class="col-md-8">
+
+                </div>
+            </div>
+            <!--最优组合结果 end-->
+
+            <!--所有股票聚类结果 start-->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    所有聚类结果
+                                    <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+             </span>
+                                </header>
+                                <div class="panel-body">
+                                    <div class="adv-table">
+                                        <table class="display table table-bordered table-striped" id="dynamic-table">
+                                            <thead>
+                                            <tr>
+                                                <th>聚类类别</th>
+                                                <th>股票代码</th>
+                                                <th>股票名称</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr class="gradeX">
+                                                <td>Trident</td>
+                                                <td>Internet
+                                                </td>
+                                                <td>Win 95+</td>
+
+                                            </tr>
+                                            <tr class="gradeC">
+                                                <td>Trident</td>
+                                                <td>Internet
+                                                </td>
+                                                <td>Win 95+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Trident</td>
+                                                <td>Internet
+                                                </td>
+                                                <td>Win 95+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td class="center">Trident</td>
+                                                <td>Explorer 6
+                                                </td>
+                                                <td>Win 98+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Trident</td>
+                                                <td>Explorer 7</td>
+                                                <td>Win XP SP2+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Trident</td>
+                                                <td>AOL browser</td>
+                                                <td>Win XP</td>
+
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Gecko</td>
+                                                <td>Firefox 1.0</td>
+                                                <td>Win 98</td>
+                                            </tr>
+
+                                            <tr class="gradeA">
+                                                <td>Presto</td>
+                                                <td>Opera 7.5</td>
+                                                <td>Win 95</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Presto</td>
+                                                <td>Opera 8.0</td>
+                                                <td>Win 95+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Presto</td>
+                                                <td>Opera 8.5</td>
+                                                <td>Win 95+</td>
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Presto</td>
+                                                <td>Opera 9.0</td>
+                                                <td>Win 95+</td>
+                                            </tr>
+                                            <tr class="gradeC">
+                                                <td>KHTML</td>
+                                                <td>Konqureror</td>
+                                                <td>KDE 3.1</td>
+
+                                            </tr>
+                                            <tr class="gradeX">
+                                                <td>Tasman</td>
+                                                <td>Internet Explorer</td>
+                                                <td>Mac OS 8-9</td>
+
+                                            </tr>
+                                            <tr class="gradeC">
+                                                <td>Tasman</td>
+                                                <td>Internet</td>
+                                                <td>Mac OS 7.6-9</td>
+                                            </tr>
+                                            <tr class="gradeC">
+                                                <td>Tasman</td>
+                                                <td>Explorer 5.2</td>
+                                                <td>Mac OS 8-X</td>
+
+                                            </tr>
+                                            <tr class="gradeA">
+                                                <td>Misc</td>
+                                                <td>NetFront 3.1</td>
+                                                <td>Embedded devices</td>
+
+                                            </tr>
+                                            <tr class="gradeU">
+                                                <td>Other browsers</td>
+                                                <td>All others</td>
+                                                <td>-</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+
+                </div>
+
+            </div>
+            <!--所有股票聚类结果 end-->
+        </div>
+        <!--body wrapper end-->
+        <!--footer section start-->
+        <footer>
+            <div class="container">
+                <div class="row" style="text-align: center;">
+                    <div class="col-xs-12">
+                        <p style="position:relative;margin-top: 2px;">Copyright©2018.GDUT.All rights reserved</p>
+                        <p>Contact information:
+                            <!--<a style="background-color: rgba(0,0,0,0.6);"-->
+                            <!--href="mailto:llcheng@gdut.edu.cn">-->
+                            <!--<i class="fa fa-envelope-o fa-fw"></i>-->
+                            <!--llcheng@gdut.edu.cn</a>.-->
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </footer>
+        <!--footer section end-->
+    </div>
+    <!-- main content end-->
+</section>
+
+<!-- Placed js at the end of the document so the pages load faster -->
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.nicescroll.js"></script>
+
+
+<!--common scripts for all pages-->
+<script src="js/scripts.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#head-title").append("异常操作管理");
+        $("#exception").addClass("active");
+    });
+</script>
+</body>
+</html>
