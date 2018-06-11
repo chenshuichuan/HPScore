@@ -57,8 +57,8 @@ public class WorksRepositoryTest {
         Works works =  worksRepository.findByCodeAndModel("5","高职高专组");
         Assert.assertThat(works.getCode(),equalTo("5"));
 
-        Works works2 =  worksRepository.findByCodeAndModel("作品1","本科组");
-        Assert.assertThat(works2.getCode(),is("作品1"));
+        Works works2 =  worksRepository.findByCodeAndModel("1","本科组");
+        Assert.assertThat(works2.getCode(),is("1"));
     }
 
 }

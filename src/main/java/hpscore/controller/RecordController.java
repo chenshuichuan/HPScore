@@ -44,8 +44,10 @@ public class RecordController {
     @Autowired
     private PingweiService pingweiService;
 
+    //本科组评分录入
     @RequestMapping(value = "/record1")
-    public ModelAndView record1(@RequestParam("editor")String editor){
+    public ModelAndView record1(@RequestParam("editor")String editor,
+                                @RequestParam("model")String model){
 
         User user = userRepository.findByName(editor);
         ModelAndView modelAndView = new ModelAndView("record1");
@@ -62,11 +64,12 @@ public class RecordController {
                 modelAndView.addObject("scoreList", scores);
             }
         }
-        modelAndView.addObject("worksList", worksService.selectAllName());
-        modelAndView.addObject("pingweiList", pingweiService.selectAllName());
+        modelAndView.addObject("worksList", worksService.selectAllCodeByModel(model));
+        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
     }
 
+    //高职高专组评分录入
     @RequestMapping("/record2")
     public ModelAndView record2(){
         //List<String> models =indexService.getModels();
@@ -77,26 +80,12 @@ public class RecordController {
         return modelAndView;
     }
 
+    //评委打分导出
     @RequestMapping(value = "/record3")
-    public ModelAndView record3(@RequestParam("editor")String editor,@RequestParam("model")String model){
+    public ModelAndView record3(@RequestParam("model")String model){
 
-        User user = userRepository.findByName(editor);
         ModelAndView modelAndView = new ModelAndView("record3");
-        if(user!=null){
-            List<Score> scores = null;
-            //管理员可以查看所有记录
-            if(user.getRole()==0){
-                scores = scoreService.selectByModel(model);
-                modelAndView.addObject("scoreList", scores);
-            }
-            //否则仅可以查看自己相关的记录
-            else{
-                scores = scoreService.selectByEditorAndModel(editor,model);
-                modelAndView.addObject("scoreList", scores);
-            }
-        }
-        modelAndView.addObject("worksList", worksService.selectAllName());
-        modelAndView.addObject("pingweiList", pingweiService.selectAllName());
+        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
     }
 }

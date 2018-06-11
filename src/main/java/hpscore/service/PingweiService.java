@@ -14,5 +14,6 @@ public interface PingweiService {
     int delete(Pingwei pingwei);
 
     List<Pingwei> selectAll();
-    public List<String> selectAllName();
+    List<String> selectAllName();
+    List<String> selectAllCodeByModel(String model);
 }

@@ -148,7 +148,7 @@ public class ScoreController2 {
 
             scoreService.add(temp);
             map.put("result",1);
-            map.put("message","成功更改评分记录！");
+            map.put("message","成功添加评分记录！");
         }else{
             map.put("result",0);
             map.put("message","添加评分记录失败！请检查数据是否已存在！");

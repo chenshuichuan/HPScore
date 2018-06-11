@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -59,5 +60,15 @@ public class PingweiServiceImpl implements PingweiService {
         }
         return stringList;
     }
-
+    @Override
+    public List<String> selectAllCodeByModel(String model) {
+        List<String> stringList = new ArrayList<>();
+        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
+        for (Pingwei pingwei: pingweiList){
+            stringList.add(pingwei.getCode());
+        }
+        //按照作品编号排序
+        Collections.sort(stringList);
+        return stringList;
+    }
 }

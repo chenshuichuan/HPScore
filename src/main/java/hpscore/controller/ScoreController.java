@@ -48,16 +48,33 @@ public class ScoreController {
     private PingweiService pingweiService;
 
 
-    //根据评委以及作品和model查询该作品评分记录是否已经存在
+    //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/selectByPidAndProIdAndModel",method = RequestMethod.GET)
-    public Score selectByPidAndProIdAndModel(
+    public Map<String,Object> selectByPidAndProIdAndModel(
             @RequestParam("pid")String pid,
             @RequestParam("proId")String proId,
             @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
         Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
-        if (score!=null)System.out.println("selectByPidAndProIdAndModel"+score.getPid());
-        return score;
+        //为查找到数据是score为null
+        if (score!=null) {
+            System.out.println("selectByPidAndProIdAndModel"+score.getPid());
+            logger.info("selectByPidAndProIdAndModel"+score.getPid());
+            map.put("result",1);
+            map.put("score",score);
+            map.put("message","找到对应数据");
+        }
+        else{
+            map.put("result",0);
+            map.put("score",null);
+            map.put("message","未找到对应数据");
+        }
+
+        return map;
     }
+
+
 
     //更新数据
     /**
@@ -101,7 +118,7 @@ public class ScoreController {
 
             scoreService.add(temp);
             map.put("result",1);
-            map.put("message","成功更改评分记录！");
+            map.put("message","成功添加评分记录！");
         }else{
             map.put("result",0);
             map.put("message","添加评分记录失败！请检查数据是否已存在！");

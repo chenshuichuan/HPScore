@@ -14,5 +14,6 @@ public interface WorksService {
     int delete(Works works);
 
     List<Works> selectAll();
-    public List<String> selectAllName();
+    List<String> selectAllName();
+    List<String> selectAllCodeByModel(String model);
 }

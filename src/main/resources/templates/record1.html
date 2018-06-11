@@ -15,6 +15,7 @@
     <!--data table-->
     <link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>
     <link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>
+
     <link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>
     <!--common-->
     <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet">
@@ -200,9 +201,9 @@
                                                 <button id="editable-sample_new" class="btn btn-primary">
                                                     新增记录 <i class="fa fa-plus"></i>
                                                 </button>
-                                                <button id="modal-text" class="btn btn-primary">
-                                                    新增记录 <i class="fa fa-plus"></i>
-                                                </button>
+                                                <!--<button id="modal-text" class="btn btn-primary">-->
+                                                    <!--新增记录 <i class="fa fa-plus"></i>-->
+                                                <!--</button>-->
                                             </div>
                                         </div>
                                         </th>
@@ -214,6 +215,7 @@
                                 <table class="table table-striped table-hover table-bordered" id="editable-sample">
                                     <thead>
                                     <tr>
+                                        <th></th>
                                         <th>作品</th>
                                         <th>选题</th>
                                         <th>科学性</th>
@@ -292,18 +294,12 @@
                 </tr>
                 <tr>
                     <td>
-                        <select id="select-pingwei2" class="form-control">
-                            <option th:each="pingwei,iterStat:${pingweiList}"
-                                    th:value="${pingwei}"
-                                    th:text="${pingwei}"></option>
-                        </select>
+                        <input id="select-pingwei2" class="form-control modal-input" size="10"
+                               type="text" value="" readonly/>
                     </td>
                     <td>
-                        <select id="select-works2" class="form-control">
-                            <option th:each="works,iterStat:${worksList}"
-                                    th:value="${works}"
-                                    th:text="${works}"></option>
-                        </select>
+                        <input id="select-works2" class="form-control modal-input" size="10"
+                               type="text" value="" readonly/>
                     </td>
                     <td>
                         <input id="option31" class="form-control modal-input" size="10"
@@ -339,11 +335,8 @@
         <div class="m-bottom">
             <!--<button class="m-btn-sure">确定</button>-->
 
-            <button id="save-2" class="btn btn-warning">
-                保存第二条
-            </button>
             <button id="save-1" class="btn btn-info">
-                保存第一条
+                强制保存
             </button>
             <button class="m-btn-cancel">取消</button>
         </div>
@@ -396,9 +389,9 @@
 
     });
 
-    $('#modal-text').on("click", function() {
-        m1.show();
-    });
+//    $('#modal-text').on("click", function() {
+//        m1.show();
+//    });
     jQuery(document).ready(function () {
         EditableTable.init();
     });
@@ -410,7 +403,5 @@
         $("#record1").addClass("active");
     });
 </script>
-
-
 </body>
 </html>

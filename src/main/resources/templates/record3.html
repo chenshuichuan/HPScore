@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
 
-    <title>评分录入页面</title>
+    <title>评分录入记录</title>
     <link rel="shortcut icon" href="../static/images/invoice-logo.jpg"
           th:href="@{images/invoice-logo.jpg}" type="image/png">
     <!--dynamic table-->
@@ -63,35 +63,47 @@
              </span>
                         </header>
                         <div class="panel-body">
+                            <table style="margin-bottom: 20px;">
+                                <thead>
+                                <tr>
+                                    <th>评委：</th>
+                                    <th>
+                                        <select id="select-pingwei" class="form-control" style="width: 150px;">
+                                            <option th:each="pingwei,iterStat:${pingweiList}"
+                                                    th:value="${pingwei}"
+                                                    th:text="${pingwei}"></option>
+                                        </select>
+                                    </th>
+                                    <th>
+                                        &nbsp;&nbsp;&nbsp;
+                                    </th>
+                                    <th>
+                                        <!--<button id="export-bt" type="button" class="btn btn-success">导出该评委评分表</button>-->
+                                        <div id="export-bt">
+                                            <a data-type="xls" href="javascript:;">导出excel</a>
+                                            <!--<a data-type="csv" href="javascript:;">导出csv</a>-->
+                                            <!--<a data-type="pdf" href="javascript:;">导出pdf</a>-->
+                                        </div>
+                                    </th>
+                                </tr>
+                                </thead>
+                            </table>
                             <div class="adv-table">
                                 <table class="display table table-bordered table-striped" id="dynamic-table">
                                     <thead>
                                     <tr>
-                                        <th>评委</th>
-                                        <th>作品</th>
+                                        <th>作品编号</th>
+                                        <th>作品名称</th>
                                         <th>选题</th>
                                         <th>科学性</th>
                                         <th>创新性</th>
                                         <th>难/易程度</th>
                                         <th>价值及效果</th>
-                                        <th>文档质量及答辩效果</th>
+                                        <th>文档及答辩</th>
                                         <th>总分</th>
-                                        <th>状态</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr th:each="score,iterStat:${scoreList}">
-                                        <td th:text="${score.pid}">pingwei1</td>
-                                        <td th:text="${score.proId}">作品1</td>
-                                        <td th:text="${score.option1}">10</td>
-                                        <td th:text="${score.option2}">15</td>
-                                        <td th:text="${score.option3}">20</td>
-                                        <td th:text="${score.option4}">25</td>
-                                        <td th:text="${score.option5}">20</td>
-                                        <td th:text="${score.option6}">15</td>
-                                        <td th:text="${score.totalScore}">90</td>
-                                        <td th:text="|第${score.editTimes}次编辑|">第二次编辑</td>
-                                    </tr>
+                                    <tbody id="scores-list">
 
                                     </tbody>
                                 </table>
@@ -129,12 +141,67 @@
 <script src="../static/plugins/data-tables/DT_bootstrap.js" th:src="@{plugins/data-tables/DT_bootstrap.js}"></script>
 <!--dynamic table initialization -->
 <script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>
+
+<!--title time initialization-->
+<script src="../static/js/tableExport.js" th:src="@{js/tableExport.js}"></script>
+
 <script>
+    //根据评委和model查询该评委的所有打分数据
+
+    $.ajaxSettings.async = false;
+    function selectByPidAndModel(pid,model){
+        var url = "/pingweiScore/selectByPidAndModel?pid="+pid+"&model="+model;
+        var result = null;
+        $.get(url,function(data,status){
+            alert("数据: " + data + "\n状态: " + status);
+            if(data.result===1) {
+                result = data.pingweiScoreList;
+            }
+        });
+        var str ="return result="+result;
+        alert(str);
+        return result;
+    }
     $(document).ready(function(){
         $("#head-title").append("评分录入记录");
         $("#record3").addClass("active");
     });
+    //监听选择框改变事件
+    document.getElementById('select-pingwei').addEventListener('change',function(){
+        var pingwei = $("#select-pingwei").val();
+        var model = getCookie("model");
+        $("#scores-list").empty();
 
+        var pingweiScoreList = selectByPidAndModel(pingwei,model);
+        if(pingweiScoreList!==null){
+            for (var i=0;i<pingweiScoreList.length;i++){
+                var str ="<tr>"+
+                    "<td>"+pingweiScoreList[i].proId+"</td>"+
+                    "<td>"+pingweiScoreList[i].proName+"</td>"+
+                    "<td>"+pingweiScoreList[i].option1+"</td>"+
+                    "<td>"+pingweiScoreList[i].option2+"</td>"+
+                    "<td>"+pingweiScoreList[i].option3+"</td>"+
+                    "<td>"+pingweiScoreList[i].option4+"</td>"+
+                    "<td>"+pingweiScoreList[i].option5+"</td>"+
+                    "<td>"+pingweiScoreList[i].option6+"</td>"+
+                    "<td>"+pingweiScoreList[i].totalScore+"</td>"+
+                    "</tr>";
+                $("#scores-list").append(str);
+            }
+        }
+    });
+</script>
+
+<script>
+    var $exportLink = document.getElementById('export-bt');
+    $exportLink.addEventListener('click', function(e) {
+        var pingwei = $("#select-pingwei").val();
+        var model = getCookie("model");
+        e.preventDefault();
+        if (e.target.nodeName === "A") {
+            tableExport('dynamic-table', model+pingwei, e.target.getAttribute('data-type'));
+        }
+    }, false);
 </script>
 </body>
 </html>

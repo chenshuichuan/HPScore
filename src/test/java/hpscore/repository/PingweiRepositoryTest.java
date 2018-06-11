@@ -31,7 +31,7 @@ public class PingweiRepositoryTest {
 
         //Works works = new Works()
         List<Pingwei> worksList =  pingweiRepository.findByModel("本科组");
-        Assert.assertThat(worksList.size(),is(3));
+        Assert.assertThat(worksList.size(),is(4));
         List<Pingwei> worksList2 =  pingweiRepository.findByModel("高职高专组");
         Assert.assertThat(worksList2.size(),is(4));
     }

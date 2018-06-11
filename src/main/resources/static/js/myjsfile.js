@@ -42,7 +42,7 @@ $(document).ready(function(){
 
     var userName = getCookie("user");
     $("#record1").click(function (e) {
-        var url = "/record1?editor="+userName;
+        var url = "/record1?editor="+userName+"&model="+model;
         window.location.href = url;
     });
     $("#record2").click(function (e) {
@@ -50,7 +50,7 @@ $(document).ready(function(){
         window.location.href = url;
     });
     $("#record3").click(function (e) {
-        var url = "/record3?editor="+userName+"&model="+model;
+        var url = "/record3?model="+model;
         window.location.href = url;
     });
 });
