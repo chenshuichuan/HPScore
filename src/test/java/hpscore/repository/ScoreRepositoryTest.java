@@ -45,4 +45,13 @@ public class ScoreRepositoryTest {
         Assert.assertThat(scores.size(),greaterThan(5));
     }
 
+    @Test
+    public void findScoreByEditTimes() throws Exception {
+        List<Score> scores = scoreRepository.findScoreLessThanEditTimes(2);
+        for (Score s:scores){
+            System.out.println("score ="+s.getPid()+","+s.getProId());
+        }
+        Assert.assertThat(scores.size(),greaterThan(2));
+    }
+
 }

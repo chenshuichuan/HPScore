@@ -6,8 +6,10 @@ package hpscore.controller;/**
  */
 
 import com.alibaba.fastjson.JSONObject;
-import hpscore.domain.Score;
-import hpscore.domain.User;
+import hpscore.domain.*;
+import hpscore.repository.PingweiRepository;
+import hpscore.repository.RelativeScoreRepository;
+import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
@@ -22,9 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *@ClassName: IndexController
@@ -47,6 +47,14 @@ public class ScoreController {
     @Autowired
     private PingweiService pingweiService;
 
+    @Autowired
+    private ScoreRepository scoreRepository;
+    @Autowired
+    private PingweiRepository pingweiRepository;
+
+
+    @Autowired
+    private RelativeScoreRepository relativeScoreRepository;
 
     //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/selectByPidAndProIdAndModel",method = RequestMethod.GET)
@@ -123,6 +131,120 @@ public class ScoreController {
             map.put("result",0);
             map.put("message","添加评分记录失败！请检查数据是否已存在！");
         }
+        return map;
+    }
+
+
+    //计算相对分请求
+    /**
+     *@Author: Ricardo
+     *@Description:
+     *@Date: 23:43 2018/6/9
+     *@param:
+     **/
+    @RequestMapping(value = "/countScore")
+    @ResponseBody
+    public Map<String,Object> countScore(
+            @RequestParam("model")String model,
+            @RequestParam("editor")String editor){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        User user = userRepository.findByName(editor);
+        //查询该编辑是否有权限进行计算操作
+        //有权限进行计算
+        if(user!=null&&user.getRole()==0){
+            //检查所有评分记录是否都录入了两次以上
+            List<Score> temps = scoreRepository.findScoreLessThanEditTimes(2);
+            if (temps.size()>0){
+                map.put("result",0);
+                map.put("message","存在评分记录录入次数未达到两次！");
+            }
+            else{
+                //检查是否每个评委都对所有作品进行了相同数量的评分记录，如：每个评委都有24条评分记录
+                List<String> pingweiList = pingweiService.selectAllCodeByModel(model);
+
+                int index = scoreService.checkIfAllTheSameTimes(model,pingweiList);
+                //index,中途退出，存在对评分记录录入不完整
+                if(index !=pingweiList.size()){
+                    map.put("result",0);
+                    map.put("message","第"+pingweiList.get(index)+"位的评委评分记录不统一！");
+                }
+                //满足计算条件，开始计算
+                else{
+                   index = scoreService.calculateRelativeScore(model,pingweiList);
+                   if(index!=pingweiList.size()){
+                       map.put("result",0);
+                       map.put("message","第"+pingweiList.get(index)+"位的委评相对分计算出错！");
+                   }
+                   else{
+                        map.put("result",1);
+                        map.put("message","相对分计算成功！");
+                    }
+                }
+            }
+        }
+        else{
+            map.put("result",0);
+            map.put("message","您没有计算相对分的权限！");
+        }
+        return map;
+    }
+
+
+    //根据model查询作品的所有相对评分记录，并返回
+    @RequestMapping(value = "/selectRelativeScoreByModel",method = RequestMethod.GET)
+    public Map<String,Object> selectRelativeScoreByModel(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<RelativeScore> relativeScores = relativeScoreRepository.findByModel(model);
+        //为查找到数据是score为null
+        if (relativeScores!=null) {
+
+            //按照作品编号排序
+            Collections.sort(relativeScores,new Comparator() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    if(o1 instanceof RelativeScore && o2 instanceof RelativeScore){
+                        RelativeScore e1 = (RelativeScore) o1;
+                        RelativeScore e2 = (RelativeScore) o2;
+                        return e1.getProId().compareTo(e2.getProId());
+                    }
+                    throw new ClassCastException("不能转换为RelativeScore类型");
+                }
+            });
+
+            map.put("result",1);
+            map.put("relativeScores",relativeScores);
+            map.put("message","找到相对评分数据");
+        }
+        else{
+            map.put("result",0);
+            map.put("score",null);
+            map.put("message","未找到相对评分数据");
+        }
+
+        return map;
+    }
+
+
+    //计算相对分平均分
+    @RequestMapping(value = "/calculteRelativeScoreAverageAndMaxAndMin",method = RequestMethod.GET)
+    public Map<String,Object> calculteRelativeScoreAverageAndMaxAndMin(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        String result = scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
+        //计算成功
+        if (result.equals("0")) {
+            map.put("result",1);
+            map.put("message","相对分平均分计算成功！");
+        }
+        else{
+            map.put("result",0);
+            map.put("message","第"+result+"个作品的相对分平均分计算失败！");
+        }
+
         return map;
     }
 }

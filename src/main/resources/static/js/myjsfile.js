@@ -46,11 +46,15 @@ $(document).ready(function(){
         window.location.href = url;
     });
     $("#record2").click(function (e) {
-        var url = "/record2?editor="+userName;
+        var url = "/record2?editor="+userName+"&model="+model;
         window.location.href = url;
     });
     $("#record3").click(function (e) {
         var url = "/record3?model="+model;
+        window.location.href = url;
+    });
+    $("#innovation").click(function (e) {
+        var url = "/innovation?model="+model;
         window.location.href = url;
     });
 });

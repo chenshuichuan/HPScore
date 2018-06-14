@@ -48,22 +48,21 @@ public class RecordController {
     @RequestMapping(value = "/record1")
     public ModelAndView record1(@RequestParam("editor")String editor,
                                 @RequestParam("model")String model){
-
-        User user = userRepository.findByName(editor);
         ModelAndView modelAndView = new ModelAndView("record1");
-        if(user!=null){
-            List<Score> scores = null;
-            //管理员可以查看所有记录
-            if(user.getRole()==0){
-                scores = scoreService.selectAll();
-                modelAndView.addObject("scoreList", scores);
-            }
-            //否则仅可以查看自己相关的记录
-            else{
-                scores = scoreService.selectByEditorAndModel(editor,"本科组");
-                modelAndView.addObject("scoreList", scores);
-            }
-        }
+//        User user = userRepository.findByName(editor);
+//        if(user!=null){
+//            List<Score> scores = null;
+//            //管理员可以查看所有记录
+//            if(user.getRole()==0){
+//                scores = scoreService.selectAll();
+//                modelAndView.addObject("scoreList", scores);
+//            }
+//            //否则仅可以查看自己相关的记录
+//            else{
+//                scores = scoreService.selectByEditorAndModel(editor,"本科组");
+//                modelAndView.addObject("scoreList", scores);
+//            }
+//        }
         modelAndView.addObject("worksList", worksService.selectAllCodeByModel(model));
         modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
@@ -71,12 +70,27 @@ public class RecordController {
 
     //高职高专组评分录入
     @RequestMapping("/record2")
-    public ModelAndView record2(){
+    public ModelAndView record2(@RequestParam("editor")String editor,
+                                @RequestParam("model")String model){
         //List<String> models =indexService.getModels();
-
         ModelAndView modelAndView = new ModelAndView("record2");
-        modelAndView.addObject("model", "高职高专组");
-        System.out.println("controller -- index --- index.html");
+
+//        User user = userRepository.findByName(editor);
+//        if(user!=null){
+//            List<Score> scores = null;
+//            //管理员可以查看所有记录
+//            if(user.getRole()==0){
+//                scores = scoreService.selectAll();
+//                modelAndView.addObject("scoreList", scores);
+//            }
+//            //否则仅可以查看自己相关的记录
+//            else{
+//                scores = scoreService.selectByEditorAndModel(editor,"本科组");
+//                modelAndView.addObject("scoreList", scores);
+//            }
+//        }
+        modelAndView.addObject("worksList", worksService.selectAllCodeByModel(model));
+        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
     }
 
@@ -85,6 +99,15 @@ public class RecordController {
     public ModelAndView record3(@RequestParam("model")String model){
 
         ModelAndView modelAndView = new ModelAndView("record3");
+        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
+        return modelAndView;
+    }
+
+    //评委打分导出
+    @RequestMapping(value = "/innovation")
+    public ModelAndView innovation(@RequestParam("model")String model){
+
+        ModelAndView modelAndView = new ModelAndView("innovation");
         modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
     }
