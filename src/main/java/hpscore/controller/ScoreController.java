@@ -247,4 +247,55 @@ public class ScoreController {
 
         return map;
     }
+
+    //返回创新性分数排名
+    @RequestMapping(value = "/selectInnovationScoreByModel",method = RequestMethod.GET)
+    public Map<String,Object> selectInnovationScore(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<InnovationScore> innovationScoreList = scoreService.calculateInnovationScore(model);
+        //按照作品编号排序
+        Collections.sort(innovationScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
+                    InnovationScore e1 = (InnovationScore) o1;
+                    InnovationScore e2 = (InnovationScore) o2;
+                    return e1.getProId().compareTo(e2.getProId());
+                }
+                throw new ClassCastException("不能转换为InnovationScore类型");
+            }
+        });
+        //计算成功
+        map.put("result",1);
+        map.put("innovationScoreList",innovationScoreList);
+        map.put("message","获取创新性分数成功！");
+        return map;
+    }
+    //返回实用性分数排名
+    @RequestMapping(value = "/selectUsefulScoreByModel",method = RequestMethod.GET)
+    public Map<String,Object> selectUsefulScoreByModel(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<InnovationScore> innovationScoreList = scoreService.calculateUsefulScore(model);
+        //按照作品编号排序
+        Collections.sort(innovationScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
+                    InnovationScore e1 = (InnovationScore) o1;
+                    InnovationScore e2 = (InnovationScore) o2;
+                    return e1.getProId().compareTo(e2.getProId());
+                }
+                throw new ClassCastException("不能转换为InnovationScore类型");
+            }
+        });
+        //计算成功
+        map.put("result",1);
+        map.put("innovationScoreList",innovationScoreList);
+        map.put("message","获取实用性分数成功！");
+        return map;
+    }
 }

@@ -108,7 +108,22 @@ public class RecordController {
     public ModelAndView innovation(@RequestParam("model")String model){
 
         ModelAndView modelAndView = new ModelAndView("innovation");
-        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
+
+        modelAndView.addObject(
+                "innovationScoreList",scoreService.calculateInnovationScore(model));
+        modelAndView.addObject(
+                "usefulScoreList",scoreService.calculateUsefulScore(model));
+        return modelAndView;
+    }
+
+    //总分平均分排名
+    @RequestMapping(value = "/total_final")
+    public ModelAndView total_final(@RequestParam("model")String model){
+
+        ModelAndView modelAndView = new ModelAndView("total_final");
+
+        modelAndView.addObject(
+                "worksList",scoreService.selectFinalScoreRanking(model));
         return modelAndView;
     }
 }

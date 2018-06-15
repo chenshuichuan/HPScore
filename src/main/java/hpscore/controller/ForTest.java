@@ -6,9 +6,11 @@ package hpscore.controller;/**
  */
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.sargeraswang.util.ExcelUtil.*;
+import hpscore.domain.InnovationScore;
 
 /**
  *@ClassName: ForTest
@@ -21,14 +23,18 @@ public class ForTest {
         String path1 = System.getProperty("user.dir");
         System.out.println("SpringApplication.run successful!");
         System.out.println("path1="+path1);
-        List<String> list1 = new ArrayList<String>();
-        List<String> list2 = null;
-        //给list1赋值
-        list1.add("测");
-        list1.add("试");
 
-        list1.addAll(list2);
-        for (String str:list1)System.out.println(str);
+
+        double d = 111231.5585;
+        BigDecimal b = new BigDecimal(d);
+        double df = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        System.out.println("2df = "+df);
+//        InnovationScore innovationScore = new InnovationScore();
+//        System.out.println("average = "+innovationScore.getAverage());
+
+
+        df = b.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+        System.out.println("3df = "+df);
     }
     public static void writeExcel(){
         List<Map<String,Object>> list = new ArrayList<>();

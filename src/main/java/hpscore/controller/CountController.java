@@ -31,7 +31,6 @@ public class CountController {
         //List<String> models =indexService.getModels();
 
         ModelAndView modelAndView = new ModelAndView("count");
-        modelAndView.addObject("model", "本科组");
         System.out.println("controller -- index --- index.html");
         return modelAndView;
     }

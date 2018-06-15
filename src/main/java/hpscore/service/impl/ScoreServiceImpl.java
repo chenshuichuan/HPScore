@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by tengj on 2017/4/7.
@@ -272,12 +271,27 @@ public class ScoreServiceImpl implements ScoreService {
                 double maxScore = GetMaxRelativeScore(relativeScore);
                 double minScore = GetMinRelativeScore(relativeScore);
                 double average =  (GetTotalScore(relativeScore)-maxScore-minScore)/11.0;
+                //保留四位小数
+                BigDecimal b = new BigDecimal(average);
+                average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 
                 relativeScore.setMaxScore(maxScore);
                 relativeScore.setMinScore(minScore);
                 relativeScore.setAverage(average);
+                //相对分平均分写入作品表
+                Works works = worksRepository.findByCodeAndModel(relativeScore.getProId(),model);
+                if(works!=null){
+                    works.setFinalScore(average);
+                    worksRepository.save(works);
+                }
+                //出错
+                else{
+                    proId=relativeScore.getProId();
+                    break;
+                }
                 saveRelativeScoreByProIdAndModel(relativeScore);
             }
+            //出错
             else{
                 proId=relativeScore.getProId();
                 break;
@@ -412,36 +426,162 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     //计算创新性分数
+    @Override
     public List<InnovationScore> calculateInnovationScore(String model){
         List<InnovationScore> innovationScoreList = new ArrayList<>();
 
         List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
         List<Works> worksList = worksRepository.findByModel(model);
+
+        //以model下的所有作品为循环构建
         for (Works works: worksList){
             InnovationScore innovationScore =
                     new InnovationScore(works.getCode(),works.getName(),model);
+
+            int maxScore = 0;
+            int minScore = 0;
+            int totalScore = 0;
             for (Pingwei pingwei:pingweiList){
                 Score score = scoreRepository.findByPidAndProIdAndModel(
                         pingwei.getCode(),works.getCode(),model);
                 if(score!=null){
-
+                    innovationScore = setInnovation(pingwei.getCode(),score.getOption3(), innovationScore);
+                    //计算该作品的最大最小分
+                    if(score.getOption3()>maxScore)maxScore = score.getOption3();
+                    if(score.getOption3()<minScore)minScore = score.getOption3();
+                    totalScore+=score.getOption3();
+                }
+                //该评委对该评分的记录还没有录入，记为0
+                else{
+                    innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
                 }
             }
+            double average = (double)(totalScore-maxScore-minScore)/(double)11;
+            BigDecimal b = new BigDecimal(average);
+            average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            innovationScore.setMaxScore(maxScore);
+            innovationScore.setMinScore(minScore);
+            innovationScore.setAverage(average);
+            innovationScoreList.add(innovationScore);
         }
 
         return innovationScoreList;
     }
-    private void setInnovation(String pid,int score,InnovationScore innovationScore){
-
+    private InnovationScore setInnovation(String pid,int score,InnovationScore innovationScore){
+        switch (pid){
+            case "1":{
+                innovationScore.setpScore1(score);
+            }break;
+            case "2":{
+                innovationScore.setpScore2(score);
+            }break;
+            case "3":{
+                innovationScore.setpScore3(score);
+            }break;
+            case "4":{
+                innovationScore.setpScore4(score);
+            }break;
+            case "5":{
+                innovationScore.setpScore5(score);
+            }break;
+            case "6":{
+                innovationScore.setpScore6(score);
+            }break;
+            case "7":{
+                innovationScore.setpScore7(score);
+            }break;
+            case "8":{
+                innovationScore.setpScore8(score);
+            }break;
+            case "9":{
+                innovationScore.setpScore9(score);
+            }break;
+            case "10":{
+                innovationScore.setpScore10(score);
+            }break;
+            case "11":{
+                innovationScore.setpScore11(score);
+            }break;
+            default:
+                logger.info("saveRelativeScoreByPidAndProIdAndModel: pid 出错！");
+        }
+        return innovationScore;
     }
+
+    //计算实用性分数
+    @Override
     public List<InnovationScore> calculateUsefulScore(String model){
-        List<Score> scoreList = scoreRepository.findByModel(model);
         List<InnovationScore> innovationScoreList = new ArrayList<>();
 
-        for (Score score:scoreList){
+        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
+        List<Works> worksList = worksRepository.findByModel(model);
 
+        //以model下的所有作品为循环构建
+        for (Works works: worksList){
+            InnovationScore innovationScore =
+                    new InnovationScore(works.getCode(),works.getName(),model);
+
+            int maxScore = 0;
+            int minScore = 0;
+            int totalScore = 0;
+            for (Pingwei pingwei:pingweiList){
+                Score score = scoreRepository.findByPidAndProIdAndModel(
+                        pingwei.getCode(),works.getCode(),model);
+                if(score!=null){
+                    innovationScore = setInnovation(pingwei.getCode(),score.getOption5(), innovationScore);
+                    //计算该作品的最大最小分
+                    if(score.getOption5()>maxScore)maxScore = score.getOption5();
+                    if(score.getOption5()<minScore)minScore = score.getOption5();
+                    totalScore+=score.getOption5();
+                }
+                //该评委对该评分的记录还没有录入，记为0
+                else{
+                    innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
+                }
+            }
+            double average = (double)(totalScore-maxScore-minScore)/11.0;
+            BigDecimal b = new BigDecimal(average);
+            average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+
+            logger.info("average="+average);
+            innovationScore.setMaxScore(maxScore);
+            innovationScore.setMinScore(minScore);
+            innovationScore.setAverage(average);
+            innovationScoreList.add(innovationScore);
         }
         return innovationScoreList;
+    }
+
+
+
+
+    //计算最终相对分的平均分分数
+    @Override
+    public List<Works> selectFinalScoreRanking(String model){
+        List<Works> worksList = worksRepository.findByModel(model);
+
+        if (worksList!=null&&worksList.size()>=2){
+            //按照平均分排序
+            Collections.sort(worksList,new Comparator() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    if(o1 instanceof Works && o2 instanceof Works){
+                        Works e1 = (Works) o1;
+                        Works e2 = (Works) o2;
+                        return compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
+                    }
+                    throw new ClassCastException("不能转换为Works类型");
+                }
+            });
+        }
+        return worksList;
+    }
+    private int compareTwoDouble(double score1,double score2){
+        int i=0;
+        if(score1>score2)i=1;
+        else if(score1<score2)i=-1;
+        return i;
     }
 
 }

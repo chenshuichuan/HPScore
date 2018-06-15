@@ -16,6 +16,6 @@ import java.util.List;
 public interface WorksRepository extends JpaRepository<Works,Integer>{
     List<Works> findByModel(String model);
     Works findByNameAndModel(String name,String model);
-    Works findByCodeAndModel(String name,String model);
+    Works findByCodeAndModel(String code,String model);
 
 }

@@ -19,6 +19,50 @@ public class Works {
     private String code;
     private String model;
     private double finalScore;
+    private String school;//
+    private String teachers;//
+    private String students;
+    private int ranking;
+
+    public Works() {
+    }
+    public Works(String name, String code, String model) {
+        this.name = name;
+        this.code = code;
+        this.model = model;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(String teachers) {
+        this.teachers = teachers;
+    }
+
+    public String getStudents() {
+        return students;
+    }
+
+    public void setStudents(String students) {
+        this.students = students;
+    }
+
+    public int getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
 
     public double getFinalScore() {
         return finalScore;
@@ -28,13 +72,6 @@ public class Works {
         this.finalScore = finalScore;
     }
 
-    public Works() {
-    }
-    public Works(String name, String code, String model) {
-        this.name = name;
-        this.code = code;
-        this.model = model;
-    }
 
     public int getId() {
         return id;

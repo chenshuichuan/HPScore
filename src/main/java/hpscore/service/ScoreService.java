@@ -1,9 +1,7 @@
 package hpscore.service;
 
 
-import hpscore.domain.InnovationScore;
-import hpscore.domain.RelativeScore;
-import hpscore.domain.Score;
+import hpscore.domain.*;
 import hpscore.repository.PingweiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,6 +35,7 @@ public interface ScoreService {
     String calculteRelativeScoreAverageAndMaxAndMin(String model);
 
 
-    public List<InnovationScore> calculateInnovationScore(String model);
-    public List<InnovationScore> calculateUsefulScore(String model);
+    List<InnovationScore> calculateInnovationScore(String model);
+    List<InnovationScore> calculateUsefulScore(String model);
+    List<Works> selectFinalScoreRanking(String model);
 }

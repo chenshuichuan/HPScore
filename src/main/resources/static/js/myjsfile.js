@@ -57,5 +57,9 @@ $(document).ready(function(){
         var url = "/innovation?model="+model;
         window.location.href = url;
     });
+    $("#total_final").click(function (e) {
+        var url = "/total_final?model="+model;
+        window.location.href = url;
+    });
 });
 

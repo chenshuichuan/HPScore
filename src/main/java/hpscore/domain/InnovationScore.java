@@ -20,7 +20,7 @@ public class InnovationScore {
     private String proName;//作品name
     private int maxScore;
     private int minScore;
-    private int average;
+    private double average;
 
     private int pScore1;
     private int pScore2;
@@ -80,7 +80,7 @@ public class InnovationScore {
         this.minScore = minScore;
     }
 
-    public void setAverage(int average) {
+    public void setAverage(double average) {
         this.average = average;
     }
 
