@@ -11,6 +11,7 @@ import hpscore.repository.PingweiRepository;
 import hpscore.repository.RelativeScoreRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
+import hpscore.service.ExcelService;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
 import hpscore.service.WorksService;
@@ -51,7 +52,8 @@ public class ScoreController {
     private ScoreRepository scoreRepository;
     @Autowired
     private PingweiRepository pingweiRepository;
-
+    @Autowired
+    private ExcelService excelService;
 
     @Autowired
     private RelativeScoreRepository relativeScoreRepository;
@@ -255,18 +257,6 @@ public class ScoreController {
 
         Map<String,Object> map =new HashMap<String,Object>();
         List<InnovationScore> innovationScoreList = scoreService.calculateInnovationScore(model);
-        //按照作品编号排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return e1.getProId().compareTo(e2.getProId());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
         //计算成功
         map.put("result",1);
         map.put("innovationScoreList",innovationScoreList);
@@ -280,22 +270,40 @@ public class ScoreController {
 
         Map<String,Object> map =new HashMap<String,Object>();
         List<InnovationScore> innovationScoreList = scoreService.calculateUsefulScore(model);
-        //按照作品编号排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return e1.getProId().compareTo(e2.getProId());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
         //计算成功
         map.put("result",1);
         map.put("innovationScoreList",innovationScoreList);
         map.put("message","获取实用性分数成功！");
+        return map;
+    }
+
+
+    //根据model和要生成的Excel表格（打分审核表/相对分统计表/得分汇总表）,生成Excel文件，并返回Excel文件地址
+    @RequestMapping(value = "/generateExcelByFileAndModel",method = RequestMethod.GET)
+    public Map<String,Object> generateExcelByFileAndModel(
+            @RequestParam("file")String file,@RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        String fileName = "";
+        if(file.equals("打分审核表")){
+            fileName = excelService.reviewExcel(model);
+        }
+        if(file.equals("相对分统计表")){
+            fileName = excelService.relativeScoreExcel(model);
+        }
+        if(file.equals("得分汇总表")){
+            fileName = excelService.finalScoreExcel(model);
+        }
+
+        if(fileName!=null){
+            map.put("result",1);
+            map.put("fileName",fileName);
+            map.put("message","获取表格成功！");
+        }
+        else{
+            map.put("result",0);
+            map.put("message","获取表格失败！数据存在问题，请检查！");
+        }
         return map;
     }
 }

@@ -465,7 +465,18 @@ public class ScoreServiceImpl implements ScoreService {
             innovationScore.setAverage(average);
             innovationScoreList.add(innovationScore);
         }
-
+        //按照平均分排序
+        Collections.sort(innovationScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
+                    InnovationScore e1 = (InnovationScore) o1;
+                    InnovationScore e2 = (InnovationScore) o2;
+                    return compareTwoDouble(e1.getAverage(),e2.getAverage());
+                }
+                throw new ClassCastException("不能转换为InnovationScore类型");
+            }
+        });
         return innovationScoreList;
     }
     private InnovationScore setInnovation(String pid,int score,InnovationScore innovationScore){
@@ -550,10 +561,21 @@ public class ScoreServiceImpl implements ScoreService {
             innovationScore.setAverage(average);
             innovationScoreList.add(innovationScore);
         }
+
+        //按照平均分排序
+        Collections.sort(innovationScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
+                    InnovationScore e1 = (InnovationScore) o1;
+                    InnovationScore e2 = (InnovationScore) o2;
+                    return compareTwoDouble(e1.getAverage(),e2.getAverage());
+                }
+                throw new ClassCastException("不能转换为InnovationScore类型");
+            }
+        });
         return innovationScoreList;
     }
-
-
 
 
     //计算最终相对分的平均分分数
@@ -579,8 +601,8 @@ public class ScoreServiceImpl implements ScoreService {
     }
     private int compareTwoDouble(double score1,double score2){
         int i=0;
-        if(score1>score2)i=1;
-        else if(score1<score2)i=-1;
+        if(score1<score2)i=1;
+        else if(score1>score2)i=-1;
         return i;
     }
 

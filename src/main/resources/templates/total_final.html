@@ -71,7 +71,9 @@
                                         <div id="export1">
                                             <a data-type="xls" href="javascript:;">导出excel</a>
                                         </div>
-
+                                        <div >
+                                            <button id="export-url"data-type="xls" href="javascript:;">url导出excel</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <table class="display table table-bordered table-striped" id="final-score-tb">
@@ -162,6 +164,11 @@
         $('#final-score-tb').dataTable( {
             "aaSorting": [[ 10, "desc" ]]
         } );
+
+        $("#export-url").click(function () {
+            alert("export-url open!");
+            window.open("/score/getExcel");
+        });
     });
 
 </script>

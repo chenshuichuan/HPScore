@@ -18,10 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,4 +160,63 @@ public class ScoreController2 {
         return map;
     }
 
+
+    //http://localhost:3388/images/getImagesByName.do?modelName=model1&name=551
+    @RequestMapping(value = "/getExcel")
+    @ResponseBody
+    public String getExcel(HttpServletRequest request, HttpServletResponse response, Model modelView,
+                           @RequestParam("fileName")String filename) {
+        FileInputStream fis = null;
+        OutputStream os = null;
+        try {
+            //String path1 = System.getProperty("user.dir");
+            fis = new FileInputStream(filename);
+            os = response.getOutputStream();
+            int count = 0;
+            byte[] buffer = new byte[1024 * 8];
+            while ((count = fis.read(buffer)) != -1) {
+                os.write(buffer, 0, count);
+                os.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            fis.close();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "ok";
+    }
+
+//    //http://localhost:3388/images/getImagesByName.do?modelName=model1&name=551
+//    @RequestMapping(value = "/getImagesByName")
+//    @ResponseBody
+//    public String getImagesByName(HttpServletRequest request,
+//                                  HttpServletResponse response, Model model
+//            ,@RequestParam("modelName")String modelName,@RequestParam("name")String name) {
+//        FileInputStream fis = null;
+//        OutputStream os = null;
+//        try {
+//            //String path1 = System.getProperty("user.dir");
+//            fis = new FileInputStream("./data/"+modelName+"/"+name+".png");
+//            os = response.getOutputStream();
+//            int count = 0;
+//            byte[] buffer = new byte[1024 * 8];
+//            while ((count = fis.read(buffer)) != -1) {
+//                os.write(buffer, 0, count);
+//                os.flush();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            fis.close();
+//            os.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return "ok";
+//    }
 }
