@@ -60,12 +60,16 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
                         score.getOption4(),score.getOption5(),score.getOption6(),
                         score.getTotalScore(),score.getModel());
                 pingweiScore.setFinalScore(score.getFinalScore());
+
                 Pingwei pingwei = pingweiRepository.findByCodeAndModel(score.getPid(),score.getModel());
                 if (pingwei!=null)pingweiScore.setpName(pingwei.getName());
                 else
                     throw new Exception("要查找的评委不存在！");
                 Works works = worksRepository.findByCodeAndModel(score.getProId(),score.getModel());
-                if(works!=null)pingweiScore.setProName(works.getName());
+                if(works!=null){
+                    pingweiScore.setProName(works.getName());
+                    pingweiScore.setBianHao(works.getBianHao());
+                }
                 else
                     throw new Exception("要查找的作品不存在！");
                 pingweiScoreList.add(pingweiScore);

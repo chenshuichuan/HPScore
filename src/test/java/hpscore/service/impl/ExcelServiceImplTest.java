@@ -32,6 +32,12 @@ public class ExcelServiceImplTest {
     }
 
     @Test
+    public void reviewTransferExcel() throws Exception {
+        String result = excelService.reviewTransferExcel("本科组");
+        Assert.assertThat(result,notNullValue());
+    }
+
+    @Test
     public void relativeScoreExcel() throws Exception {
         String result = excelService.relativeScoreExcel("本科组");
         Assert.assertThat(result,notNullValue());

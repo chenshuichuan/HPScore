@@ -4,11 +4,13 @@ package hpscore.service.impl;
 import hpscore.domain.Pingwei;
 import hpscore.repository.PingweiRepository;
 import hpscore.service.PingweiService;
+import hpscore.tools.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -67,8 +69,18 @@ public class PingweiServiceImpl implements PingweiService {
         for (Pingwei pingwei: pingweiList){
             stringList.add(pingwei.getCode());
         }
-        //按照作品编号排序
-        Collections.sort(stringList);
+        //按照序号排序
+        Collections.sort(stringList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof String && o2 instanceof String){
+                    String e1 = (String) o1;
+                    String e2 = (String) o2;
+                    return StringUtil.comparePidOrProId(e1,e2);
+                }
+                throw new ClassCastException("不能转换为String类型");
+            }
+        });
         return stringList;
     }
 }

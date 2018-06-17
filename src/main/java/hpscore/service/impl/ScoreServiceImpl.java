@@ -7,6 +7,7 @@ import hpscore.repository.RelativeScoreRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.ScoreService;
+import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -436,7 +437,7 @@ public class ScoreServiceImpl implements ScoreService {
         //以model下的所有作品为循环构建
         for (Works works: worksList){
             InnovationScore innovationScore =
-                    new InnovationScore(works.getCode(),works.getName(),model);
+                    new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
 
             int maxScore = 0;
             int minScore = 0;
@@ -465,58 +466,16 @@ public class ScoreServiceImpl implements ScoreService {
             innovationScore.setAverage(average);
             innovationScoreList.add(innovationScore);
         }
-        //按照平均分排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
         return innovationScoreList;
     }
     private InnovationScore setInnovation(String pid,int score,InnovationScore innovationScore){
-        switch (pid){
-            case "1":{
-                innovationScore.setpScore1(score);
-            }break;
-            case "2":{
-                innovationScore.setpScore2(score);
-            }break;
-            case "3":{
-                innovationScore.setpScore3(score);
-            }break;
-            case "4":{
-                innovationScore.setpScore4(score);
-            }break;
-            case "5":{
-                innovationScore.setpScore5(score);
-            }break;
-            case "6":{
-                innovationScore.setpScore6(score);
-            }break;
-            case "7":{
-                innovationScore.setpScore7(score);
-            }break;
-            case "8":{
-                innovationScore.setpScore8(score);
-            }break;
-            case "9":{
-                innovationScore.setpScore9(score);
-            }break;
-            case "10":{
-                innovationScore.setpScore10(score);
-            }break;
-            case "11":{
-                innovationScore.setpScore11(score);
-            }break;
-            default:
-                logger.info("saveRelativeScoreByPidAndProIdAndModel: pid 出错！");
+        int pidNumber = Integer.parseInt(pid);
+        if (pidNumber>innovationScore.getpScores().length||pidNumber<=0){
+            logger.info("setInnovation: 评委编号不符合规则！请检查！");
+            System.out.println("setInnovation:评委编号不符合规则！请检查！");
         }
+        //评委编号从1开始
+        else innovationScore.getpScores()[pidNumber-1]=score;
         return innovationScore;
     }
 
@@ -531,7 +490,7 @@ public class ScoreServiceImpl implements ScoreService {
         //以model下的所有作品为循环构建
         for (Works works: worksList){
             InnovationScore innovationScore =
-                    new InnovationScore(works.getCode(),works.getName(),model);
+                    new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
 
             int maxScore = 0;
             int minScore = 0;
@@ -562,23 +521,11 @@ public class ScoreServiceImpl implements ScoreService {
             innovationScoreList.add(innovationScore);
         }
 
-        //按照平均分排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
         return innovationScoreList;
     }
 
 
-    //计算最终相对分的平均分分数
+    //获取works作品表，
     @Override
     public List<Works> selectFinalScoreRanking(String model){
         List<Works> worksList = worksRepository.findByModel(model);
@@ -591,7 +538,7 @@ public class ScoreServiceImpl implements ScoreService {
                     if(o1 instanceof Works && o2 instanceof Works){
                         Works e1 = (Works) o1;
                         Works e2 = (Works) o2;
-                        return compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
+                        return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
                     }
                     throw new ClassCastException("不能转换为Works类型");
                 }
@@ -599,11 +546,35 @@ public class ScoreServiceImpl implements ScoreService {
         }
         return worksList;
     }
-    private int compareTwoDouble(double score1,double score2){
-        int i=0;
-        if(score1<score2)i=1;
-        else if(score1>score2)i=-1;
-        return i;
+
+    //获得综合奖列表 按照相对分平均分排序
+    @Override
+    public List<Works> getSumUpAward(String model){
+        return selectFinalScoreRanking(model);
     }
 
+    //获得创新奖列表 按照平均分排序
+    @Override
+    public List<Works> getInnovationAward(String model){
+        List<InnovationScore>innovationScoreList = calculateInnovationScore(model);
+        List<Works> worksList = new ArrayList<>();
+        for (InnovationScore innovationScore: innovationScoreList){
+            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
+            works.setFinalScore(innovationScore.getAverage());//将平均分设置为创新奖的平均分
+            worksList.add(works);
+        }
+        return worksList;
+    }
+    //获得实用奖列表 按照平均分排序
+    @Override
+    public List<Works> getUsefulAward(String model){
+        List<InnovationScore> innovationScoreList = calculateUsefulScore(model);
+        List<Works> worksList = new ArrayList<>();
+        for (InnovationScore innovationScore: innovationScoreList){
+            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
+            works.setFinalScore(innovationScore.getAverage());//将平均分设置为实用奖的平均分
+            worksList.add(works);
+        }
+        return worksList;
+    }
 }

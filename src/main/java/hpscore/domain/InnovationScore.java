@@ -17,33 +17,42 @@ import javax.persistence.Table;
 public class InnovationScore {
 
     private String proId;//作品code
+
+    private String BianHao;//作品编号
     private String proName;//作品name
+
     private int maxScore;
     private int minScore;
     private double average;
 
-    private int pScore1;
-    private int pScore2;
-    private int pScore3;
-    private int pScore4;
-    private int pScore5;
-    private int pScore6;
-    private int pScore7;
-    private int pScore8;
-    private int pScore9;
-    private int pScore10;
-    private int pScore11;
+    private int[] pScores;//评委打分
+
     private String model;
 
-    public InnovationScore() {
+    public InnovationScore(int NumberOfPingwei) {
+        pScores = new int [NumberOfPingwei];
     }
 
-    public InnovationScore(String proId, String proName, String model) {
+    public InnovationScore(String proId, String proName, String model,int NumberOfPingwei) {
         this.proId = proId;
         this.proName = proName;
         this.model = model;
+        this.pScores = new int [NumberOfPingwei];
+    }
+    public int[] getpScores() {
+        return pScores;
+    }
+    public String getBianHao() {
+        return BianHao;
     }
 
+    public void setBianHao(String bianHao) {
+        BianHao = bianHao;
+    }
+
+    public void setpScores(int[] pScores) {
+        this.pScores = pScores;
+    }
     public double getAverage() {
         return average;
     }
@@ -82,94 +91,6 @@ public class InnovationScore {
 
     public void setAverage(double average) {
         this.average = average;
-    }
-
-    public int getpScore1() {
-        return pScore1;
-    }
-
-    public void setpScore1(int pScore1) {
-        this.pScore1 = pScore1;
-    }
-
-    public int getpScore2() {
-        return pScore2;
-    }
-
-    public void setpScore2(int pScore2) {
-        this.pScore2 = pScore2;
-    }
-
-    public int getpScore3() {
-        return pScore3;
-    }
-
-    public void setpScore3(int pScore3) {
-        this.pScore3 = pScore3;
-    }
-
-    public int getpScore4() {
-        return pScore4;
-    }
-
-    public void setpScore4(int pScore4) {
-        this.pScore4 = pScore4;
-    }
-
-    public int getpScore5() {
-        return pScore5;
-    }
-
-    public void setpScore5(int pScore5) {
-        this.pScore5 = pScore5;
-    }
-
-    public int getpScore6() {
-        return pScore6;
-    }
-
-    public void setpScore6(int pScore6) {
-        this.pScore6 = pScore6;
-    }
-
-    public int getpScore7() {
-        return pScore7;
-    }
-
-    public void setpScore7(int pScore7) {
-        this.pScore7 = pScore7;
-    }
-
-    public int getpScore8() {
-        return pScore8;
-    }
-
-    public void setpScore8(int pScore8) {
-        this.pScore8 = pScore8;
-    }
-
-    public int getpScore9() {
-        return pScore9;
-    }
-
-    public void setpScore9(int pScore9) {
-        this.pScore9 = pScore9;
-    }
-
-    public int getpScore10() {
-        return pScore10;
-    }
-
-    public void setpScore10(int pScore10) {
-        this.pScore10 = pScore10;
-    }
-
-    public int getpScore11() {
-        return pScore11;
-    }
-
-    public void setpScore11(int pScore11) {
-        this.pScore11 = pScore11;
     }
 
     public String getModel() {

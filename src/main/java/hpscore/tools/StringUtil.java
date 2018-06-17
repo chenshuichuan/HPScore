@@ -8,7 +8,10 @@ import java.util.regex.Pattern;
  * @author ouzhb
  */
 public class StringUtil {
+	public static void main(String[] args) {
 
+		System.out.println("getNextCell:"+StringUtil.getNextCell('A',20));
+	}
 	/**
 	 * 判断字符串是否为null、“ ”、“null”
 	 * @param obj
@@ -55,5 +58,45 @@ public class StringUtil {
         b[6] = (byte) (l >>> 8);  
         b[7] = (byte) (l);  
         return b;  
-    } 
+    }
+
+    //比较评委id或作品id，用于按序号由小到大排序
+	public static int comparePidOrProId(String pid1,String pid2){
+    	int i=0;
+    	int id1 = Integer.parseInt(pid1);
+		int id2 = Integer.parseInt(pid2);
+		if(id1>id2)i=1;
+		else if(id1<id2)i=-1;
+		return i;
+	}
+	//由大到小排序
+	public static int compareTwoDouble(double score1,double score2){
+		int i=0;
+		if(score1<score2)i=1;
+		else if(score1>score2)i=-1;
+		return i;
+	}
+
+	//根据起始单元格，计算结束单元格的大写字母，并返回
+	public static String getNextCell(char start,int next){
+		int nextCharNumber = ((int)start)+next;
+		return String.valueOf((char)(nextCharNumber));
+	}
+	//获取下一个字母
+	public String getNextUpEn(String en){
+		if(en==null || en.equals(""))
+			return "A";
+		char lastE = 'Z';
+		int lastEnglish = (int)lastE;
+		char[] c = en.toCharArray();
+		if(c.length>1){
+			return null;
+		}else{
+			int now = (int)c[0];
+			if(now >= lastEnglish)
+				return null;
+			char uppercase = (char)(now+1);
+			return String.valueOf(uppercase);
+		}
+	}
 }

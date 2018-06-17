@@ -16,14 +16,32 @@ public class Works {
     @GeneratedValue
     private int id;
     private String name;
-    private String code;
+    private String code;//序号
     private String model;
     private double finalScore;
     private String school;//
     private String teachers;//
     private String students;
     private int ranking;
+    //分赛区名称
+    private String partName;
+    //作品编号
+    private String BianHao;
 
+    public String getBianHao() {
+        return BianHao;
+    }
+
+    public void setBianHao(String bianHao) {
+        BianHao = bianHao;
+    }
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
     public Works() {
     }
     public Works(String name, String code, String model) {

@@ -40,6 +40,17 @@ public class PingweiScore {
     private double finalScore;
     private String model;
 
+    //作品编号
+    private String BianHao;
+
+    public String getBianHao() {
+        return BianHao;
+    }
+
+    public void setBianHao(String bianHao) {
+        BianHao = bianHao;
+    }
+
     public PingweiScore(int id, String pid, String proId,
                         int option1, int option2, int option3, int option4, int option5, int option6,
                         int totalScore, String model) {

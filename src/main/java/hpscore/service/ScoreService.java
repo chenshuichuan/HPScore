@@ -38,4 +38,8 @@ public interface ScoreService {
     List<InnovationScore> calculateInnovationScore(String model);
     List<InnovationScore> calculateUsefulScore(String model);
     List<Works> selectFinalScoreRanking(String model);
+
+    List<Works> getSumUpAward(String model);
+    List<Works> getInnovationAward(String model);
+    List<Works> getUsefulAward(String model);
 }
