@@ -2,7 +2,6 @@ package hpscore.service.impl;
 
 
 import hpscore.domain.*;
-import hpscore.repository.RelativeScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.*;
 import hpscore.tools.StringUtil;
@@ -30,8 +29,6 @@ public class ExcelServiceImpl implements ExcelService {
     private PingweiScoreService pingweiScoreService;
     @Autowired
     private PingweiService pingweiService;
-    @Autowired
-    private RelativeScoreRepository relativeScoreRepository;
 
     //原始打分审核表
     @Override
@@ -227,7 +224,7 @@ public class ExcelServiceImpl implements ExcelService {
             }
         });
 
-        String titleName = "2018泛珠赛全国总决赛终评评委打分审核表("+model+")";
+        String titleName = "2018泛珠赛全国总决赛终评评委打分转换表("+model+")";
         String pingweiName = "评委"+pid;
 
         Sheet sheet = wb.createSheet(pingweiName);
@@ -248,7 +245,7 @@ public class ExcelServiceImpl implements ExcelService {
         Row secondRow = sheet.createRow(1);
         secondRow.setHeightInPoints(40);
         Cell secondCell = secondRow.createCell(0);
-        secondCell.setCellValue("评委编号:"+pid+"      评委签名:         数据处理员: ");
+        secondCell.setCellValue("评委编号:"+pid+"      评委签名:                 数据处理员: ");
         secondCell.setCellStyle(styles.get("header"));
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$J$2"));
 
@@ -294,7 +291,7 @@ public class ExcelServiceImpl implements ExcelService {
         return  0;
     }
 
-    //相对分、创新分、实用分
+    //相对分、创新分、实用分  的平均分
     @Override
     public String relativeScoreExcel(String model) {
         //评委pid已经按照序号大小排序
@@ -380,7 +377,8 @@ public class ExcelServiceImpl implements ExcelService {
     private int CreateRelativeScore(Workbook wb, Map<String, CellStyle> styles,
                                     String[] headers,String model,List<String> pingweiStrList){
         //所有作品的相对分
-        List<RelativeScore>relativeScoreList = relativeScoreRepository.findByModel(model);
+        List<RelativeScore>relativeScoreList =
+                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
         //按照平均分排序
         Collections.sort(relativeScoreList,new Comparator() {
             @Override
@@ -390,12 +388,12 @@ public class ExcelServiceImpl implements ExcelService {
                     RelativeScore e2 = (RelativeScore) o2;
                     return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
                 }
-                throw new ClassCastException("不能转换为Works类型");
+                throw new ClassCastException("不能转换为RelativeScore类型");
             }
         });
-        String excelName = "相对平均分统计表("+model+")";
-
-        Sheet sheet = wb.createSheet(excelName);
+        String excelName = "2018泛珠赛总决赛终评相对平均分统计表("+model+")";
+        String sheetName = "相对平均分统计表("+model+")";
+        Sheet sheet = wb.createSheet(sheetName);
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
         sheet.setFitToPage(true);
@@ -426,18 +424,18 @@ public class ExcelServiceImpl implements ExcelService {
             Row row = sheet.createRow(rownum++);
             for (int j = 0; j < headers.length; j++) {
                 Cell cell = row.createCell(j);
-//                if(j==0){
-//                    cell.setCellValue(innovationScoreList.get(i).getProId());
-//                }
-//                else if(j==1){
-//                    cell.setCellValue(innovationScoreList.get(i).getBianHao());
-//                }else if(j==2){
-//                    cell.setCellValue(innovationScoreList.get(i).getProName());
-//                }
-//                else if(j>2&&j<=(pingweiStrList.size()+2)){
-//                    cell.setCellValue(innovationScoreList.get(i).getpScores()[j-3]);
-//                }
-//                else if(j==20)cell.setCellValue(innovationScoreList.get(i).getAverage());
+                if(j==0){
+                    cell.setCellValue(relativeScoreList.get(i).getProId());
+                }
+                else if(j==1){
+                    cell.setCellValue(relativeScoreList.get(i).getBianHao());
+                }else if(j==2){
+                    cell.setCellValue(relativeScoreList.get(i).getProName());
+                }
+                else if(j>2&&j<=(pingweiStrList.size()+2)){
+                    cell.setCellValue(relativeScoreList.get(i).getpScore()[j-3]);
+                }
+                else if(j==20)cell.setCellValue(relativeScoreList.get(i).getAverage());
             }
         }
         sheet.setColumnWidth(0, 6*256); //6 characters wide
@@ -445,7 +443,7 @@ public class ExcelServiceImpl implements ExcelService {
         sheet.setColumnWidth(2, 30*256); //30 characters wide
 
         for (int i = 3; i < headers.length; i++) {
-            sheet.setColumnWidth(i, 10*256); //30 characters wide
+            sheet.setColumnWidth(i, 8*256); //30 characters wide
         }
         return  0;
     }
@@ -456,9 +454,9 @@ public class ExcelServiceImpl implements ExcelService {
         //所有作品的创新分
         List<InnovationScore>innovationScoreList = scoreService.calculateInnovationScore(model);
 
-        String excelName = "创新分统计表("+model+")";
-
-        Sheet sheet = wb.createSheet(excelName);
+        String sheetName = "创新分统计表("+model+")";
+        String titleName = "2018泛珠赛总决赛终评创新分统计表("+model+")";
+        Sheet sheet = wb.createSheet(sheetName);
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
         sheet.setFitToPage(true);
@@ -468,7 +466,7 @@ public class ExcelServiceImpl implements ExcelService {
         Row titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(45);
         Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue(excelName);
+        titleCell.setCellValue(titleName);
         titleCell.setCellStyle(styles.get("title"));
         String str = StringUtil.getNextCell( 'A', 20);
         //
@@ -521,9 +519,10 @@ public class ExcelServiceImpl implements ExcelService {
         //所有作品的创新分
         List<InnovationScore>innovationScoreList = scoreService.calculateUsefulScore(model);
 
-        String excelName = "实用分统计表("+model+")";
+        String sheetName = "实用分统计表("+model+")";
+        String titleName = "2018泛珠赛总决赛终评实用分统计表("+model+")";
 
-        Sheet sheet = wb.createSheet(excelName);
+        Sheet sheet = wb.createSheet(sheetName);
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
         sheet.setFitToPage(true);
@@ -533,7 +532,7 @@ public class ExcelServiceImpl implements ExcelService {
         Row titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(45);
         Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue(excelName);
+        titleCell.setCellValue(titleName);
         titleCell.setCellStyle(styles.get("title"));
         String str = StringUtil.getNextCell( 'A', 20);
         //
@@ -576,7 +575,6 @@ public class ExcelServiceImpl implements ExcelService {
         }
         return  0;
     }
-
 
     @Override
     public String finalScoreExcel(String model) {
@@ -680,6 +678,118 @@ public class ExcelServiceImpl implements ExcelService {
             sheet.setColumnWidth(i, 30*256); //30 characters wide
         }
 
+        return  0;
+    }
+    ////评分统计表，各个子项的平均分
+    @Override
+    public String scoringSumUpExcel(String model) {
+        String[] headers = {
+                "序号","作品编号", "作品名称",
+                "选题\n(平均分)","科学性\n(平均分)","创新性\n(平均分)",
+                "难易度\n(平均分)","实用价值\n(平均分)","答辩效果\n(平均分)"
+                ,"相对分\n(平均分)","相对分排序","创新分排序","实用分排序"};
+
+        String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+")";
+        Workbook wb = new HSSFWorkbook();
+        Map<String, CellStyle> styles = createStyles(wb);
+        CreateSumUpAverage(wb, styles, headers, model);
+        // Write the output to a file
+        String file = excelName+".xls";
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            wb.write(out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return file;
+    }
+
+    private int CreateSumUpAverage(Workbook wb, Map<String, CellStyle> styles,
+                                   String[] headers, String model){
+        //所有作品的相对分
+        List<RelativeScore>relativeScoreList =
+                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
+        //按照总分的平均分排序
+        Collections.sort(relativeScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof RelativeScore && o2 instanceof RelativeScore){
+                    RelativeScore e1 = (RelativeScore) o1;
+                    RelativeScore e2 = (RelativeScore) o2;
+                    return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
+                }
+                throw new ClassCastException("不能转换为RelativeScore类型");
+            }
+        });
+        String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+")";
+
+        Sheet sheet = wb.createSheet(excelName);
+        PrintSetup printSetup = sheet.getPrintSetup();
+        printSetup.setLandscape(true);
+        sheet.setFitToPage(true);
+        sheet.setHorizontallyCenter(true);
+
+        //title row
+        Row titleRow = sheet.createRow(0);
+        titleRow.setHeightInPoints(45);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue(excelName);
+        titleCell.setCellStyle(styles.get("title"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:M$1"));
+
+        //second row
+        Row secondRow = sheet.createRow(1);
+        secondRow.setHeightInPoints(40);
+        Cell secondCell = secondRow.createCell(0);
+        secondCell.setCellValue("数据处理员：");
+        secondCell.setCellStyle(styles.get("header"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$M$2"));
+
+
+        //header row
+        Row headerRow = sheet.createRow(2);
+        headerRow.setHeightInPoints(40);
+        Cell headerCell;
+        for (int i = 0; i < headers.length; i++) {
+            headerCell = headerRow.createCell(i);
+            headerCell.setCellValue(headers[i]);
+            headerCell.setCellStyle(styles.get("header"));
+        }
+
+        int rownum = 3;
+        for (int i = 0; i < relativeScoreList.size(); i++) {
+            Row row = sheet.createRow(rownum++);
+            for (int j = 0; j < headers.length; j++) {
+                Cell cell = row.createCell(j);
+                if(j==0){
+                    cell.setCellValue(relativeScoreList.get(i).getProId());
+                }
+                else if(j==1){
+                    cell.setCellValue(relativeScoreList.get(i).getBianHao());
+                }else if(j==2){
+                    cell.setCellValue(relativeScoreList.get(i).getProName());
+                }
+                else if(j>2&&j<=8){
+                    cell.setCellValue(relativeScoreList.get(i).getpAverage()[j-3]);
+                }
+                else if(j==9){
+                    cell.setCellValue(relativeScoreList.get(i).getAverage());
+                }
+            }
+        }
+        sheet.setColumnWidth(0, 6*256); //6 characters wide
+        sheet.setColumnWidth(1, 10*256); //10 characters wide
+        sheet.setColumnWidth(2, 30*256); //30 characters wide
+
+        for (int i = 3; i < headers.length; i++) {
+            sheet.setColumnWidth(i, 10*256); //30 characters wide
+        }
         return  0;
     }
 }

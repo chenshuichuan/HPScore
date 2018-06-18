@@ -22,7 +22,10 @@ public interface ScoreRepository extends JpaRepository<Score,Integer>{
 
 
     List<Score> findByModel(String model);
+    //查询评委的所有评分记录
     List<Score> findByPidAndModel(String pid,String model);
+    //查询某作品的所有评委评分记录
+    List<Score> findByProIdAndModel(String proId,String model);
     Score findByPidAndProIdAndModel(String pid, String proId,String model);
 
     //查找记录录入次数少于2次的记录

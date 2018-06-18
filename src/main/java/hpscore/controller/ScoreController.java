@@ -8,7 +8,6 @@ package hpscore.controller;/**
 import com.alibaba.fastjson.JSONObject;
 import hpscore.domain.*;
 import hpscore.repository.PingweiRepository;
-import hpscore.repository.RelativeScoreRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.ExcelService;
@@ -55,9 +54,6 @@ public class ScoreController {
     private PingweiRepository pingweiRepository;
     @Autowired
     private ExcelService excelService;
-
-    @Autowired
-    private RelativeScoreRepository relativeScoreRepository;
 
     //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/selectByPidAndProIdAndModel",method = RequestMethod.GET)
@@ -200,7 +196,8 @@ public class ScoreController {
             @RequestParam("model")String model){
 
         Map<String,Object> map =new HashMap<String,Object>();
-        List<RelativeScore> relativeScores = relativeScoreRepository.findByModel(model);
+        List<RelativeScore> relativeScores = null;
+                //relativeScoreRepository.findByModel(model);
         //为查找到数据是score为null
         if (relativeScores!=null) {
 
@@ -237,17 +234,19 @@ public class ScoreController {
             @RequestParam("model")String model){
 
         Map<String,Object> map =new HashMap<String,Object>();
-        String result = scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
+
+        List<RelativeScore> relativeScoreList = scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
         //计算成功
-        if (result.equals("0")) {
+        if (relativeScoreList!=null) {
             map.put("result",1);
+            map.put("relativeScoreList",relativeScoreList);
             map.put("message","相对分平均分计算成功！");
         }
         else{
             map.put("result",0);
-            map.put("message","第"+result+"个作品的相对分平均分计算失败！");
+            map.put("relativeScoreList",null);
+            map.put("message","平均分计算失败！");
         }
-
         return map;
     }
 

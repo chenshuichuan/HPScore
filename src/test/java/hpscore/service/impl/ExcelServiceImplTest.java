@@ -25,29 +25,38 @@ public class ExcelServiceImplTest {
     @Autowired
     private ExcelService excelService;
 
+    private String model1="本科组";
+    //private String model1="高专高职组";
     @Test
     public void reviewExcel() throws Exception {
-        String result = excelService.reviewExcel("本科组");
+        String result = excelService.reviewExcel(model1);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void reviewTransferExcel() throws Exception {
-        String result = excelService.reviewTransferExcel("本科组");
+        String result = excelService.reviewTransferExcel(model1);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void relativeScoreExcel() throws Exception {
-        String result = excelService.relativeScoreExcel("本科组");
+        String result = excelService.relativeScoreExcel(model1);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void finalScoreExcel() throws Exception {
 
-        String result = excelService.finalScoreExcel("本科组");
+        String result = excelService.finalScoreExcel(model1);
         Assert.assertThat(result,notNullValue());
     }
 
+
+    @Test
+    public void scoringSumUpExcel() throws Exception {
+
+        String result = excelService.scoringSumUpExcel(model1);
+        Assert.assertThat(result,notNullValue());
+    }
 }

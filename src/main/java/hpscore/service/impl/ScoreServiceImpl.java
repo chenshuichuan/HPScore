@@ -3,10 +3,10 @@ package hpscore.service.impl;
 
 import hpscore.domain.*;
 import hpscore.repository.PingweiRepository;
-import hpscore.repository.RelativeScoreRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.ScoreService;
+import hpscore.tools.ScoreUtil;
 import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +30,6 @@ public class ScoreServiceImpl implements ScoreService {
     PingweiRepository pingweiRepository;
     @Autowired
     WorksRepository worksRepository;
-
-    @Autowired
-    RelativeScoreRepository relativeScoreRepository;
 
     @Override
     public int add(Score score) {
@@ -124,7 +121,7 @@ public class ScoreServiceImpl implements ScoreService {
         return index;
     }
 
-    //根据评委的pid(对应code)和model计算该评委的所有评分的相对分，和
+    //根据评委的pid(对应code)和model计算该评委的所有评分的相对分，
     @Override
     public int calculateByCodeAndModel(String code,String model){
         List<Score> scores = scoreRepository.findByPidAndModel(code,model);
@@ -171,136 +168,115 @@ public class ScoreServiceImpl implements ScoreService {
             if(score1!=null)System.out.println("评委"+code+"-作品"+score1.getProId()+",相对分保存成功！");
             else System.out.println("评委"+code+"-作品"+score.getProId()+",相对分保存失败！");
 
-            //保存到相对分到评分汇总表
-            saveRelativeScoreByPidAndProIdAndModel(code,score.getProId(), model, relativeScore);
         }
         return 1;
     }
 
+
+    //计算相对分的平均分、最大分、最小分,返回计算出的平均分表
     @Override
-    public int saveRelativeScoreByProIdAndModel(RelativeScore relativeScore) {
+    public List<RelativeScore> calculteRelativeScoreAverageAndMaxAndMin(String model) {
 
-        RelativeScore temp = relativeScoreRepository.findByProIdAndModel(
-                relativeScore.getProId(),relativeScore.getModel());
-        if(temp==null){
-            RelativeScore relativeScore3 = relativeScoreRepository.save(relativeScore);
-            logger.info("添加，RelativeScore id="+relativeScore3.getId());
-        }
-        else{
-            logger.info("更新，RelativeScore id="+temp.getProId());
-            relativeScore.setId(temp.getId());
-            RelativeScore relativeScore1 = relativeScoreRepository.save(temp);
-        }
-        return 0;
-    }
+        ////得到相关model的所有数据，要求此时score表的相对分已经计算完成，否则得出的分数无意义
+        List<Works> worksList = worksRepository.findByModel(model);
+        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
+        if(pingweiList==null||pingweiList.size()==0)return null;
+        int pingweiSize = pingweiList.size();
 
-    @Override
-    public int saveRelativeScoreByPidAndProIdAndModel(
-            String pid, String proId, String model,double pscore) {
+        List<RelativeScore> relativeScoreList = new ArrayList<>();
+        //根据作品构造相对平均分、创新平均分，实用平均分等
+        for(Works works: worksList){
+            List<Score> scoreList = scoreRepository.findByProIdAndModel(works.getCode(),model);
+            double[] maxScore ={0,0,0,0,0,0,0};//相对分最大分、6个单项的最大分
+            double[] minScore ={100,100,100,100,100,100,100};
+            double[] totalScore = {0,0,0,0,0,0,0};//总分
+            double[] average ={0,0,0,0,0,0,0};
+            RelativeScore relativeScore = new RelativeScore(
+                    works.getCode(),works.getName(),model,pingweiSize);
+            for (Score score: scoreList){
+                double decimalDouble = ScoreUtil.DecimalDouble(score.getFinalScore()
+                        ,3);
+                score.setFinalScore(decimalDouble);//保留三位小数
 
-        RelativeScore temp = relativeScoreRepository.findByProIdAndModel(
-                proId,model);
-        //直接更新
-        if(temp!=null){
-        }
-        //要先添加
-        else{
-            Works works = worksRepository.findByCodeAndModel(proId,model);
-            if (works!=null){
-                temp = new RelativeScore(works.getCode(),works.getName(),model);
-            }
-            else{
-                logger.info("saveRelativeScoreByPidAndProIdAndModel 添加相对分失败！作品不存在");
-                return -1;
-            }
-        }
-        switch (pid){
-            case "1":{
-                temp.setpScore1(pscore);
-            }break;
-            case "2":{
-                temp.setpScore2(pscore);
-            }break;
-            case "3":{
-                temp.setpScore3(pscore);
-            }break;
-            case "4":{
-                temp.setpScore4(pscore);
-            }break;
-            case "5":{
-                temp.setpScore5(pscore);
-            }break;
-            case "6":{
-                temp.setpScore6(pscore);
-            }break;
-            case "7":{
-                temp.setpScore7(pscore);
-            }break;
-            case "8":{
-                temp.setpScore8(pscore);
-            }break;
-            case "9":{
-                temp.setpScore9(pscore);
-            }break;
-            case "10":{
-                temp.setpScore10(pscore);
-            }break;
-            case "11":{
-                temp.setpScore11(pscore);
-            }break;
-            default:
-                logger.info("saveRelativeScoreByPidAndProIdAndModel: pid 出错！");
-        }
-        saveRelativeScoreByProIdAndModel(temp);
-        return 0;
-    }
-
-    //计算相对分的平均分、最大分、最小分,失败返回失败的作品proid，成功返回"0"
-    @Override
-    public String calculteRelativeScoreAverageAndMaxAndMin(String model) {
-
-        List<RelativeScore> relativeScoreList =  relativeScoreRepository.findByModel(model);
-
-        //记录条数是否符合
-        //        if(relativeScoreList.size()!=11){
-        //        }
-        String proId = "0";
-        //所有的分数要在70-90分之间
-        for (RelativeScore relativeScore:relativeScoreList){
-            if( AllScoreIsOk(relativeScore)){
-                //都符合，开始计算
-                double maxScore = GetMaxRelativeScore(relativeScore);
-                double minScore = GetMinRelativeScore(relativeScore);
-                double average =  (GetTotalScore(relativeScore)-maxScore-minScore)/11.0;
-                //保留四位小数
-                BigDecimal b = new BigDecimal(average);
-                average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
-
-                relativeScore.setMaxScore(maxScore);
-                relativeScore.setMinScore(minScore);
-                relativeScore.setAverage(average);
-                //相对分平均分写入作品表
-                Works works = worksRepository.findByCodeAndModel(relativeScore.getProId(),model);
-                if(works!=null){
-                    works.setFinalScore(average);
-                    worksRepository.save(works);
+                //设置某评委的相对分
+                int pid = Integer.parseInt(score.getPid());
+                if(pid>=1&&pid<=pingweiSize)relativeScore.getpScore()[pid-1]=score.getFinalScore();
+                else {
+                    logger.info("pid出错！请保证评委序号从1开始！请保证数据库数据存在！");
                 }
-                //出错
-                else{
-                    proId=relativeScore.getProId();
-                    break;
-                }
-                saveRelativeScoreByProIdAndModel(relativeScore);
+                //
+                CompareToMaxAndMin(maxScore,minScore,totalScore,score);
+            }
+            //计算平均分
+            for (int i=0;i<7;i++){
+                average[i] = (totalScore[i]-maxScore[i]-minScore[i])/(double)pingweiSize;
+                //保留三位小数
+                average[i] = ScoreUtil.DecimalDouble(average[i],3);
+            }
+
+            relativeScore.setBianHao(works.getBianHao());
+            relativeScore.setMinScore(minScore[0]);
+            relativeScore.setMaxScore(maxScore[0]);
+            relativeScore.setAverage(average[0]);
+            for (int i=0;i<6;i++){
+                relativeScore.getpAverage()[i]=average[i+1];
+            }
+
+            relativeScoreList.add(relativeScore);
+
+            //相对分平均分写入作品表
+            Works works1 = worksRepository.findByCodeAndModel(relativeScore.getProId(),model);
+            if(works1!=null){
+                works1.setFinalScore(average[0]);
+                worksRepository.save(works1);
             }
             //出错
             else{
-                proId=relativeScore.getProId();
-                break;
+                logger.info("该作品序号不存在！请检查数据库！");
             }
         }
-        return proId;
+        return relativeScoreList;
     }
+    private int CompareToMaxAndMin(double[]maxScore,double[] minScore,double[] totalScore,Score score){
+        if (maxScore[0]<score.getFinalScore())
+            maxScore[0]=score.getFinalScore();
+        if (maxScore[1]<score.getOption1())
+            maxScore[1]=score.getOption1();
+        if (maxScore[2]<score.getOption2())
+            maxScore[2]=score.getOption2();
+        if (maxScore[3]<score.getOption3())
+            maxScore[3]=score.getOption3();
+        if (maxScore[4]<score.getOption4())
+            maxScore[4]=score.getOption4();
+        if (maxScore[5]<score.getOption5())
+            maxScore[5]=score.getOption5();
+        if (maxScore[6]<score.getOption6())
+            maxScore[6]=score.getOption6();
 
+        if (minScore[0]>score.getFinalScore())
+            minScore[0]=score.getFinalScore();
+        if (minScore[1]>score.getOption1())
+            minScore[1]=score.getOption1();
+        if (minScore[2]>score.getOption2())
+            minScore[2]=score.getOption2();
+        if (minScore[3]>score.getOption3())
+            minScore[3]=score.getOption3();
+        if (minScore[4]>score.getOption4())
+            minScore[4]=score.getOption4();
+        if (minScore[5]>score.getOption5())
+            minScore[5]=score.getOption5();
+        if (minScore[6]>score.getOption6())
+            minScore[6]=score.getOption6();
+
+        totalScore[0]+=score.getFinalScore();
+        totalScore[1]+=score.getOption1();
+        totalScore[2]+=score.getOption2();
+        totalScore[3]+=score.getOption3();
+        totalScore[4]+=score.getOption4();
+        totalScore[5]+=score.getOption5();
+        totalScore[6]+=score.getOption6();
+        return 0;
+    }
     private boolean ScoreIsOk(double relativeScore){
         boolean result = true;
         //相对分应该在[70,90]之间
@@ -312,118 +288,24 @@ public class ScoreServiceImpl implements ScoreService {
     }
     private boolean AllScoreIsOk(RelativeScore relativeScore){
         boolean result = false;
-        //相对分应该在[70,90]之间
-        if(ScoreIsOk(relativeScore.getpScore1())&&
-                ScoreIsOk(relativeScore.getpScore2())&&
-                ScoreIsOk(relativeScore.getpScore3())&&
-                ScoreIsOk(relativeScore.getpScore4())&&
-                ScoreIsOk(relativeScore.getpScore5())&&
-                ScoreIsOk(relativeScore.getpScore6())
-                ) {
-            if (ScoreIsOk(relativeScore.getpScore7()) &&
-                    ScoreIsOk(relativeScore.getpScore8()) &&
-                    ScoreIsOk(relativeScore.getpScore9()) &&
-                    ScoreIsOk(relativeScore.getpScore10()) &&
-                    ScoreIsOk(relativeScore.getpScore11())
-                    ) {
-                result = true;
-            }
-        }
+//        //相对分应该在[70,90]之间
+//        if(ScoreIsOk(relativeScore.getpScore1())&&
+//                ScoreIsOk(relativeScore.getpScore2())&&
+//                ScoreIsOk(relativeScore.getpScore3())&&
+//                ScoreIsOk(relativeScore.getpScore4())&&
+//                ScoreIsOk(relativeScore.getpScore5())&&
+//                ScoreIsOk(relativeScore.getpScore6())
+//                ) {
+//            if (ScoreIsOk(relativeScore.getpScore7()) &&
+//                    ScoreIsOk(relativeScore.getpScore8()) &&
+//                    ScoreIsOk(relativeScore.getpScore9()) &&
+//                    ScoreIsOk(relativeScore.getpScore10()) &&
+//                    ScoreIsOk(relativeScore.getpScore11())
+//                    ) {
+//                result = true;
+//            }
+//        }
         return  result;
-    }
-
-    private double GetMaxRelativeScore(RelativeScore relativeScore){
-        double maxScore = 0;
-        //相对分应该在[70,90]之间
-
-        if(relativeScore.getpScore1()>maxScore){
-            maxScore = relativeScore.getpScore1();
-        }
-        if(relativeScore.getpScore2()>maxScore){
-            maxScore = relativeScore.getpScore2();
-        }
-        if(relativeScore.getpScore3()>maxScore){
-            maxScore = relativeScore.getpScore3();
-        }
-        if(relativeScore.getpScore4()>maxScore){
-            maxScore = relativeScore.getpScore4();
-        }
-        if(relativeScore.getpScore5()>maxScore){
-            maxScore = relativeScore.getpScore5();
-        }
-
-        if(relativeScore.getpScore6()>maxScore){
-            maxScore = relativeScore.getpScore6();
-        }
-        if(relativeScore.getpScore7()>maxScore){
-            maxScore = relativeScore.getpScore7();
-        }
-        if(relativeScore.getpScore8()>maxScore){
-            maxScore = relativeScore.getpScore8();
-        }
-        if(relativeScore.getpScore9()>maxScore){
-            maxScore = relativeScore.getpScore9();
-        }
-        if(relativeScore.getpScore10()>maxScore){
-            maxScore = relativeScore.getpScore10();
-        }
-        if(relativeScore.getpScore11()>maxScore){
-            maxScore = relativeScore.getpScore11();
-        }
-        if (maxScore==0.0)logger.info("maxScore==0.0");
-        return  maxScore;
-    }
-    private double GetMinRelativeScore(RelativeScore relativeScore){
-        double minScore = 100;
-        //相对分应该在[70,90]之间
-
-        if(relativeScore.getpScore1()<minScore){
-            minScore = relativeScore.getpScore1();
-        }
-        if(relativeScore.getpScore2()<minScore){
-            minScore = relativeScore.getpScore2();
-        }
-        if(relativeScore.getpScore3()<minScore){
-            minScore = relativeScore.getpScore3();
-        }
-        if(relativeScore.getpScore4()<minScore){
-            minScore = relativeScore.getpScore4();
-        }
-        if(relativeScore.getpScore5()<minScore){
-            minScore = relativeScore.getpScore5();
-        }
-
-        if(relativeScore.getpScore6()<minScore){
-            minScore = relativeScore.getpScore6();
-        }
-        if(relativeScore.getpScore7()<minScore){
-            minScore = relativeScore.getpScore7();
-        }
-        if(relativeScore.getpScore8()<minScore){
-            minScore = relativeScore.getpScore8();
-        }
-        if(relativeScore.getpScore9()<minScore){
-            minScore = relativeScore.getpScore9();
-        }
-        if(relativeScore.getpScore10()<minScore){
-            minScore = relativeScore.getpScore10();
-        }
-        if(relativeScore.getpScore11()<minScore){
-            minScore = relativeScore.getpScore11();
-        }
-        if (minScore==100.0)logger.info("minScore==0.0");
-        return  minScore;
-    }
-    private double GetTotalScore(RelativeScore relativeScore){
-        double totalScore = 0;
-        //相对分应该在[70,90]之间
-        totalScore = relativeScore.getpScore1()+relativeScore.getpScore2()+
-                relativeScore.getpScore3()+relativeScore.getpScore4()+
-                relativeScore.getpScore5()+relativeScore.getpScore6()+
-                relativeScore.getpScore7()+relativeScore.getpScore8()+
-                relativeScore.getpScore9()+relativeScore.getpScore10()+
-                relativeScore.getpScore11();
-        return  totalScore;
     }
 
     //计算创新性分数
@@ -458,8 +340,8 @@ public class ScoreServiceImpl implements ScoreService {
                 }
             }
             double average = (double)(totalScore-maxScore-minScore)/(double)11;
-            BigDecimal b = new BigDecimal(average);
-            average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+            //保留三位小数
+            average = ScoreUtil.DecimalDouble(average,3);
 
             innovationScore.setMaxScore(maxScore);
             innovationScore.setMinScore(minScore);
@@ -511,8 +393,8 @@ public class ScoreServiceImpl implements ScoreService {
                 }
             }
             double average = (double)(totalScore-maxScore-minScore)/11.0;
-            BigDecimal b = new BigDecimal(average);
-            average = b.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+            //保留三位小数
+            average = ScoreUtil.DecimalDouble(average,3);
 
             logger.info("average="+average);
             innovationScore.setMaxScore(maxScore);
@@ -563,6 +445,18 @@ public class ScoreServiceImpl implements ScoreService {
             works.setFinalScore(innovationScore.getAverage());//将平均分设置为创新奖的平均分
             worksList.add(works);
         }
+        //按照平均分排序
+        Collections.sort(worksList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof Works && o2 instanceof Works){
+                    Works e1 = (Works) o1;
+                    Works e2 = (Works) o2;
+                    return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
+                }
+                throw new ClassCastException("不能转换为Works类型");
+            }
+        });
         return worksList;
     }
     //获得实用奖列表 按照平均分排序
@@ -575,6 +469,18 @@ public class ScoreServiceImpl implements ScoreService {
             works.setFinalScore(innovationScore.getAverage());//将平均分设置为实用奖的平均分
             worksList.add(works);
         }
+        //按照平均分排序
+        Collections.sort(worksList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof Works && o2 instanceof Works){
+                    Works e1 = (Works) o1;
+                    Works e2 = (Works) o2;
+                    return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
+                }
+                throw new ClassCastException("不能转换为Works类型");
+            }
+        });
         return worksList;
     }
 }

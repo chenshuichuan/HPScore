@@ -17,4 +17,6 @@ public interface ExcelService {
     //最终作品相对分平均分排名表
     String finalScoreExcel(String model);
 
+    //评分统计表，各个子项的平均分
+    String scoringSumUpExcel(String model);
 }

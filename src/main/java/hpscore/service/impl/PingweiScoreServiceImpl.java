@@ -10,6 +10,7 @@ import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.PingweiScoreService;
 import hpscore.service.ScoreService;
+import hpscore.tools.ScoreUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,9 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
                         score.getOption1(),score.getOption2(),score.getOption3(),
                         score.getOption4(),score.getOption5(),score.getOption6(),
                         score.getTotalScore(),score.getModel());
-                pingweiScore.setFinalScore(score.getFinalScore());
+                //保留三位小数
+                double decimalDouble = ScoreUtil.DecimalDouble(score.getFinalScore(),3);
+                pingweiScore.setFinalScore(decimalDouble);
 
                 Pingwei pingwei = pingweiRepository.findByCodeAndModel(score.getPid(),score.getModel());
                 if (pingwei!=null)pingweiScore.setpName(pingwei.getName());

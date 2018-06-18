@@ -54,4 +54,5 @@ public class ScoreRepositoryTest {
         Assert.assertThat(scores.size(),greaterThan(2));
     }
 
+
 }

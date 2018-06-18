@@ -25,14 +25,8 @@ public interface ScoreService {
     int calculateRelativeScore(String model,List<String> pingweiList);
     int calculateByCodeAndModel(String code,String model);
 
-    //根据作品id和model保存作品的相对评分
-    int saveRelativeScoreByProIdAndModel(RelativeScore relativeScore);
-
-    //根据评委id作品id和model，保存该评委对该作品的相对评分
-    int saveRelativeScoreByPidAndProIdAndModel(String pid, String proId,String model,double pscore);
-
-    //计算相对分的平均分、最大分、最小分,失败返回失败的作品proid，成功返回"0"
-    String calculteRelativeScoreAverageAndMaxAndMin(String model);
+    //计算相对分的平均分、最大分、最小分,
+    List<RelativeScore>  calculteRelativeScoreAverageAndMaxAndMin(String model);
 
 
     List<InnovationScore> calculateInnovationScore(String model);
