@@ -7,7 +7,6 @@
           content="admin, dashboard, bootstrap, template, flat, modern, theme, responsive, fluid, retina, backend, html5, css, css3">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-
     <title>评分录入记录</title>
     <link rel="shortcut icon" href="../static/images/invoice-logo.jpg"
           th:href="@{images/invoice-logo.jpg}" type="image/png">
@@ -15,7 +14,6 @@
     <link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>
     <link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>
     <link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>
-
     <!--common-->
     <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet">
     <link href="../static/css/style-responsive.css" th:href="@{css/style-responsive.css}" rel="stylesheet">
@@ -74,25 +72,14 @@
                                                     th:text="${pingwei}"></option>
                                         </select>
                                     </th>
-                                    <th>
-                                        &nbsp;&nbsp;&nbsp;
-                                    </th>
-                                    <th>
-                                        <!--<button id="export-bt" type="button" class="btn btn-success">导出该评委评分表</button>-->
-                                        <div id="export-bt">
-                                            <a data-type="xls" href="javascript:;">导出excel</a>
-                                            <!--<a data-type="csv" href="javascript:;">导出csv</a>-->
-                                            <!--<a data-type="pdf" href="javascript:;">导出pdf</a>-->
-                                        </div>
-                                    </th>
                                 </tr>
                                 </thead>
                             </table>
                             <div class="adv-table">
-                                <table class="display table table-bordered table-striped" id="dynamic-table">
+                                <table class="display table table-bordered table-striped" id="search-table">
                                     <thead>
                                     <tr>
-                                        <th>作品编号</th>
+                                        <th>作品序号</th>
                                         <th>作品名称</th>
                                         <th>选题</th>
                                         <th>科学性</th>
@@ -140,10 +127,7 @@
 <script src="../static/plugins/advanced-datatable/js/jquery.dataTables.js" th:src="@{plugins/advanced-datatable/js/jquery.dataTables.js}"></script>
 <script src="../static/plugins/data-tables/DT_bootstrap.js" th:src="@{plugins/data-tables/DT_bootstrap.js}"></script>
 <!--dynamic table initialization -->
-<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>
-
-<!--title time initialization-->
-<script src="../static/js/tableExport.js" th:src="@{js/tableExport.js}"></script>
+<!--<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>-->
 
 <script>
     //根据评委和model查询该评委的所有打分数据
@@ -164,8 +148,10 @@
     }
     $(document).ready(function(){
         var model = getCookie("model");
-        $("#head-title").append("评分录入记录-"+model);
+        if(model==="本科组") $("#head-title").append("评分录入记录-"+model);
+        else $("#head-title").append("评分录入记录-"+model);
         $("#record3").addClass("active");
+
     });
     //监听选择框改变事件
     document.getElementById('select-pingwei').addEventListener('change',function(){
@@ -193,16 +179,5 @@
     });
 </script>
 
-<script>
-    var $exportLink = document.getElementById('export-bt');
-    $exportLink.addEventListener('click', function(e) {
-        var pingwei = $("#select-pingwei").val();
-        var model = getCookie("model");
-        e.preventDefault();
-        if (e.target.nodeName === "A") {
-            tableExport('dynamic-table', model+pingwei, e.target.getAttribute('data-type'));
-        }
-    }, false);
-</script>
 </body>
 </html>

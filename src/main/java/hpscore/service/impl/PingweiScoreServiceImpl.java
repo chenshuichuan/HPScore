@@ -11,6 +11,7 @@ import hpscore.repository.WorksRepository;
 import hpscore.service.PingweiScoreService;
 import hpscore.service.ScoreService;
 import hpscore.tools.ScoreUtil;
+import hpscore.tools.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +46,23 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
         return pingweiScoreList;
     }
 
+    //根据model和评委id ，返回该评委的评分数据
     @Override
     public List<PingweiScore> selectByPidAndModel(String pid, String model) {
         List<Score> scoreList= scoreRepository.findByPidAndModel(pid,model);
         List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
+        //按照作品id排序
+        Collections.sort(pingweiScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof PingweiScore && o2 instanceof PingweiScore){
+                    PingweiScore e1 = (PingweiScore) o1;
+                    PingweiScore e2 = (PingweiScore) o2;
+                    return StringUtil.comparePidOrProId(e1.getProId(),e2.getProId());
+                }
+                throw new ClassCastException("不能转换为PingweiScore类型");
+            }
+        });
         return pingweiScoreList;
     }
 
@@ -94,6 +108,29 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
             }
         });
 
+        return pingweiScoreList;
+    }
+
+    //根据model和评委id ，返回该评委的评分数据
+    @Override
+    public List<PingweiScore> selectByPidAndEditorAndModel(String pid,String editor, String model) {
+        List<Score> scoreList= scoreRepository.findByPidAndEditor1AndModel(pid,editor,model);
+        List<Score> scoreList2= scoreRepository.findByPidAndEditor2AndModel(pid,editor,model);
+        scoreList.addAll(scoreList2);
+
+        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
+        //按照作品id排序
+        Collections.sort(pingweiScoreList,new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                if(o1 instanceof PingweiScore && o2 instanceof PingweiScore){
+                    PingweiScore e1 = (PingweiScore) o1;
+                    PingweiScore e2 = (PingweiScore) o2;
+                    return StringUtil.comparePidOrProId(e1.getProId(),e2.getProId());
+                }
+                throw new ClassCastException("不能转换为Works类型");
+            }
+        });
         return pingweiScoreList;
     }
 }

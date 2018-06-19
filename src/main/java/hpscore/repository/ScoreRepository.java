@@ -19,6 +19,8 @@ public interface ScoreRepository extends JpaRepository<Score,Integer>{
 
     List<Score> findByEditor1AndModel(String editor1, String model);
     List<Score> findByEditor2AndModel(String editor2, String model);
+    List<Score> findByPidAndEditor1AndModel(String pid,String editor1, String model);
+    List<Score> findByPidAndEditor2AndModel(String pid,String editor2, String model);
 
 
     List<Score> findByModel(String model);

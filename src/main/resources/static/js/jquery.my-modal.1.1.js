@@ -50,24 +50,6 @@ var MyModal = (function() {
 				that.hide();
 			});
 
-            // $("#save-1").on("click", function(event) {
-            //     var pid =  $('#pingwei2').text();
-            //     var proId =$('#works2').text();
-            //     var option1 =$('#option21').text();
-            //     var option2 =$('#option22').text();
-            //     var option3 =$('#option23').text();
-            //     var option4 =$('#option24').text();
-            //     var option5 =$('#option25').text();
-            //     var option6 =$('#option26').text();
-            //     var editor = $('#editor2').text();
-            //     var result = addAsUpdate(pid,proId,option1,option2,option3,option4,option5,option6,editor);
-            //     if (result===1){
-            //         setCookie("saveChoice",1);
-            //         that.fn();
-            //         that.hide();
-            //     }
-            // });
-
             //强制保存/就是更新后台数据
             $("#save-1").on("click", function(event) {
                 var pid = $('#select-pingwei2').val();
@@ -81,7 +63,10 @@ var MyModal = (function() {
                 var editor = $('#editor2').text();
                 var result = addAsUpdate(pid,proId,option1,option2,option3,option4,option5,option6,editor);
                 if (result===1){
-                    alert("数据保存成功！")
+                    alert("数据保存成功！");
+                    //设置按钮为绿色
+                    var myId="input"+proId+7;
+                    $("#"+myId).attr("class","btn btn-success");
                     that.fn();
                     that.hide();
                 }

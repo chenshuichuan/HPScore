@@ -67,4 +67,29 @@ public class PingweiScoreController {
 
         return map;
     }
+
+    //根据评委和model查询该评委所有的评分记录，
+    @RequestMapping(value = "/selectByPidAndEditorAndModel",method = RequestMethod.GET)
+    public Map<String,Object> selectByPidAndEditorAndModel(
+            @RequestParam("pid")String pid,
+            @RequestParam("editor")String editor,
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<PingweiScore> pingweiScoreList =
+                pingweiScoreService.selectByPidAndEditorAndModel(pid,editor,model);
+        //为查找到数据是score为null
+        if (pingweiScoreList.size()>0) {
+            System.out.println("selectByPidAndModel size="+pingweiScoreList.size());
+            map.put("result",1);
+            map.put("pingweiScoreList",pingweiScoreList);
+            map.put("message","找到对应数据");
+        }
+        else{
+            map.put("result",0);
+            map.put("pingweiScoreList",null);
+            map.put("message","未找到对应数据");
+        }
+        return map;
+    }
 }

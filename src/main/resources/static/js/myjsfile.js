@@ -20,16 +20,16 @@ $(document).ready(function(){
         var count=document.getElementById("count");
         count.style.display='none';
     }
-    //不是本科组，隐藏record1
-    if(model != "本科组"){
-        var count=document.getElementById("record1");
-        count.style.display='none';
-    }
-    //不是本科组，隐藏record2
-    if(model != "高职高专组"){
-        var count=document.getElementById("record2");
-        count.style.display='none';
-    }
+    // //不是本科组，隐藏record1
+    // if(model != "本科组"){
+    //     var count=document.getElementById("record1");
+    //     count.style.display='none';
+    // }
+    // //不是本科组，隐藏record2
+    // if(model != "高职高专组"){
+    //     var count=document.getElementById("record2");
+    //     count.style.display='none';
+    // }
 
 
     $("#logout").click(function (e) {
@@ -45,10 +45,10 @@ $(document).ready(function(){
         var url = "/record1?editor="+userName+"&model="+model;
         window.location.href = url;
     });
-    $("#record2").click(function (e) {
-        var url = "/record2?editor="+userName+"&model="+model;
-        window.location.href = url;
-    });
+    // $("#record2").click(function (e) {
+    //     var url = "/record2?editor="+userName+"&model="+model;
+    //     window.location.href = url;
+    // });
     $("#record3").click(function (e) {
         var url = "/record3?model="+model;
         window.location.href = url;

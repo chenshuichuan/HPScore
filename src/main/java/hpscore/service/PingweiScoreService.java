@@ -15,4 +15,5 @@ public interface PingweiScoreService {
     List<PingweiScore> selectAll();
     List<PingweiScore> selectByModel(String model);
     List<PingweiScore> selectByPidAndModel(String pid, String model);
+    List<PingweiScore> selectByPidAndEditorAndModel(String pid,String editor, String model);
 }

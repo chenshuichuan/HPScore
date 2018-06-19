@@ -576,6 +576,7 @@ public class ExcelServiceImpl implements ExcelService {
         return  0;
     }
 
+    //作品获奖表
     @Override
     public String finalScoreExcel(String model) {
         String excelName = "2018泛珠赛总决赛作品获奖表("+model+")";

@@ -312,13 +312,18 @@ public class ScoreController {
         if(file.equals("打分审核表")){
             fileName = excelService.reviewExcel(model);
         }
-        if(file.equals("相对分统计表")){
+        if(file.equals("打分转换表")){
+            fileName = excelService.reviewTransferExcel(model);
+        }
+        if(file.equals("打分统计表")){
+            fileName = excelService.scoringSumUpExcel(model);
+        }
+        if(file.equals("平均分统计表")){
             fileName = excelService.relativeScoreExcel(model);
         }
-        if(file.equals("得分汇总表")){
+        if(file.equals("作品获奖表")){
             fileName = excelService.finalScoreExcel(model);
         }
-
         if(fileName!=null){
             map.put("result",1);
             map.put("fileName",fileName);
