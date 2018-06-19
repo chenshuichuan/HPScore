@@ -7,6 +7,7 @@ package hpscore.controller;/**
 
 import hpscore.domain.Score;
 import hpscore.domain.User;
+import hpscore.domain.Works;
 import hpscore.repository.UserRepository;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
@@ -49,25 +50,12 @@ public class RecordController {
     public ModelAndView record1(@RequestParam("editor")String editor,
                                 @RequestParam("model")String model){
         ModelAndView modelAndView = new ModelAndView("record1");
-//        User user = userRepository.findByName(editor);
-//        if(user!=null){
-//            List<Score> scores = null;
-//            //管理员可以查看所有记录
-//            if(user.getRole()==0){
-//                scores = scoreService.selectAll();
-//                modelAndView.addObject("scoreList", scores);
-//            }
-//            //否则仅可以查看自己相关的记录
-//            else{
-//                scores = scoreService.selectByEditorAndModel(editor,"本科组");
-//                modelAndView.addObject("scoreList", scores);
-//            }
-//        }
+
         modelAndView.addObject("worksList", worksService.selectAllCodeByModel(model));
         modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
         return modelAndView;
     }
-    
+
     //评委打分导出
     @RequestMapping(value = "/record3")
     public ModelAndView record3(@RequestParam("model")String model){
@@ -77,27 +65,21 @@ public class RecordController {
         return modelAndView;
     }
 
-    //评委打分导出
-    @RequestMapping(value = "/innovation")
-    public ModelAndView innovation(@RequestParam("model")String model){
-
-        ModelAndView modelAndView = new ModelAndView("innovation");
-
-        modelAndView.addObject(
-                "innovationScoreList",scoreService.calculateInnovationScore(model));
-        modelAndView.addObject(
-                "usefulScoreList",scoreService.calculateUsefulScore(model));
-        return modelAndView;
-    }
-
     //总分平均分排名
     @RequestMapping(value = "/total_final")
     public ModelAndView total_final(@RequestParam("model")String model){
 
         ModelAndView modelAndView = new ModelAndView("total_final");
 
+        List<Works> worksList = scoreService.getSumUpAward(model);
         modelAndView.addObject(
-                "worksList",scoreService.selectFinalScoreRanking(model));
+                "finalList",worksList);
+        List<Works> innovationList = scoreService.getInnovationAward(model);
+        modelAndView.addObject(
+                "innovationList",innovationList);
+        List<Works>usefulList = scoreService.getUsefulAward(model);
+        modelAndView.addObject(
+                "usefulList",usefulList);
         return modelAndView;
     }
 }

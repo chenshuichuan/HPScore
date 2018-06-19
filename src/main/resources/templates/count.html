@@ -14,7 +14,6 @@
     <!--<link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>-->
     <!--<link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>-->
     <!--<link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>-->
-
     <!--common-->
     <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet">
     <link href="../static/css/style-responsive.css" th:href="@{css/style-responsive.css}" rel="stylesheet">
@@ -161,66 +160,116 @@
                     <section class="panel">
                         <header class="panel-heading">
                             <span id="tb-title">相对分统计表(本科组)</span>
+                            <span class="tools" style="margin-left: 50px;">
+                                <button id="export-excel1" type="button" class="btn btn-success">导出评分转换表</button>
+                            </span>
+                            <span class="tools" style="margin-left: 50px;">
+                                <button id="export-excel2" type="button" class="btn btn-success">导出评分统计表</button>
+                            </span>
+                            <span class="tools" style="margin-left: 50px;">
+                                <button id="export-excel3" type="button" class="btn btn-success">导出评分平均分表</button>
+                            </span>
                             <span class="tools pull-right">
-                <a href="javascript:;" class="fa fa-chevron-down"></a>
-             </span>
+                                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            </span>
                         </header>
                         <div class="panel-body">
-                            <div class="adv-table">
-                                <div class="row" style="visibility: visible;">
-                                    <div class="col-md-12" style="text-align:right;">
-                                        <div id="export">
-                                            <a data-type="xls" href="javascript:;">导出excel</a>
-                                            <a data-type="csv" href="javascript:;">导出csv</a>
-                                        </div>
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li class="active"><a href="#final-score" data-toggle="tab">
+                                    相对平均分</a>
+                                </li>
+                                <li><a href="#innovation-score" data-toggle="tab">创新平均分</a></li>
+                                <li><a href="#useful-score" data-toggle="tab">实用平均分</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div class="tab-pane fade in active" id="final-score">
+                                    <!--相对平均分-->
+                                    <div class="adv-table">
+
+                                        <table class="display table table-bordered table-striped" id="final-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>作品名称</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>评委1</th>
+                                                <th>名次1</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="final-score-tb-body">
+
+                                            </tbody>
+                                        </table>
+
 
                                     </div>
                                 </div>
-                                <table class="table table-bordered" id="relative-score-tb">
-                                    <thead>
-                                    <tr>
-                                        <th>作品编号</th>
-                                        <th>作品名称</th>
-                                        <th>评委1</th>
-                                        <th>评委2</th>
-                                        <th>评委3</th>
-                                        <th>评委4</th>
-                                        <th>评委5</th>
-                                        <th>评委6</th>
-                                        <th>评委7</th>
-                                        <th>评委8</th>
-                                        <th>评委9</th>
-                                        <th>评委10</th>
-                                        <th>评委11</th>
-                                        <th>最高分</th>
-                                        <th>最低分</th>
-                                        <th>平均分</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="tb-body">
-                                    <tr>
-                                        <td>作品编号</td>
-                                        <td>作品名称</td>
-                                        <td>评委1</td>
-                                        <td>评委2</td>
-                                        <td>评委3</td>
-                                        <td>评委4</td>
-                                        <td>评委5</td>
-                                        <td>评委6</td>
-                                        <td>评委7</td>
-                                        <td>评委8</td>
-                                        <td>评委9</td>
-                                        <td>评委10</td>
-                                        <td>评委11</td>
-                                        <td>最高分</td>
-                                        <td>最低分</td>
-                                        <td>平均分</td>
-                                    </tr>
+                                <div class="tab-pane fade" id="innovation-score">
+                                    <!--创新平均分-->
+                                    <div class="adv-table">
 
-                                    </tbody>
-                                </table>
+                                        <table class="display table table-bordered table-striped" id="innovation-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>作品序号</th>
+                                                <th>作品名称</th>
+                                                <th>学校名称</th>
+                                                <th>指导老师</th>
+                                                <th>研发学生</th>
+                                                <th>创新平均分</th>
+                                                <th>名次2</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="innovation-score-tb-body">
 
 
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="useful-score">
+                                    <!--实用平均分-->
+                                    <div class="adv-table">
+
+                                        <table class="display table table-bordered table-striped" id="useful-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>作品序号</th>
+                                                <th>作品名称</th>
+                                                <th>学校名称</th>
+                                                <th>指导老师</th>
+                                                <th>研发学生</th>
+                                                <th>实用平均分</th>
+                                                <th>名次3</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="useful-score-tb-body">
+
+
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -255,17 +304,9 @@
 <!--<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>-->
 
 <!--title time initialization-->
-<script src="../static/js/tableExport.js" th:src="@{js/tableExport.js}"></script>
+<script src="../static/js/count.js" th:src="@{js/count.js}"></script>
 
 <script>
-    var $exportLink = document.getElementById('export');
-    $exportLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        var model = getCookie("model");
-        if (e.target.nodeName === "A") {
-            tableExport('relative-score-tb', "相对分汇总表-"+model, e.target.getAttribute('data-type'));
-        }
-    }, false);
 
     $(document).ready(function () {
         var model = getCookie("model");
@@ -281,94 +322,18 @@
         selectRelativeScoreByModel();
     });
 
-    function setTbbody(data) {
-        $("#tb-body").empty();
-        for (var i=0;i<data.length;i++){
-            var str = "<tr>\n" +
-                "<td>"+data[i].proId+"</td>\n" +
-                "<td>"+data[i].proName+"</td>\n" +
-                "<td>"+data[i].pScore1+"</td>\n" +
-                "<td>"+data[i].pScore2+"</td>\n" +
-                "<td>"+data[i].pScore3+"</td>\n" +
-                "<td>"+data[i].pScore4+"</td>\n" +
-                "<td>"+data[i].pScore5+"</td>\n" +
-                "<td>"+data[i].pScore6+"</td>\n" +
-                "<td>"+data[i].pScore7+"</td>\n" +
-                "<td>"+data[i].pScore8+"</td>\n" +
-                "<td>"+data[i].pScore9+"</td>\n" +
-                "<td>"+data[i].pScore10+"</td>\n" +
-                "<td>"+data[i].pScore11+"</td>\n" +
-                "<td>"+data[i].maxScore+"</td>\n" +
-                "<td>"+data[i].minScore+"</td>\n" +
-                "<td>"+data[i].average+"</td>\n" +
-                "</tr>";
-            $("#tb-body").append(str);
-        }
-    }
-    
-    function selectRelativeScoreByModel() {
-        var model = getCookie("model");
-        var url = "/score/selectRelativeScoreByModel?model=" + model;
-        $.get(url, function (data, status) {
-            alert(data.result);
-            if (data.result == "1") {
-                alert(data.message);
-                //加载表格数据
-                setTbbody(data.relativeScores);
-            } else {
-                alert(data.message);
-            }
+</script>
+<script>
+    $(function(){
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // 获取已激活的标签页的名称
+            var activeTab = $(e.target).text();
+            // 获取前一个激活的标签页的名称
+            var previousTab = $(e.relatedTarget).text();
+            $(".active-tab span").html(activeTab);
+            $(".previous-tab span").html(previousTab);
         });
-    }
-    function countScore(model, editor) {
-        var url = "/score/countScore?model=" + model + "&editor=" + editor;
-
-        $.get(url, function (data, status) {
-            alert(data.result);
-            if (data.result == "1") {
-                alert(data.message);
-                //加载表格数据
-                selectRelativeScoreByModel();
-            } else {
-                alert(data.message);
-            }
-        });
-    }
-    
-    $("#count-bt").click(function (e) {
-        //根据权限和model设置页面显示
-        //禁用按钮
-        document.getElementById("count-bt").disabled=true;
-        var editor = getCookie("user");
-        var model = getCookie("model");
-        countScore(model, editor);
-        document.getElementById("count-bt").disabled=false;
     });
-
-
-    function countRelativeScore(model) {
-        var url = "/score/calculteRelativeScoreAverageAndMaxAndMin?model=" + model;
-
-        $.get(url, function (data, status) {
-            //alert(data.result);
-            if (data.result == "1") {
-                alert(data.message);
-                //加载表格数据
-                selectRelativeScoreByModel();
-            } else {
-                alert(data.message);
-            }
-        });
-    }
-    $("#count-relative-bt").click(function (e) {
-        //根据权限和model设置页面显示
-        //禁用按钮
-        document.getElementById("count-relative-bt").disabled=true;
-        var model = getCookie("model");
-        countRelativeScore(model);
-        document.getElementById("count-relative-bt").disabled=false;
-    });
-
 </script>
 </body>
 </html>

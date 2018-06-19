@@ -26,14 +26,14 @@ public class Works {
     //分赛区名称
     private String partName;
     //作品编号
-    private String BianHao;
+    private String bianHao;
 
     public String getBianHao() {
-        return BianHao;
+        return bianHao;
     }
 
     public void setBianHao(String bianHao) {
-        BianHao = bianHao;
+        this.bianHao = bianHao;
     }
     public String getPartName() {
         return partName;

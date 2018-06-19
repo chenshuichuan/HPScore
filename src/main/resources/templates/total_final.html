@@ -51,54 +51,145 @@
 
         <!--body wrapper start-->
         <div class="wrapper">
-
+            <!--相对分平均分-->
             <div class="row">
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <span >最终总分平均分排名</span>
-                            <span class="tools pull-right">
-                <a href="javascript:;" class="fa fa-chevron-down"></a>
-             </span>
+                            <span >作品获奖表</span>
+                            <span class="tools" style="margin-left: 100px;">
+                                <button id="export-excel" type="button" class="btn btn-success">导出作品获奖表</button>
+                            </span>
+                            <span class="tools pull-right" >
+                                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            </span>
+
                         </header>
                         <div class="panel-body">
-                            <div class="adv-table">
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li class="active"><a href="#final-score" data-toggle="tab">
+                                    相对平均分</a>
+                                </li>
+                                <li><a href="#innovation-score" data-toggle="tab">创新平均分</a></li>
+                                <li><a href="#useful-score" data-toggle="tab">实用平均分</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div class="tab-pane fade in active" id="final-score">
+                                    <!--相对平均分-->
+                                    <div class="adv-table">
 
-                                <table class="display table table-bordered table-striped" id="final-score-tb">
-                                    <thead>
-                                    <tr>
-                                        <th>作品序号</th>
-                                        <th>作品名称</th>
-                                        <th>学校名称</th>
-                                        <th>指导老师</th>
-                                        <th>研发学生</th>
-                                        <th>总分平均分</th>
-                                        <th>名次</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="final-score-tb-body">
+                                        <table class="display table table-bordered table-striped" id="final-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>作品编号</th>
+                                                <th>作品名称</th>
+                                                <th>分赛区名称</th>
+                                                <th>学校名称</th>
+                                                <th>指导老师</th>
+                                                <th>研发学生</th>
+                                                <th>相对平均分</th>
+                                                <th>获奖等级</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="final-score-tb-body">
 
-                                    <tr th:each="work,iterStat:${worksList}">
-                                        <td th:text="${work.code}">作品编号</td>
-                                        <td th:text="${work.name}">作品名称</td>
-                                        <td th:text="${work.school}">学校名称</td>
-                                        <td th:text="${work.teachers}">指导老师</td>
-                                        <td th:text="${work.students}">研发学生</td>
-                                        <td th:text="${work.finalScore}">总分平均分</td>
-                                        <td > </td>
-                                    </tr>
+                                            <tr th:each="workf:${finalList}">
+                                                <td th:text="${workf.code}">序号</td>
+                                                <td th:text="${workf.bianHao}">编号</td>
+                                                <td th:text="${workf.name}">作品名称</td>
+                                                <td th:text="${workf.partName}">分赛区名称</td>
+                                                <td th:text="${workf.school}">学校名称</td>
+                                                <td th:text="${workf.teachers}">指导老师</td>
+                                                <td th:text="${workf.students}">研发学生</td>
+                                                <td th:text="${workf.finalScore}">平均分</td>
+                                                <td > </td>
+                                            </tr>
 
-                                    </tbody>
-                                </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="innovation-score">
+                                    <!--创新平均分-->
+                                    <div class="adv-table">
+
+                                        <table class="display table table-bordered table-striped" id="innovation-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>作品编号</th>
+                                                <th>作品名称</th>
+                                                <th>分赛区名称</th>
+                                                <th>学校名称</th>
+                                                <th>指导老师</th>
+                                                <th>研发学生</th>
+                                                <th>创新平均分</th>
+                                                <th>获奖等级</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="innovation-score-tb-body">
+
+                                            <tr th:each="worki:${innovationList}">
+                                                <td th:text="${worki.code}">序号</td>
+                                                <td th:text="${worki.bianHao}">编号</td>
+                                                <td th:text="${worki.name}">作品名称</td>
+                                                <td th:text="${worki.partName}">分赛区名称</td>
+                                                <td th:text="${worki.school}">学校名称</td>
+                                                <td th:text="${worki.teachers}">指导老师</td>
+                                                <td th:text="${worki.students}">研发学生</td>
+                                                <td th:text="${worki.finalScore}">平均分</td>
+                                                <td > </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
 
 
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="useful-score">
+                                    <!--实用平均分-->
+                                    <div class="adv-table">
+
+                                        <table class="display table table-bordered table-striped" id="useful-score-tb">
+                                            <thead>
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>作品编号</th>
+                                                <th>作品名称</th>
+                                                <th>分赛区名称</th>
+                                                <th>学校名称</th>
+                                                <th>指导老师</th>
+                                                <th>研发学生</th>
+                                                <th>实用平均分</th>
+                                                <th>获奖等级</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="useful-score-tb-body">
+                                            <tr th:each="worku:${usefulList}">
+                                                <td th:text="${worku.code}">序号</td>
+                                                <td th:text="${worku.bianHao}">编号</td>
+                                                <td th:text="${worku.name}">作品名称</td>
+                                                <td th:text="${worku.partName}">分赛区名称</td>
+                                                <td th:text="${worku.school}">学校名称</td>
+                                                <td th:text="${worku.teachers}">指导老师</td>
+                                                <td th:text="${worku.students}">研发学生</td>
+                                                <td th:text="${worku.finalScore}">平均分</td>
+                                                <td > </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </section>
                 </div>
             </div>
-
-
+            
         </div>
         <!--body wrapper end-->
         <!--footer section start-->
@@ -119,45 +210,59 @@
 <!--dynamic table-->
 <script src="../static/plugins/advanced-datatable/js/jquery.dataTables.js" th:src="@{plugins/advanced-datatable/js/jquery.dataTables.js}"></script>
 <script src="../static/plugins/data-tables/DT_bootstrap.js" th:src="@{plugins/data-tables/DT_bootstrap.js}"></script>
-<!--dynamic table initialization -->
-<script src="../static/plugins/advanced-datatable/innovation_table_init.js" th:src="@{plugins/advanced-datatable/innovation_table_init.js}"></script>
-
 
 <!--common scripts for all pages-->
 <script src="../static/js/scripts.js"  th:src="@{js/scripts.js}"></script>
 <!--title time initialization-->
 <script src="../static/js/myjsfile.js" th:src="@{js/myjsfile.js}"></script>
 
-<!--export table initialization-->
-<script src="../static/js/tableExport.js" th:src="@{js/tableExport.js}"></script>
-
-<script>
-    var $exportLink = document.getElementById('export1');
-    $exportLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        var model = getCookie("model");
-        if (e.target.nodeName === "A") {
-            tableExport('final-score-tb', "最终总分平均分排名-"+model, e.target.getAttribute('data-type'));
-        }
-    }, false);
-
-</script>
-
 <script>
     $(document).ready(function () {
         var model = getCookie("model");
-        $("#head-title").append("最终总分平均分排名-"+model);
+        $("#head-title").append("最终作品获奖排名-"+model);
         $("#total_final").addClass("active");
 
         $('#final-score-tb').dataTable( {
             "aaSorting": [[ 10, "desc" ]]
         } );
 
-        $("#export-url").click(function () {
-            alert("export-url open!");
-            window.open("/score/getExcel");
+        $('#innovation-score-tb').dataTable( {
+            "aaSorting": [[ 10, "desc" ]]
+        } );
+        $('#useful-score-tb').dataTable( {
+            "aaSorting": [[ 10, "desc" ]]
+        } );
+
+        $("#export-excel").click(function () {
+            //alert("export-url open!");
+            var url = "/score/generateExcelByFileAndModel?file=作品获奖表&model="+model;
+            $.get(url, function (data, status) {
+                alert(data.result);
+                if (data.result === 1) {
+                    alert('获取Excel表成功!');
+                    window.open("/score/getExcel?fileName="+data.fileName);
+                } else {
+                    alert('获取Excel表失败!');
+                }
+            });
+
+
         });
     });
+
+</script>
+<script>
+    $(function(){
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            // 获取已激活的标签页的名称
+            var activeTab = $(e.target).text();
+            // 获取前一个激活的标签页的名称
+            var previousTab = $(e.relatedTarget).text();
+            $(".active-tab span").html(activeTab);
+            $(".previous-tab span").html(previousTab);
+        });
+    });
+
 
 </script>
 </body>

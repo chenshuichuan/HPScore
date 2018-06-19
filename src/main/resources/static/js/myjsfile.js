@@ -19,6 +19,8 @@ $(document).ready(function(){
     if(role != 0){
         var count=document.getElementById("count");
         count.style.display='none';
+        var total_final=document.getElementById("total_final");
+        total_final.style.display='none';
     }
     // //不是本科组，隐藏record1
     // if(model != "本科组"){
@@ -53,10 +55,7 @@ $(document).ready(function(){
         var url = "/record3?model="+model;
         window.location.href = url;
     });
-    $("#innovation").click(function (e) {
-        var url = "/innovation?model="+model;
-        window.location.href = url;
-    });
+
     $("#total_final").click(function (e) {
         var url = "/total_final?model="+model;
         window.location.href = url;

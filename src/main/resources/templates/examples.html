@@ -365,6 +365,197 @@
     </div>
     <!--添加记录 end-->
 
+
+
+    <!--相对分平均分-->
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <span >相对平均分排名</span>
+                    <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+             </span>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+
+                        <table class="display table table-bordered table-striped" id="final-score-tb">
+                            <thead>
+                            <tr>
+                                <th>作品序号</th>
+                                <th>作品名称</th>
+                                <th>学校名称</th>
+                                <th>指导老师</th>
+                                <th>研发学生</th>
+                                <th>相对平均分</th>
+                                <th>名次</th>
+                            </tr>
+                            </thead>
+                            <tbody id="final-score-tb-body">
+
+                            <tr th:each="work,iterStat:${worksList}">
+                                <td th:text="${work.code}">作品编号</td>
+                                <td th:text="${work.name}">作品名称</td>
+                                <td th:text="${work.school}">学校名称</td>
+                                <td th:text="${work.teachers}">指导老师</td>
+                                <td th:text="${work.students}">研发学生</td>
+                                <td th:text="${work.finalScore}">总分平均分</td>
+                                <td > </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+    <!--创新分平均分-->
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <span >创新平均分排名</span>
+                    <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+             </span>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+
+                        <table class="display table table-bordered table-striped" id="innovation-score-tb">
+                            <thead>
+                            <tr>
+                                <th>作品序号</th>
+                                <th>作品名称</th>
+                                <th>学校名称</th>
+                                <th>指导老师</th>
+                                <th>研发学生</th>
+                                <th>创新平均分</th>
+                                <th>名次</th>
+                            </tr>
+                            </thead>
+                            <tbody id="innovation-score-tb-body">
+
+                            <tr th:each="work,iterStat:${worksList}">
+                                <td th:text="${work.code}">作品编号</td>
+                                <td th:text="${work.name}">作品名称</td>
+                                <td th:text="${work.school}">学校名称</td>
+                                <td th:text="${work.teachers}">指导老师</td>
+                                <td th:text="${work.students}">研发学生</td>
+                                <td th:text="${work.finalScore}">创新平均分</td>
+                                <td > </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!--实用分平均分-->
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <span >实用平均分排名</span>
+                    <span class="tools pull-right">
+                <a href="javascript:;" class="fa fa-chevron-down"></a>
+             </span>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+
+                        <table class="display table table-bordered table-striped" id="useful-score-tb">
+                            <thead>
+                            <tr>
+                                <th>作品序号</th>
+                                <th>作品名称</th>
+                                <th>学校名称</th>
+                                <th>指导老师</th>
+                                <th>研发学生</th>
+                                <th>实用平均分</th>
+                                <th>名次</th>
+                            </tr>
+                            </thead>
+                            <tbody id="useful-score-tb-body">
+
+                            <tr th:each="work,iterStat:${worksList}">
+                                <td th:text="${work.code}">作品编号</td>
+                                <td th:text="${work.name}">作品名称</td>
+                                <td th:text="${work.school}">学校名称</td>
+                                <td th:text="${work.teachers}">指导老师</td>
+                                <td th:text="${work.students}">研发学生</td>
+                                <td th:text="${work.finalScore}">实用平均分</td>
+                                <td > </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+
+    <div class="adv-table">
+        <table class="table table-bordered" id="relative-score-tb">
+            <thead id="relative-score-header">
+            <tr>
+                <th>作品编号</th>
+                <th>作品名称</th>
+                <th>评委1</th>
+                <th>评委2</th>
+                <th>评委3</th>
+                <th>评委4</th>
+                <th>评委5</th>
+                <th>评委6</th>
+                <th>评委7</th>
+                <th>评委8</th>
+                <th>评委9</th>
+                <th>评委10</th>
+                <th>评委11</th>
+                <th>最高分</th>
+                <th>最低分</th>
+                <th>平均分</th>
+            </tr>
+            </thead>
+            <tbody id="tb-body">
+            <tr>
+                <td>作品编号</td>
+                <td>作品名称</td>
+                <td>评委1</td>
+                <td>评委2</td>
+                <td>评委3</td>
+                <td>评委4</td>
+                <td>评委5</td>
+                <td>评委6</td>
+                <td>评委7</td>
+                <td>评委8</td>
+                <td>评委9</td>
+                <td>评委10</td>
+                <td>评委11</td>
+                <td>最高分</td>
+                <td>最低分</td>
+                <td>平均分</td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
 </div>
 <!--body wrapper end-->
 <script>
