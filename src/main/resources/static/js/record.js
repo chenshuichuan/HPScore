@@ -30,7 +30,33 @@ function addRecord(pid,proId,options,model,editor) {
         });
     return result;
 }
-
+function updateRecord(pid,proId,options,model,editor) {
+    var index_begin=-1;
+    var result =1;
+    $.post("/score/update",
+        {
+            "pid": pid,
+            "proId": proId,
+            "option1": options[index_begin+1],
+            "option2": options[index_begin+2],
+            "option3": options[index_begin+3],
+            "option4": options[index_begin+4],
+            "option5": options[index_begin+5],
+            "option6": options[index_begin+6],
+            "model": model,
+            "editor": editor
+        },
+        function(data,status){
+            //alert(data.result);
+            if (data.result === 1) {
+                alert(data.message);
+            } else {
+                result=0;
+                alert(data.message);
+            }
+        });
+    return result;
+}
 function setModalText(pid,proId,data,options,editor) {
 
     // $('#pingwei2').text(data.pid);
@@ -85,28 +111,29 @@ function IsDataOk(options,model) {
 //第一个编辑就是editor，第二个编辑为空时，不可以
 //冲突不可以 冲突则返回冲突数据，否则返回null
 function IsDataOk2(pid,proId, options,model){
-    // var optionList=[]
-    // for(var j=0;j<6;j++){
-    //     optionList[j]=parseInt($(options[j]).val());
-    // }
+    var optionList=options;
+    for(var j=0;j<6;j++){
+        options[j]=parseInt(optionList[j]);
+    }
     var url = "/score/selectByPidAndProIdAndModel?pid="+pid+"&proId="+proId+"&model="+model;
-    var result = null;
+    var result = -1;//不存在该数据
     $.get(url,function(data,status){
-        alert("数据: " + data + "\n状态: " + status);
+        //alert("数据: " + data + "\n状态: " + status);
         if(data.result===1){
             var score = data.score;
             if(score!==null&&score.proId!==null&&score.proId.length>0){
                 if (score.option1!==options[0]||score.option2!==options[1]||score.option3!==options[2]||
                     score.option4!==options[3]||score.option5!==options[4]||score.option6!==options[5]){
                     alert("数据不一致！");
-                    result=score;
+                    result=1;
                 }
+                else result=0;//数据一致
             }
         }
 
     });
-    var str ="return result="+result;
-    alert(str);
+    // var str ="return result="+result;
+    // alert(str);
     return result;
 }
 
@@ -238,20 +265,25 @@ function generateSaveListener() {
             if(result===1){
                 result = IsDataOk2(pid,proId, options,model);
                 //数据冲突
-                if(result!==null){
+                if(result===1){
                     //设置modal显示内容
                     setModalText(pid,proId,result,options,editor);
                     m1.show();
                 }
-                //没冲突，写入数据库
+                //数据和数据库一致，更新数据
+                else if (result===0){
+                    //写入
+                    result = updateRecord(pid,proId,options,model,editor);
+                }
+                //数据库未存在该数据，新增数据
                 else {
                     //写入
                     result = addRecord(pid,proId,options,model,editor);
-                    //设置按钮为绿色
-                    if (result===1)$("#"+myId).attr("class","btn btn-success");
-                    $("#search-pingwei").val(pid);
-                    searchListener();
                 }
+                //设置按钮为绿色
+                if (result===1)$("#"+myId).attr("class","btn btn-success");
+                $("#search-pingwei").val(pid);
+                searchListener();
             }
         });
 
@@ -296,8 +328,8 @@ function selectByPidAndModel(pid,editor,model){
             result = data.pingweiScoreList;
         }
     });
-    var str ="return result="+result;
-    alert(str);
+    // var str ="return result="+result;
+    // alert(str);
     return result;
 }
 //监听查询评委列表改变

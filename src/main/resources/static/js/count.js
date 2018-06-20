@@ -55,7 +55,7 @@ function setTbBodyData() {
 //
 function selectScoreByModel(tbBodyId,url) {
     $.get(url, function (data, status) {
-        alert(data.result);
+        //alert(data.result);
         if (data.result === 1) {
             //alert(data.message);
             //加载表格数据
@@ -71,11 +71,12 @@ function countScore(model, editor) {
     var url = "/score/countScore?model=" + model + "&editor=" + editor;
 
     $.get(url, function (data, status) {
-        alert(data.result);
+        //alert(data.result);
         if (data.result ===1) {
             alert(data.message);
             //加载表格数据
             //selectRelativeScoreByModel();
+            window.location.reload();
         } else {
             alert(data.message);
         }

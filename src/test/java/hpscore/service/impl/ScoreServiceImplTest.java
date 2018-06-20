@@ -72,12 +72,13 @@ public class ScoreServiceImplTest {
     }
 
 
+    //生成测试分数
     @Test
     public void GenerateScoreData() throws Exception {
 
         scoreRepository.deleteAll();
-        int[] optionlist={10,15,20,20,20,15};
-        //int[] optionlist={10,15,10,25,25,15};
+        //int[] optionlist={10,15,20,20,20,15};
+        int[] optionlist={10,15,10,25,25,15};
         List<Works> worksList = worksRepository.findByModel(model1);
         List<String>pingweiList = pingweiService.selectAllCodeByModel(model1);
         for(Works works:worksList){
@@ -102,4 +103,8 @@ public class ScoreServiceImplTest {
                 is(pingweiList.size()*worksList.size()));
     }
 
+    @Test
+    public void GeneratePingweiData() throws Exception {
+
+    }
 }

@@ -155,6 +155,21 @@
         else $("#head-title").append("评分录入记录-"+model);
         $("#record3").addClass("active");
 
+        $("#export-excel").click(function () {
+            //alert("export-url open!");
+            $("#export-excel").attr("disabled",true);
+            var url = "/score/generateExcelByFileAndModel?file=打分审核表&model="+model;
+            $.get(url, function (data, status) {
+                alert(data.result);
+                if (data.result === 1) {
+                    alert('获取Excel表成功!');
+                    window.open("/score/getExcel?fileName="+data.fileName);
+                } else {
+                    alert('获取Excel表失败!');
+                }
+                $("#export-excel").attr("disabled",false);
+            });
+        });
     });
     //监听选择框改变事件
     document.getElementById('select-pingwei').addEventListener('change',function(){

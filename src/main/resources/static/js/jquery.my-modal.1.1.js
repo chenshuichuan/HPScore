@@ -63,7 +63,7 @@ var MyModal = (function() {
                 var editor = $('#editor2').text();
                 var result = addAsUpdate(pid,proId,option1,option2,option3,option4,option5,option6,editor);
                 if (result===1){
-                    alert("数据保存成功！");
+                    //alert("数据保存成功！");
                     //设置按钮为绿色
                     var myId="input"+proId+7;
                     $("#"+myId).attr("class","btn btn-success");
