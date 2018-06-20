@@ -9,12 +9,7 @@
           th:href="@{images/invoice-logo.jpg}" type="image/png">
 
     <title>计算最终相对分</title>
-
-    <!--&lt;!&ndash;dynamic table&ndash;&gt;-->
-    <!--<link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>-->
-    <!--<link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>-->
-    <!--<link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>-->
-    <!--common-->
+   <!--common-->
     <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet">
     <link href="../static/css/style-responsive.css" th:href="@{css/style-responsive.css}" rel="stylesheet">
     <link href="../static/css/mystyle.css" th:href="@{css/mystyle.css}" rel="stylesheet">
@@ -24,7 +19,6 @@
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
     <style>
-
         /*水波按钮效果*/
         button{
             text-decoration:none;
@@ -79,6 +73,12 @@
             opacity: 1;
             transition-duration: 0s;
         }
+        table tr th{
+            font-size: small;
+        }
+        table tr td{
+            font-size: small;
+        }
     </style>
 </head>
 
@@ -119,16 +119,18 @@
                         <div class="panel-body">
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-md-4" style="text-align: center;">
-                                        <button class="btn btn-primary btn-lg" type="button">检查异常</button>
-                                    </div>
-                                    <div class="col-md-4" style="text-align: center;">
+                                    <div class="col-md-3" style="text-align: center;">
                                         <button id="count-bt" class="btn btn-primary btn-lg" type="button">计算相对分</button>
                                     </div>
-                                    <div class="col-md-4" style="text-align: center;">
-                                        <button  id="count-relative-bt" class="btn btn-primary btn-lg" style="width: auto;" type="button">计算相对分平均分</button>
+                                    <div class="col-md-3" style="text-align: center;">
+                                        <button id="export-excel1" type="button" class="btn btn-success">导出评分转换表</button>
                                     </div>
-
+                                    <div class="col-md-3" style="text-align: center;">
+                                        <button id="export-excel2" type="button" class="btn btn-success">导出评分统计表</button>
+                                    </div>
+                                    <div class="col-md-3" style="text-align: center;">
+                                        <button id="export-excel3" type="button" class="btn btn-success">导出评分平均分表</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,15 +162,6 @@
                     <section class="panel">
                         <header class="panel-heading">
                             <span id="tb-title">相对分统计表(本科组)</span>
-                            <span class="tools" style="margin-left: 50px;">
-                                <button id="export-excel1" type="button" class="btn btn-success">导出评分转换表</button>
-                            </span>
-                            <span class="tools" style="margin-left: 50px;">
-                                <button id="export-excel2" type="button" class="btn btn-success">导出评分统计表</button>
-                            </span>
-                            <span class="tools" style="margin-left: 50px;">
-                                <button id="export-excel3" type="button" class="btn btn-success">导出评分平均分表</button>
-                            </span>
                             <span class="tools pull-right">
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                             </span>
@@ -188,35 +181,12 @@
 
                                         <table class="display table table-bordered table-striped" id="final-score-tb">
                                             <thead id="final-score-tb-header">
-                                            <tr>
-                                                <th>序号</th>
-                                                <th>作品名称</th>
-                                                <th>评委1</th>
-                                                <th>评委2</th>
-                                                <th>评委3</th>
-                                                <th>评委4</th>
-                                                <th>评委5</th>
-                                                <th>评委6</th>
-                                                <th>评委7</th>
-                                                <th>评委8</th>
-                                                <th>评委9</th>
-                                                <th>评委10</th>
-                                                <th>评委11</th>
-                                                <th>评委12</th>
-                                                <th>评委13</th>
-                                                <th>评委14</th>
-                                                <th>评委15</th>
-                                                <th>评委16</th>
-                                                <th>评委17</th>
-                                                <th>相对平均分</th>
-                                                <th>名次1</th>
-                                            </tr>
+
                                             </thead>
                                             <tbody id="final-score-tb-body">
-
+                                            <td>final</td>
                                             </tbody>
                                         </table>
-
 
                                     </div>
                                 </div>
@@ -226,44 +196,21 @@
 
                                         <table class="display table table-bordered table-striped" id="innovation-score-tb">
                                             <thead id="innovation-score-tb-header">
-                                            <tr>
-                                                <th>作品序号</th>
-                                                <th>作品名称</th>
-                                                <th>学校名称</th>
-                                                <th>指导老师</th>
-                                                <th>研发学生</th>
-                                                <th>创新平均分</th>
-                                                <th>名次2</th>
-                                            </tr>
                                             </thead>
                                             <tbody id="innovation-score-tb-body">
-
-
+                                            <td>innovation</td>
                                             </tbody>
                                         </table>
-
-
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="useful-score">
                                     <!--实用平均分-->
                                     <div class="adv-table">
-
                                         <table class="display table table-bordered table-striped" id="useful-score-tb">
                                             <thead id="useful-score-tb-header">
-                                            <tr>
-                                                <th>作品序号</th>
-                                                <th>作品名称</th>
-                                                <th>学校名称</th>
-                                                <th>指导老师</th>
-                                                <th>研发学生</th>
-                                                <th>实用平均分</th>
-                                                <th>名次3</th>
-                                            </tr>
                                             </thead>
                                             <tbody id="useful-score-tb-body">
-
-
+                                            <td>useful</td>
                                             </tbody>
                                         </table>
 
@@ -305,25 +252,24 @@
 
 <!--title time initialization-->
 <script src="../static/js/count.js" th:src="@{js/count.js}"></script>
-
-<script>
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var pingweiList = /*[[${pingweiList}]]*/ 2;
     $(document).ready(function () {
         var model = getCookie("model");
         $("#head-title").append("计算最终相对分-"+model);
         $("#count").addClass("active");
-
-        if(model==="本科组"){
-            $("#tb-title").text("相对分统计表(本科组)");
-        }
-        else{
-            $("#tb-title").text("相对分统计表(高职组)");
-        }
-        selectRelativeScoreByModel();
+        $("#tb-title").text("平均分统计表-"+model);
+        //selectRelativeScoreByModel();
+        setHeader(pingweiList.length);
+        setTbBodyData();
+        setClickListener();
     });
-
+    /*]]>*/
 </script>
+
 <script>
+
     $(function(){
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             // 获取已激活的标签页的名称

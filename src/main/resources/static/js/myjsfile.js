@@ -47,15 +47,15 @@ $(document).ready(function(){
         var url = "/record1?editor="+userName+"&model="+model;
         window.location.href = url;
     });
-    // $("#record2").click(function (e) {
-    //     var url = "/record2?editor="+userName+"&model="+model;
-    //     window.location.href = url;
-    // });
+
     $("#record3").click(function (e) {
         var url = "/record3?model="+model;
         window.location.href = url;
     });
-
+    $("#count").click(function (e) {
+        var url = "/count?model="+model;
+        window.location.href = url;
+    });
     $("#total_final").click(function (e) {
         var url = "/total_final?model="+model;
         window.location.href = url;

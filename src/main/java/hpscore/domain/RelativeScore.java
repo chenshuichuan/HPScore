@@ -20,11 +20,11 @@ public class RelativeScore {
     private double average;
     private double[] pAverage;//6个单项的平均分
     //评委们的相对分
-    private double[]pScore;
+    private double[]pScores;
     private String model;
 
     public RelativeScore(int NumberOfPingwei) {
-        this.pScore = new double[NumberOfPingwei];
+        this.pScores = new double[NumberOfPingwei];
         this.pAverage = new double[6];
     }
 
@@ -32,7 +32,7 @@ public class RelativeScore {
         this.proId = proId;
         this.proName = proName;
         this.model = model;
-        this.pScore = new double[NumberOfPingwei];
+        this.pScores = new double[NumberOfPingwei];
         this.pAverage = new double[6];
     }
 
@@ -51,11 +51,11 @@ public class RelativeScore {
     public void setBianHao(String bianHao) {
         this.bianHao = bianHao;
     }
-    public double[] getpScore() {
-        return pScore;
+    public double[] getpScores() {
+        return pScores;
     }
-    public void setpScore(double[] pScore) {
-        this.pScore = pScore;
+    public void setpScores(double[] pScores) {
+        this.pScores = pScores;
     }
 
     public int getId() {

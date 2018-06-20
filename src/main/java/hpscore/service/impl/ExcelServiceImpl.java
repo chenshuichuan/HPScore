@@ -433,7 +433,7 @@ public class ExcelServiceImpl implements ExcelService {
                     cell.setCellValue(relativeScoreList.get(i).getProName());
                 }
                 else if(j>2&&j<=(pingweiStrList.size()+2)){
-                    cell.setCellValue(relativeScoreList.get(i).getpScore()[j-3]);
+                    cell.setCellValue(relativeScoreList.get(i).getpScores()[j-3]);
                 }
                 else if(j==20)cell.setCellValue(relativeScoreList.get(i).getAverage());
             }

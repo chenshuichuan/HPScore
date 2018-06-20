@@ -68,7 +68,7 @@ public class PingweiScoreController {
         return map;
     }
 
-    //根据评委和model查询该评委所有的评分记录，
+    //根据评委和编辑者，model查询该评委所有的评分记录，
     @RequestMapping(value = "/selectByPidAndEditorAndModel",method = RequestMethod.GET)
     public Map<String,Object> selectByPidAndEditorAndModel(
             @RequestParam("pid")String pid,

@@ -200,7 +200,7 @@ public class ScoreServiceImpl implements ScoreService {
 
                 //设置某评委的相对分
                 int pid = Integer.parseInt(score.getPid());
-                if(pid>=1&&pid<=pingweiSize)relativeScore.getpScore()[pid-1]=score.getFinalScore();
+                if(pid>=1&&pid<=pingweiSize)relativeScore.getpScores()[pid-1]=score.getFinalScore();
                 else {
                     logger.info("pid出错！请保证评委序号从1开始！请保证数据库数据存在！");
                 }

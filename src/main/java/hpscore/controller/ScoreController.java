@@ -239,12 +239,12 @@ public class ScoreController {
         //计算成功
         if (relativeScoreList!=null) {
             map.put("result",1);
-            map.put("relativeScoreList",relativeScoreList);
+            map.put("scoreList",relativeScoreList);
             map.put("message","相对分平均分计算成功！");
         }
         else{
             map.put("result",0);
-            map.put("relativeScoreList",null);
+            map.put("scoreList",null);
             map.put("message","平均分计算失败！");
         }
         return map;
@@ -271,7 +271,7 @@ public class ScoreController {
         });
         //计算成功
         map.put("result",1);
-        map.put("innovationScoreList",innovationScoreList);
+        map.put("scoreList",innovationScoreList);
         map.put("message","获取创新性分数成功！");
         return map;
     }
@@ -296,7 +296,7 @@ public class ScoreController {
         });
         //计算成功
         map.put("result",1);
-        map.put("innovationScoreList",innovationScoreList);
+        map.put("scoreList",innovationScoreList);
         map.put("message","获取实用性分数成功！");
         return map;
     }
