@@ -44,6 +44,19 @@ public class Works {
     }
     public Works() {
     }
+    public Works(Works works) {
+       this.id=works.id;
+        this.name=works.name;
+        this.code=works.code;
+        this.bianHao=works.bianHao;
+        this.finalScore=works.finalScore;
+        this.model=works.model;
+        this.school=works.school;
+        this.teachers=works.teachers;
+        this.students=works.students;
+        this.ranking=works.ranking;
+        this.partName=works.partName;
+    }
     public Works(String name, String code, String model) {
         this.name = name;
         this.code = code;
@@ -122,4 +135,5 @@ public class Works {
     public void setModel(String model) {
         this.model = model;
     }
+
 }

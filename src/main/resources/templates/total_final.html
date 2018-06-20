@@ -235,6 +235,7 @@
 
         $("#export-excel").click(function () {
             //alert("export-url open!");
+            $("#export-excel").attr("disabled",true);
             var url = "/score/generateExcelByFileAndModel?file=作品获奖表&model="+model;
             $.get(url, function (data, status) {
                 alert(data.result);
@@ -244,9 +245,8 @@
                 } else {
                     alert('获取Excel表失败!');
                 }
+                $("#export-excel").attr("disabled",false);
             });
-
-
         });
     });
 

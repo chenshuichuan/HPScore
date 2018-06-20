@@ -322,7 +322,7 @@ public class ScoreServiceImpl implements ScoreService {
                     new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
 
             int maxScore = 0;
-            int minScore = 0;
+            int minScore = 100;
             int totalScore = 0;
             for (Pingwei pingwei:pingweiList){
                 Score score = scoreRepository.findByPidAndProIdAndModel(
@@ -339,7 +339,7 @@ public class ScoreServiceImpl implements ScoreService {
                     innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
                 }
             }
-            double average = (double)(totalScore-maxScore-minScore)/(double)11;
+            double average = (double)(totalScore-maxScore-minScore)/(double)pingweiList.size();
             //保留三位小数
             average = ScoreUtil.DecimalDouble(average,3);
 
@@ -375,7 +375,7 @@ public class ScoreServiceImpl implements ScoreService {
                     new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
 
             int maxScore = 0;
-            int minScore = 0;
+            int minScore = 100;
             int totalScore = 0;
             for (Pingwei pingwei:pingweiList){
                 Score score = scoreRepository.findByPidAndProIdAndModel(
@@ -392,7 +392,7 @@ public class ScoreServiceImpl implements ScoreService {
                     innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
                 }
             }
-            double average = (double)(totalScore-maxScore-minScore)/11.0;
+            double average = (double)(totalScore-maxScore-minScore)/(double)pingweiList.size();
             //保留三位小数
             average = ScoreUtil.DecimalDouble(average,3);
 
@@ -442,8 +442,9 @@ public class ScoreServiceImpl implements ScoreService {
         List<Works> worksList = new ArrayList<>();
         for (InnovationScore innovationScore: innovationScoreList){
             Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
-            works.setFinalScore(innovationScore.getAverage());//将平均分设置为创新奖的平均分
-            worksList.add(works);
+            Works works1 = new Works(works);
+            works1.setFinalScore(innovationScore.getAverage());//将平均分设置为创新奖的平均分
+            worksList.add(works1);
         }
         //按照平均分排序
         Collections.sort(worksList,new Comparator() {
@@ -466,8 +467,9 @@ public class ScoreServiceImpl implements ScoreService {
         List<Works> worksList = new ArrayList<>();
         for (InnovationScore innovationScore: innovationScoreList){
             Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
-            works.setFinalScore(innovationScore.getAverage());//将平均分设置为实用奖的平均分
-            worksList.add(works);
+            Works works1 = new Works(works);
+            works1.setFinalScore(innovationScore.getAverage());//将平均分设置为实用奖的平均分
+            worksList.add(new Works(works1));
         }
         //按照平均分排序
         Collections.sort(worksList,new Comparator() {
