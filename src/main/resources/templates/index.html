@@ -11,7 +11,7 @@
           th:href="@{images/invoice-logo.jpg}" type="image/png">
 
     <title>计分系统</title>
-
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css" th:href="@{css/font-awesome.min.css}"/>
     <!--dynamic table-->
     <link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>
     <link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>
@@ -32,7 +32,6 @@
     <!-- left side start-->
     <div class="left-side sticky-left-side"  th:include="left_side_template :: leftside"></div>
     <!-- left side end-->
-
     <!-- main content start-->
     <div class="main-content">
         <!-- header section start-->
@@ -48,10 +47,79 @@
             <!--title end-->
         </div>
         <!-- header section end-->
-
+        
         <!--body wrapper start-->
         <div class="wrapper">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span >Excel列表</span>
+                            <span class="tools pull-right" >
+                                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            </span>
 
+                        </header>
+                        <div class="panel-body">
+                            <!--相对平均分-->
+                            <div class="adv-table">
+                                <table class="display table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Excel文件</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="fileName:${fileList}">
+                                        <td style="color: rgb(13,225,137);font-size: 20px; text-align: left;">
+                                            <a href="#" th:href="|/score/getExcel1?fileName=${fileName}|">
+                                                <i class="fa fa-file-excel-o"></i>
+                                                <span  th:text="${fileName}"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!--<div class="row">-->
+                <!--<div class="col-sm-12">-->
+                    <!--<section class="panel">-->
+                        <!--<header class="panel-heading">-->
+                            <!--<span >Excel列表</span>-->
+                            <!--<span class="tools pull-right" >-->
+                                <!--<a href="javascript:;" class="fa fa-chevron-down"></a>-->
+                            <!--</span>-->
+
+                        <!--</header>-->
+                        <!--<div class="panel-body">-->
+                            <!--<ul id="myTab" class="nav nav-tabs">-->
+                                <!--<li class="active"><a href="#final-score" data-toggle="tab">-->
+                                    <!--相对平均分</a>-->
+                                <!--</li>-->
+                                <!--<li><a href="#innovation-score" data-toggle="tab">创新平均分</a></li>-->
+                                <!--<li><a href="#useful-score" data-toggle="tab">实用平均分</a></li>-->
+                            <!--</ul>-->
+                            <!--<div id="myTabContent" class="tab-content">-->
+                                <!--<div class="tab-pane fade in active" id="final-score">-->
+                                   <!---->
+                                <!--</div>-->
+                                <!--<div class="tab-pane fade" id="innovation-score">-->
+                                   <!---->
+                                <!--</div>-->
+                                <!--<div class="tab-pane fade" id="useful-score">-->
+                                   <!---->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                        <!--</div>-->
+                    <!--</section>-->
+                <!--</div>-->
+            <!--</div>-->
         </div>
         <!--body wrapper end-->
         <!--footer section start-->

@@ -21,11 +21,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -189,34 +192,26 @@ public class ScoreController2 {
         }
         return "ok";
     }
-
-//    //http://localhost:3388/images/getImagesByName.do?modelName=model1&name=551
-//    @RequestMapping(value = "/getImagesByName")
-//    @ResponseBody
-//    public String getImagesByName(HttpServletRequest request,
-//                                  HttpServletResponse response, Model model
-//            ,@RequestParam("modelName")String modelName,@RequestParam("name")String name) {
-//        FileInputStream fis = null;
-//        OutputStream os = null;
-//        try {
-//            //String path1 = System.getProperty("user.dir");
-//            fis = new FileInputStream("./data/"+modelName+"/"+name+".png");
-//            os = response.getOutputStream();
-//            int count = 0;
-//            byte[] buffer = new byte[1024 * 8];
-//            while ((count = fis.read(buffer)) != -1) {
-//                os.write(buffer, 0, count);
-//                os.flush();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            fis.close();
-//            os.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return "ok";
-//    }
+    @RequestMapping(value = "/getExcel1")
+    @ResponseBody
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        //获得请求文件名
+        String filename = request.getParameter("fileName");
+        String enFileName = URLEncoder.encode(filename,"utf-8");
+        System.out.println("/getExcel1="+filename);
+        //设置Content-Disposition
+        response.setHeader("Content-Disposition", "attachment;filename="+enFileName);
+        //读取目标文件，通过response将目标文件写到客户端
+        //读取文件
+        InputStream in = new FileInputStream(filename);
+        OutputStream out = response.getOutputStream();
+        //写文件
+        int b;
+        while((b=in.read())!= -1) {
+            out.write(b);
+        }
+        in.close();
+        out.close();
+    }
 }

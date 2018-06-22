@@ -1,7 +1,7 @@
 
 // $.ajaxSettings.async = false;
 $.ajaxSetup({
-    async:false
+    async:true
 });
 
 //根据评委的个数，设置table的header头
@@ -66,7 +66,6 @@ function selectScoreByModel(tbBodyId,url) {
     });
 }
 
-
 function countScore(model, editor) {
     var url = "/score/countScore?model=" + model + "&editor=" + editor;
 
@@ -78,8 +77,13 @@ function countScore(model, editor) {
             //selectRelativeScoreByModel();
             window.location.reload();
         } else {
+
             alert(data.message);
         }
+        document.getElementById("count-bt").disabled=false;
+        document.getElementById("export-excel1").disabled=true;
+        document.getElementById("export-excel2").disabled=true;
+        document.getElementById("export-excel3").disabled=true;
     });
 }
 //打分转换表
@@ -91,7 +95,7 @@ function getExcelByName(exportBtId,model, excelName) {
         alert(data.result);
         if (data.result === 1) {
             alert('获取Excel表成功!');
-            window.open("/score/getExcel?fileName="+data.fileName);
+            window.open("/score/getExcel1?fileName="+data.fileName);
         } else {
             alert('获取Excel表失败!');
         }
@@ -108,13 +112,14 @@ function setClickListener() {
         //根据权限和model设置页面显示
         //禁用按钮
         document.getElementById("count-bt").disabled=true;
+        document.getElementById("export-excel1").disabled=true;
+        document.getElementById("export-excel2").disabled=true;
+        document.getElementById("export-excel3").disabled=true;
         countScore(model, editor);
-        document.getElementById("count-bt").disabled=false;
     });
     var export1="#export-excel1";
     var export2="#export-excel2";
     var export3="#export-excel3";
-
     //打分转换表
     $(export1).click(function () {
         getExcelByName(export1,model, "打分转换表");

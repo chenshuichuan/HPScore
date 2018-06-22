@@ -5,6 +5,7 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
+import hpscore.tools.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,9 @@ public class IndexController {
         //List<String> models =indexService.getModels();
 
         ModelAndView modelAndView = new ModelAndView("index");
-        modelAndView.addObject("model", "本科组");
-        System.out.println("controller -- index --- index.html");
+        List<String> fileList = FileUtil.readfiles("./");
+        System.out.println("controller -- index --- index.html = "+fileList.size());
+        modelAndView.addObject("fileList", fileList);
         return modelAndView;
     }
 

@@ -10,10 +10,8 @@ import hpscore.domain.*;
 import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
-import hpscore.service.ExcelService;
-import hpscore.service.PingweiService;
-import hpscore.service.ScoreService;
-import hpscore.service.WorksService;
+import hpscore.service.*;
+import hpscore.service.impl.GenerateExcelThreadServiceImpl;
 import hpscore.tools.ServletUtil;
 import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
@@ -54,6 +52,8 @@ public class ScoreController {
     private PingweiRepository pingweiRepository;
     @Autowired
     private ExcelService excelService;
+    @Autowired
+    private GenerateExcelThreadService generateExcelThreadService;
 
     //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/selectByPidAndProIdAndModel",method = RequestMethod.GET)
@@ -176,8 +176,10 @@ public class ScoreController {
                        map.put("message","第"+pingweiList.get(index)+"位的委评相对分计算出错！");
                    }
                    else{
-                        map.put("result",1);
-                        map.put("message","相对分计算成功！");
+                       for (int i=0;i<5;i++)
+                           generateExcelThreadService.executeAsyncTask(i,model);
+                       map.put("result",1);
+                       map.put("message","相对分计算成功！");
                     }
                 }
             }
