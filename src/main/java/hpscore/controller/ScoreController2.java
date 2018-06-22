@@ -197,14 +197,15 @@ public class ScoreController2 {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
         //获得请求文件名
+        String encoding = System.getProperty("file.encoding");
         String filename = request.getParameter("fileName");
-        String enFileName = URLEncoder.encode(filename,"utf-8");
+        String enFileName =new String(filename.getBytes(encoding),"UTF-8");
         System.out.println("/getExcel1="+filename);
+
         //设置Content-Disposition
         response.setHeader("Content-Disposition", "attachment;filename="+enFileName);
         //读取目标文件，通过response将目标文件写到客户端
         //读取文件
-        String encoding = System.getProperty("file.encoding");
         String fileName = new String(filename.getBytes("UTF-8"),encoding);
         InputStream in = new FileInputStream(fileName);
         OutputStream out = response.getOutputStream();

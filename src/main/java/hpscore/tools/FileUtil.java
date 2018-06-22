@@ -23,6 +23,8 @@ public class FileUtil {
 
     public static void main(String[] args){
 
+        String encoding = System.getProperty("file.encoding");
+        System.out.println(encoding);
        List<String> fileList = FileUtil.readfiles( ".");
        for (String file: fileList){
            String pattern = ".*\\.xls";
@@ -43,33 +45,35 @@ public class FileUtil {
     }
 
     public static List<String> readfiles(String filepath) {
+        //获取系统编码
+        String encoding = System.getProperty("file.encoding");
+        System.out.println("encoding = "+encoding);
         List<String> fileList = new ArrayList<>();
-        File file = new File(filepath);
-        if (file.isDirectory()) {
-            System.out.println("文件夹");
-            String[] filelist = file.list();
-            for (int i = 0; i < filelist.length; i++) {
-                File readfile = new File(filepath + "\\" + filelist[i]);
-                if (!readfile.isDirectory()) {
-                    try {
-                        //System.out.println("path=" + readfile.getPath());
+        try {
+            File file = new File(new String(filepath.getBytes(encoding),"UTF-8"));
+            if (file.isDirectory()) {
+                System.out.println("文件夹");
+                String[] filelist = file.list();
+                for (int i = 0; i < filelist.length; i++) {
+                    File readfile = new File(filepath + "\\" + filelist[i]);
+                    if (!readfile.isDirectory()) {
 
-                        //System.out.println("name=" + readfile.getName());
                         String pattern = ".*\\.xls";
-                        boolean isMatch = Pattern.matches(pattern, readfile.getPath());
+                        String fileName =readfile.getName();
+                        int index = fileName.lastIndexOf('\\');
+                        fileName = fileName.substring(index+1);
+                        boolean isMatch = Pattern.matches(pattern, fileName);
                         if(isMatch){
-                            //获取系统编码
-                            String encoding = System.getProperty("file.encoding");
-                            System.out.println("encoding = "+encoding);
-                            String fileName = new String(readfile.getName().getBytes(encoding),"UTF-8");
-                            fileList.add(fileName);
+                            String fileName2 = new String(fileName.getBytes(encoding),"UTF-8");
+                            fileList.add(fileName2);
                         }
-                    }
-                    catch(UnsupportedEncodingException e){
-                        e.printStackTrace();
+
                     }
                 }
             }
+        }
+        catch(UnsupportedEncodingException e){
+            e.printStackTrace();
         }
         return fileList;
     }
