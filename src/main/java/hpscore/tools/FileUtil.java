@@ -8,6 +8,7 @@ package hpscore.tools;/**
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -50,11 +51,23 @@ public class FileUtil {
             for (int i = 0; i < filelist.length; i++) {
                 File readfile = new File(filepath + "\\" + filelist[i]);
                 if (!readfile.isDirectory()) {
-                    //System.out.println("path=" + readfile.getPath());
-                    //System.out.println("name=" + readfile.getName());
-                    String pattern = ".*\\.xls";
-                    boolean isMatch = Pattern.matches(pattern, readfile.getPath());
-                    if(isMatch)fileList.add(readfile.getName());
+                    try {
+                        //System.out.println("path=" + readfile.getPath());
+
+                        //System.out.println("name=" + readfile.getName());
+                        String pattern = ".*\\.xls";
+                        boolean isMatch = Pattern.matches(pattern, readfile.getPath());
+                        if(isMatch){
+                            //获取系统编码
+                            String encoding = System.getProperty("file.encoding");
+                            System.out.println("encoding = "+encoding);
+                            String fileName = new String(readfile.getName().getBytes(encoding),"UTF-8");
+                            fileList.add(fileName);
+                        }
+                    }
+                    catch(UnsupportedEncodingException e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }

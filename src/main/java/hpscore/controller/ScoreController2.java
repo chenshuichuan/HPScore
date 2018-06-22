@@ -204,7 +204,9 @@ public class ScoreController2 {
         response.setHeader("Content-Disposition", "attachment;filename="+enFileName);
         //读取目标文件，通过response将目标文件写到客户端
         //读取文件
-        InputStream in = new FileInputStream(filename);
+        String encoding = System.getProperty("file.encoding");
+        String fileName = new String(filename.getBytes("UTF-8"),encoding);
+        InputStream in = new FileInputStream(fileName);
         OutputStream out = response.getOutputStream();
         //写文件
         int b;
