@@ -22,7 +22,7 @@ public class FileUtil {
 
     public static void main(String[] args){
 
-       List<String> fileList = FileUtil.readfiles( "./");
+       List<String> fileList = FileUtil.readfiles( ".");
        for (String file: fileList){
            String pattern = ".*\\.xls";
            boolean isMatch = Pattern.matches(pattern, file);
