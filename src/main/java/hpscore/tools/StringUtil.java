@@ -77,6 +77,13 @@ public class StringUtil {
 		return i;
 	}
 
+	//由大到小排序
+	public static boolean isEquals(double score1,double score2){
+		boolean equals = false;
+		if(Double.doubleToLongBits(score1)==Double.doubleToLongBits(score2))equals=true;
+		return equals;
+	}
+
 	//根据起始单元格，计算结束单元格的大写字母，并返回
 	public static String getNextCell(char start,int next){
 		int nextCharNumber = ((int)start)+next;

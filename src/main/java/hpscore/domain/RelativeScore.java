@@ -22,7 +22,13 @@ public class RelativeScore {
     //评委们的相对分
     private double[]pScores;
     private String model;
-
+    private int ranking;
+    public int getRanking() {
+        return ranking;
+    }
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
     public RelativeScore(int NumberOfPingwei) {
         this.pScores = new double[NumberOfPingwei];
         this.pAverage = new double[6];

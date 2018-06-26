@@ -59,15 +59,15 @@ function updateRecord(pid,proId,options,model,editor) {
 }
 function setModalText(pid,proId,data,options,editor) {
 
-    // $('#pingwei2').text(data.pid);
-    // $('#works2').text(data.proId);
-    // $('#option21').text(data.option1);
-    // $('#option22').text(data.option2);
-    // $('#option23').text(data.option3);
-    // $('#option24').text(data.option4);
-    // $('#option25').text(data.option5);
-    // $('#option26').text(data.option6);
-    // $('#editor1').text(data.editor1);
+    $('#pingwei2').text(data.pid);
+    $('#works2').text(data.proId);
+    $('#option21').text(data.option1);
+    $('#option22').text(data.option2);
+    $('#option23').text(data.option3);
+    $('#option24').text(data.option4);
+    $('#option25').text(data.option5);
+    $('#option26').text(data.option6);
+    $('#editor1').text(data.editor1);
 
     var index_begin=0;
     var option1=parseInt(options[index_begin]);
@@ -110,7 +110,7 @@ function IsDataOk(options,model) {
 }
 //第一个编辑就是editor，第二个编辑为空时，不可以
 //冲突不可以 冲突则返回冲突数据，否则返回null
-function IsDataOk2(pid,proId, options,model){
+function IsDataOk2(pid,proId, options,model,editor){
     var optionList=options;
     for(var j=0;j<6;j++){
         options[j]=parseInt(optionList[j]);
@@ -125,6 +125,8 @@ function IsDataOk2(pid,proId, options,model){
                 if (score.option1!==options[0]||score.option2!==options[1]||score.option3!==options[2]||
                     score.option4!==options[3]||score.option5!==options[4]||score.option6!==options[5]){
                     alert("数据不一致！");
+                    //设置modal显示内容
+                    setModalText(pid,proId,score,optionList,editor);
                     result=1;
                 }
                 else result=0;//数据一致
@@ -263,11 +265,10 @@ function generateSaveListener() {
             var proId = $(preId+0).text();
             var result = IsDataOk(options,model);
             if(result===1){
-                result = IsDataOk2(pid,proId, options,model);
+                result = IsDataOk2(pid,proId, options,model,editor);
                 //数据冲突
                 if(result===1){
-                    //设置modal显示内容
-                    setModalText(pid,proId,result,options,editor);
+                    result=0;
                     m1.show();
                 }
                 //数据和数据库一致，更新数据
@@ -338,6 +339,7 @@ function searchListener() {
     var model = getCookie("model");
     var editor = getCookie("user");
     $("#search-table").empty();
+    $("#search-tips").text("")
     var pingweiScoreList = selectByPidAndModel(pingwei,editor,model);
     if(pingweiScoreList!==null){
         $("#search-tips").text(pingweiScoreList.length);

@@ -38,7 +38,7 @@ function setTbbody(tbBodyId,data) {
         for (index=0;index<pScores.length;index++){
             strOrigin = strOrigin+ "<td>"+pScores[index]+"</td>" ;
         }
-        var str =strOrigin+ "<td>"+data[i].average+"</td><td></td>" +
+        var str =strOrigin+ "<td>"+data[i].average+"</td><td>"+data[i].ranking+"</td>" +
             "</tr>";
         $(tbBodyId).append(str);
     }

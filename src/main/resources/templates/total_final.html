@@ -18,7 +18,7 @@
     <link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>
     <link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>
     <link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>
-
+    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script th:src="@{js/html5shiv.js}"></script>
@@ -103,7 +103,7 @@
                                                 <td th:text="${workf.teachers}">指导老师</td>
                                                 <td th:text="${workf.students}">研发学生</td>
                                                 <td th:text="${workf.finalScore}">平均分</td>
-                                                <td > </td>
+                                                <td th:text="${workf.ranking}"> </td>
                                             </tr>
 
                                             </tbody>
@@ -139,7 +139,7 @@
                                                 <td th:text="${worki.teachers}">指导老师</td>
                                                 <td th:text="${worki.students}">研发学生</td>
                                                 <td th:text="${worki.finalScore}">平均分</td>
-                                                <td > </td>
+                                                <td th:text="${worki.ranking}"> </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -175,7 +175,7 @@
                                                 <td th:text="${worku.teachers}">指导老师</td>
                                                 <td th:text="${worku.students}">研发学生</td>
                                                 <td th:text="${worku.finalScore}">平均分</td>
-                                                <td > </td>
+                                                <td th:text="${worku.ranking}"> </td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -222,16 +222,16 @@
         $("#head-title").append("最终作品获奖排名-"+model);
         $("#total_final").addClass("active");
 
-        $('#final-score-tb').dataTable( {
-            "aaSorting": [[ 10, "desc" ]]
-        } );
-
-        $('#innovation-score-tb').dataTable( {
-            "aaSorting": [[ 10, "desc" ]]
-        } );
-        $('#useful-score-tb').dataTable( {
-            "aaSorting": [[ 10, "desc" ]]
-        } );
+//        $('#final-score-tb').dataTable( {
+//            "aaSorting": [[ 10, "desc" ]]
+//        } );
+//
+//        $('#innovation-score-tb').dataTable( {
+//            "aaSorting": [[ 10, "desc" ]]
+//        } );
+//        $('#useful-score-tb').dataTable( {
+//            "aaSorting": [[ 10, "desc" ]]
+//        } );
 
         $("#export-excel").click(function () {
             //alert("export-url open!");

@@ -414,17 +414,7 @@ public class ScoreServiceImpl implements ScoreService {
 
         if (worksList!=null&&worksList.size()>=2){
             //按照平均分排序
-            Collections.sort(worksList,new Comparator() {
-                @Override
-                public int compare(Object o1, Object o2) {
-                    if(o1 instanceof Works && o2 instanceof Works){
-                        Works e1 = (Works) o1;
-                        Works e2 = (Works) o2;
-                        return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
-                    }
-                    throw new ClassCastException("不能转换为Works类型");
-                }
-            });
+            ScoreUtil.sortWorks(worksList);
         }
         return worksList;
     }
@@ -447,17 +437,7 @@ public class ScoreServiceImpl implements ScoreService {
             worksList.add(works1);
         }
         //按照平均分排序
-        Collections.sort(worksList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof Works && o2 instanceof Works){
-                    Works e1 = (Works) o1;
-                    Works e2 = (Works) o2;
-                    return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
-                }
-                throw new ClassCastException("不能转换为Works类型");
-            }
-        });
+        ScoreUtil.sortWorks(worksList);
         return worksList;
     }
     //获得实用奖列表 按照平均分排序
@@ -472,17 +452,7 @@ public class ScoreServiceImpl implements ScoreService {
             worksList.add(new Works(works1));
         }
         //按照平均分排序
-        Collections.sort(worksList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof Works && o2 instanceof Works){
-                    Works e1 = (Works) o1;
-                    Works e2 = (Works) o2;
-                    return StringUtil.compareTwoDouble(e1.getFinalScore(),e2.getFinalScore());
-                }
-                throw new ClassCastException("不能转换为Works类型");
-            }
-        });
+        ScoreUtil.sortWorks(worksList);
         return worksList;
     }
 }

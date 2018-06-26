@@ -12,6 +12,7 @@ import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.*;
 import hpscore.service.impl.GenerateExcelThreadServiceImpl;
+import hpscore.tools.ScoreUtil;
 import hpscore.tools.ServletUtil;
 import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
@@ -224,17 +225,7 @@ public class ScoreController {
         if (relativeScores!=null) {
 
             //按照作品编号排序
-            Collections.sort(relativeScores,new Comparator() {
-                @Override
-                public int compare(Object o1, Object o2) {
-                    if(o1 instanceof RelativeScore && o2 instanceof RelativeScore){
-                        RelativeScore e1 = (RelativeScore) o1;
-                        RelativeScore e2 = (RelativeScore) o2;
-                        return e1.getProId().compareTo(e2.getProId());
-                    }
-                    throw new ClassCastException("不能转换为RelativeScore类型");
-                }
-            });
+            ScoreUtil.sortRelativeScore(relativeScores);
 
             map.put("result",1);
             map.put("relativeScores",relativeScores);
@@ -260,6 +251,8 @@ public class ScoreController {
         List<RelativeScore> relativeScoreList = scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
         //计算成功
         if (relativeScoreList!=null) {
+            //按照作品编号排序
+            ScoreUtil.sortRelativeScore(relativeScoreList);
             map.put("result",1);
             map.put("scoreList",relativeScoreList);
             map.put("message","相对分平均分计算成功！");
@@ -280,17 +273,7 @@ public class ScoreController {
         Map<String,Object> map =new HashMap<String,Object>();
         List<InnovationScore> innovationScoreList = scoreService.calculateInnovationScore(model);
         //按照平均分排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
+        ScoreUtil.sortInnovationScore(innovationScoreList);
         //计算成功
         map.put("result",1);
         map.put("scoreList",innovationScoreList);
@@ -305,17 +288,7 @@ public class ScoreController {
         Map<String,Object> map =new HashMap<String,Object>();
         List<InnovationScore> innovationScoreList = scoreService.calculateUsefulScore(model);
         //按照平均分排序
-        Collections.sort(innovationScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof InnovationScore && o2 instanceof InnovationScore){
-                    InnovationScore e1 = (InnovationScore) o1;
-                    InnovationScore e2 = (InnovationScore) o2;
-                    return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为InnovationScore类型");
-            }
-        });
+        ScoreUtil.sortInnovationScore(innovationScoreList);
         //计算成功
         map.put("result",1);
         map.put("scoreList",innovationScoreList);

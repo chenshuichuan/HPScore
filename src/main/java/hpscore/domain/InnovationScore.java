@@ -20,14 +20,18 @@ public class InnovationScore {
 
     private String BianHao;//作品编号
     private String proName;//作品name
-
     private int maxScore;
     private int minScore;
     private double average;
-
     private int[] pScores;//评委打分
-
     private String model;
+    private int ranking;
+    public int getRanking() {
+        return ranking;
+    }
+    public void setRanking(int ranking) {
+        this.ranking = ranking;
+    }
 
     public InnovationScore(int NumberOfPingwei) {
         pScores = new int [NumberOfPingwei];

@@ -163,6 +163,8 @@
     #edit-table td{
         border-bottom: 0px solid #aaa;
     }
+
+
 </style>
 </head>
 <body class="sticky-header">
@@ -291,27 +293,27 @@
 
                 </thead>
                 <tbody >
-                <!--<tr class="bijao-tr">-->
-                    <!--<td id="pingwei2">-->
-                    <!--</td>-->
-                    <!--<td id="works2">-->
-                    <!--</td>-->
-                    <!--<td id="option21">-->
-                    <!--</td>-->
-                    <!--<td id="option22">-->
-                    <!--</td>-->
-                    <!--<td id="option23">-->
-                    <!--</td>-->
-                    <!--<td id="option24">-->
-                    <!--</td>-->
-                    <!--<td id="option25">-->
-                    <!--</td>-->
-                    <!--<td id="option26">-->
-                    <!--</td>-->
-                    <!--<td id="editor1">-->
-                        <!--编辑者-->
-                    <!--</td>-->
-                <!--</tr>-->
+                <tr class="bijao-tr">
+                    <td id="pingwei2">
+                    </td>
+                    <td id="works2">
+                    </td>
+                    <td id="option21">
+                    </td>
+                    <td id="option22">
+                    </td>
+                    <td id="option23">
+                    </td>
+                    <td id="option24">
+                    </td>
+                    <td id="option25">
+                    </td>
+                    <td id="option26">
+                    </td>
+                    <td id="editor1">
+                        编辑者
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         <input id="select-pingwei2" class="form-control modal-input" size="10"
@@ -406,6 +408,12 @@
         generateSaveListener();
         generateInputChangeListener();
         resetAllInput();
+        var pingwei = $("#select-pingwei").val();
+        alert("当前录入评委为："+pingwei+"号评委的评分记录");
+        document.getElementById('select-pingwei').addEventListener('change',function(){
+            var pingwei = $("#select-pingwei").val();
+            alert("当前录入评委为："+pingwei+"号评委的评分记录");
+        });
     });
     document.getElementById('search-pingwei').addEventListener('change',function(){
         searchListener();

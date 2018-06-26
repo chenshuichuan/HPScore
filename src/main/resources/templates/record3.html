@@ -140,13 +140,13 @@
         var url = "/pingweiScore/selectByPidAndModel?pid="+pid+"&model="+model;
         var result = null;
         $.get(url,function(data,status){
-            alert("数据: " + data + "\n状态: " + status);
+            //alert("数据: " + data + "\n状态: " + status);
             if(data.result===1) {
                 result = data.pingweiScoreList;
             }
         });
-        var str ="return result="+result;
-        alert(str);
+        //var str ="return result="+result;
+        //alert(str);
         return result;
     }
     $(document).ready(function(){
@@ -160,7 +160,7 @@
             $("#export-excel").attr("disabled",true);
             var url = "/score/generateExcelByFileAndModel?file=打分审核表&model="+model;
             $.get(url, function (data, status) {
-                alert(data.result);
+                //alert(data.result);
                 if (data.result === 1) {
                     alert('获取Excel表成功!');
                     window.open("/score/getExcel1?fileName="+data.fileName);
