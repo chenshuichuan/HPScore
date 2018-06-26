@@ -55,6 +55,9 @@ public class ScoreController {
     @Autowired
     private GenerateExcelThreadService generateExcelThreadService;
 
+    @Autowired
+    private LogInfoService logInfoService;
+
     //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/selectByPidAndProIdAndModel",method = RequestMethod.GET)
     public Map<String,Object> selectByPidAndProIdAndModel(
@@ -144,17 +147,29 @@ public class ScoreController {
     @RequestMapping(value = "/countScore")
     @ResponseBody
     public Map<String,Object> countScore(
+            HttpServletRequest request, HttpServletResponse response,
             @RequestParam("model")String model,
             @RequestParam("editor")String editor){
 
         Map<String,Object> map =new HashMap<String,Object>();
         User user = userRepository.findByName(editor);
+
+
+
+        //日志
+        User user1 = (User)request.getSession().getAttribute("user");
+        String userName= user1.getName();
+        String ip = (String)request.getSession().getAttribute("ip");
+
+        long startTime = System.currentTimeMillis();
+        String action =this.getClass().getName()+ ".countScore-参数：model="+model+",editor="+editor;
         //查询该编辑是否有权限进行计算操作
         //有权限进行计算
         if(user!=null&&user.getRole()==0){
             //检查所有评分记录是否都录入了两次以上
             List<Score> temps = scoreRepository.findScoreLessThanEditTimes(2);
             if (temps.size()>0){
+                action+=",存在评分记录录入次数未达到两次！";
                 map.put("result",0);
                 map.put("message","存在评分记录录入次数未达到两次！");
             }
@@ -165,6 +180,7 @@ public class ScoreController {
                 int index = scoreService.checkIfAllTheSameTimes(model,pingweiList);
                 //index,中途退出，存在对评分记录录入不完整
                 if(index !=pingweiList.size()){
+                    action+=",位的评委评分记录不统一！";
                     map.put("result",0);
                     map.put("message","第"+pingweiList.get(index)+"位的评委评分记录不统一！");
                 }
@@ -172,12 +188,15 @@ public class ScoreController {
                 else{
                    index = scoreService.calculateRelativeScore(model,pingweiList);
                    if(index!=pingweiList.size()){
+                       action+=",评委评分记录不统一！";
                        map.put("result",0);
                        map.put("message","第"+pingweiList.get(index)+"位的委评相对分计算出错！");
                    }
                    else{
                        for (int i=0;i<5;i++)
                            generateExcelThreadService.executeAsyncTask(i,model);
+
+                       action+=",相对分计算成功！";
                        map.put("result",1);
                        map.put("message","相对分计算成功！");
                     }
@@ -188,6 +207,7 @@ public class ScoreController {
             map.put("result",0);
             map.put("message","您没有计算相对分的权限！");
         }
+        logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
 

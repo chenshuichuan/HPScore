@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by ricardo on 2018/6/6.
@@ -18,16 +18,25 @@ public class LogInfo {
     private int id;
     private String name;
     private String ip;
-    private Date time;
+    private String time;
     private String action;
-    public LogInfo() {
+    private String model;
+
+    public String getModel() {
+        return model;
     }
 
-    public LogInfo(String name, String ip, Date time, String action) {
+    public void setModel(String model) {
+        this.model = model;
+    }
+    public LogInfo() {
+    }
+    public LogInfo(String name, String ip, String time, String action,String model) {
         this.name = name;
         this.ip = ip;
         this.time = time;
         this.action = action;
+        this.model = model;
     }
 
     public String getIp() {
@@ -38,11 +47,11 @@ public class LogInfo {
         this.ip = ip;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

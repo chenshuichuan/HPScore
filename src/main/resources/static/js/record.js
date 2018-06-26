@@ -323,7 +323,7 @@ function selectByPidAndModel(pid,editor,model){
     var url = "/pingweiScore/selectByPidAndEditorAndModel?pid="+pid+"&editor="+editor+"&model="+model;
     var result = null;
     $.get(url,function(data,status){
-        alert("数据: " + data + "\n状态: " + status);
+        //alert("数据: " + data + "\n状态: " + status);
         if(data.result===1) {
             result = data.pingweiScoreList;
         }

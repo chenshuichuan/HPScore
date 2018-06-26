@@ -8,6 +8,7 @@ package hpscore.tools;/**
 import hpscore.domain.Score;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.Random;
 
 /**
@@ -24,6 +25,9 @@ public class ScoreUtil {
         for (int i = 0; i < 50; i++) {
             System.out.println("GetRandomNumber = "+ScoreUtil.GetRandomNumber(5,20));
         }
+        long startTime = System.currentTimeMillis();
+        Date date = new Date(startTime);
+        System.out.println(date.toString());
     }
     public static int GetRandomNumber(int up,int top){
         Random rand = new Random();

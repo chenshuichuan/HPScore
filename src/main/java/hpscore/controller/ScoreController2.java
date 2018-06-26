@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import hpscore.domain.Score;
 import hpscore.domain.User;
 import hpscore.repository.UserRepository;
+import hpscore.service.LogInfoService;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
 import hpscore.service.WorksService;
@@ -52,7 +53,8 @@ public class ScoreController2 {
     private WorksService worksService;
     @Autowired
     private PingweiService pingweiService;
-
+    @Autowired
+    private LogInfoService logInfoService;
     //更新数据
     @RequestMapping(value = "/update")
     @ResponseBody
@@ -76,6 +78,15 @@ public class ScoreController2 {
 
         String editor = request.getParameter("editor");//编辑者
 
+        //日志
+        User user1 = (User)request.getSession().getAttribute("user");
+        String userName= user1.getName();
+        String ip = (String)request.getSession().getAttribute("ip");
+        long startTime = System.currentTimeMillis();
+        String action =this.getClass().getName()+ ".update-参数：pid="+pid+",proId="+proId
+                +",p1="+option1Str+",p2="+option2Str+",p3="+option3Str+",p4="+option4Str+
+                ",p5="+option5Str+",p6="+option6Str+
+                ",model ="+model;
         Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
         if(score!=null){
             logger.info("---更新评分数据，正在写入数据库-----"+score.getEditor1());
@@ -105,12 +116,16 @@ public class ScoreController2 {
 //            else logger.info("editor 写入失败！editor="+score.getEditor1());
 
             scoreService.update(temp);
+
+            action+=",成功更改评分记录！";
             map.put("result",1);
             map.put("message","成功更改评分记录！");
         }else{
+            action+=",更改评分记录失败！";
             map.put("result",0);
             map.put("message","更改评分记录失败！请检查数据是否已存在！");
         }
+        logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
 
@@ -143,6 +158,16 @@ public class ScoreController2 {
 
         String editor = request.getParameter("editor");//编辑者
 
+        //日志
+        User user1 = (User)request.getSession().getAttribute("user");
+        String userName= user1.getName();
+        String ip = (String)request.getSession().getAttribute("ip");
+        long startTime = System.currentTimeMillis();
+        String action =this.getClass().getName()+ ".add-参数：pid="+pid+",proId="+proId
+                +",p1="+option1Str+",p2="+option2Str+",p3="+option3Str+",p4="+option4Str+
+                ",p5="+option5Str+",p6="+option6Str+
+                ",model ="+model;
+
         Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
         if(score ==null){
             logger.info("---添加评分数据，正在写入数据库-----");
@@ -152,14 +177,17 @@ public class ScoreController2 {
                     option1, option2, option3, option4, option5, option6,
                     editTimes+1,model);
             temp.setEditor1(editor);
-
             scoreService.add(temp);
+
+            action+=",成功添加评分记录！";
             map.put("result",1);
             map.put("message","成功添加评分记录！");
         }else{
+            action+=",添加评分记录失败！";
             map.put("result",0);
             map.put("message","添加评分记录失败！请检查数据是否已存在！");
         }
+        logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
 
@@ -199,7 +227,7 @@ public class ScoreController2 {
         //获得请求文件名
         String encoding = System.getProperty("file.encoding");
         String filename = request.getParameter("fileName");
-        String enFileName =new String(filename.getBytes(encoding),"UTF-8");
+        String enFileName = URLEncoder.encode(filename,"utf-8");
         System.out.println("/getExcel1="+filename);
 
         //设置Content-Disposition

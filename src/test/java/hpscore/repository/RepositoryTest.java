@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -79,8 +80,9 @@ public class RepositoryTest {
 
         long time = System.currentTimeMillis();
         Date date = new java.sql.Date(time);
-
-        LogInfo logInfo = new LogInfo("admin","ip:1245.ddd.d",date,"action");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timeStr =df.format(date);
+        LogInfo logInfo = new LogInfo("admin","ip:1245.ddd.d",timeStr,"action","本科组");
         LogInfo logInfo1 = logInfoRepository.save(logInfo);
         Assert.assertThat(logInfo1,notNullValue());
 

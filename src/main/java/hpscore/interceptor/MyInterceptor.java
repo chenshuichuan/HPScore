@@ -1,6 +1,9 @@
 package hpscore.interceptor;
 
+import hpscore.domain.LogInfo;
 import hpscore.domain.User;
+import hpscore.service.LogInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +16,9 @@ import java.lang.reflect.Method;
  * Created by tengj on 2017/3/29.
  */
 public class MyInterceptor implements HandlerInterceptor {
+    @Autowired
+    LogInfoService logInfoService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
@@ -22,8 +28,9 @@ public class MyInterceptor implements HandlerInterceptor {
         request.setAttribute("requestStartTime", startTime);
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        System.out.println("用户:"+ip+",访问目标:"+method.getDeclaringClass().getName() + "."
-                + method.getName());
+        String target = method.getDeclaringClass().getName() + "."
+                + method.getName();
+        System.out.println("用户:"+ip+",访问目标:"+target);
         User user=(User)request.getSession().getAttribute("user");
 
         if(null==user){
@@ -31,6 +38,7 @@ public class MyInterceptor implements HandlerInterceptor {
             response.sendRedirect("toLogin");
             flag = false;
         }else{
+            //logInfoService.addLoginInfo(user.getName(),ip,startTime,target);
             System.out.println("MyInterceptor:username="+user.getName());
             flag = true;
         }

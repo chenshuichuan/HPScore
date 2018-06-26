@@ -5,10 +5,13 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
+import hpscore.domain.LogInfo;
 import hpscore.domain.Score;
 import hpscore.domain.User;
 import hpscore.domain.Works;
+import hpscore.repository.LogInfoRepository;
 import hpscore.repository.UserRepository;
+import hpscore.service.LogInfoService;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
 import hpscore.service.WorksService;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +49,8 @@ public class RecordController {
     private WorksService worksService;
     @Autowired
     private PingweiService pingweiService;
+    @Autowired
+    private LogInfoRepository logInfoRepository;
 
     //本科组评分录入
     @RequestMapping(value = "/record1")
@@ -80,6 +87,33 @@ public class RecordController {
         List<Works>usefulList = scoreService.getUsefulAward(model);
         modelAndView.addObject(
                 "usefulList",usefulList);
+        return modelAndView;
+    }
+
+
+    //日志管理
+    @RequestMapping(value = "/log_infor.html")
+    public ModelAndView log_infor(HttpServletRequest request, HttpServletResponse response){
+        String model = (String)request.getSession().getAttribute("model");
+        ModelAndView modelAndView = new ModelAndView("log_infor");
+
+        List<LogInfo> logInfoList = logInfoRepository.findByModel(model);
+        modelAndView.addObject(
+                "logInfoList",logInfoList);
+
+        List<User>userList = userRepository.findAll();
+        modelAndView.addObject(
+                "userList",userList);
+        return modelAndView;
+    }
+
+    //日志管理
+    @RequestMapping(value = "/user.html")
+    public ModelAndView user(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = new ModelAndView("user");
+        List<User>userList = userRepository.findAll();
+        modelAndView.addObject(
+                "userList",userList);
         return modelAndView;
     }
 }
