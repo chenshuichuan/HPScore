@@ -7,4 +7,5 @@ package hpscore.service;
  */
 public interface GenerateExcelThreadService {
     void executeAsyncTask(Integer i,String model);
+    void executeGenerateAward(String model);
 }

@@ -3,7 +3,18 @@
 $.ajaxSetup({
     async:true
 });
-
+function appendSpinner() {
+    var str = " <!--预测参数 start-->\n" +
+        "            <div class=\"row\" id=\"my-spinner\">\n" +
+        "                <div class=\"col-md-12\">\n" +
+        "                    <div style=\"color: #4c4ae1;text-align: center;\">正在加载 .... </div>\n" +
+        "                    <div class=\"spinner\"></div>\n" +
+        "                </div>\n" +
+        "            </div>";
+    $("#final-score-tb-body-spinner").append(str);
+    $("#innovation-score-tb-body-spinner").append(str);
+    $("#useful-score-tb-body-spinner").append(str);
+}
 //根据评委的个数，设置table的header头
 function setHeader(pingweiSize) {
     var index=0;
@@ -30,6 +41,7 @@ function setHeader(pingweiSize) {
 
 function setTbbody(tbBodyId,data) {
     $(tbBodyId).empty();
+    $(tbBodyId+"-spinner").empty();
     for (var i=0;i<data.length;i++){
         var index=0;
         var strOrigin="<tr>" +
@@ -44,6 +56,7 @@ function setTbbody(tbBodyId,data) {
     }
 }
 function setTbBodyData() {
+    appendSpinner();
     var model = getCookie("model");
     var url1 = "/score/calculteRelativeScoreAverageAndMaxAndMin?model=" + model;
     selectScoreByModel("#final-score-tb-body",url1);
@@ -84,6 +97,8 @@ function countScore(model, editor) {
         document.getElementById("export-excel1").disabled=true;
         document.getElementById("export-excel2").disabled=true;
         document.getElementById("export-excel3").disabled=true;
+        var myspinner=document.getElementById("my-spinner");
+        myspinner.style.display='none';
     });
 }
 //打分转换表
@@ -111,11 +126,14 @@ function setClickListener() {
     $("#count-bt").click(function (e) {
         //根据权限和model设置页面显示
         //禁用按钮
+        var myspinner=document.getElementById("my-spinner");
+        myspinner.style.display='block';
         document.getElementById("count-bt").disabled=true;
         document.getElementById("export-excel1").disabled=true;
         document.getElementById("export-excel2").disabled=true;
         document.getElementById("export-excel3").disabled=true;
         countScore(model, editor);
+
     });
     var export1="#export-excel1";
     var export2="#export-excel2";

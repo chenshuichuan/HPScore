@@ -1,6 +1,8 @@
 package hpscore.service;
 
 
+import hpscore.domain.Award;
+import hpscore.domain.InnovationScore;
 import hpscore.domain.Works;
 
 import java.util.List;
@@ -16,4 +18,12 @@ public interface WorksService {
     List<Works> selectAll();
     List<String> selectAllName();
     List<String> selectAllCodeByModel(String model);
+
+    List<Works> awardToWorks(List<Award> awardList);
+    List<Works> selectFinalScoreRanking(String model);
+    List<Works> getSumUpAward(String model);
+    List<Works> getInnovationAward(String model);
+    List<Works> getUsefulAward(String model);
+
+    int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType);
 }

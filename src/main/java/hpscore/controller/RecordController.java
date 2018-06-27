@@ -11,10 +11,7 @@ import hpscore.domain.User;
 import hpscore.domain.Works;
 import hpscore.repository.LogInfoRepository;
 import hpscore.repository.UserRepository;
-import hpscore.service.LogInfoService;
-import hpscore.service.PingweiService;
-import hpscore.service.ScoreService;
-import hpscore.service.WorksService;
+import hpscore.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +49,9 @@ public class RecordController {
     @Autowired
     private LogInfoRepository logInfoRepository;
 
+    @Autowired
+    private GenerateExcelThreadService generateExcelThreadService;
+
     //本科组评分录入
     @RequestMapping(value = "/record1")
     public ModelAndView record1(@RequestParam("editor")String editor,
@@ -76,17 +76,17 @@ public class RecordController {
     @RequestMapping(value = "/total_final")
     public ModelAndView total_final(@RequestParam("model")String model){
 
+        //generateExcelThreadService.executeGenerateAward();
         ModelAndView modelAndView = new ModelAndView("total_final");
-
-        List<Works> worksList = scoreService.getSumUpAward(model);
-        modelAndView.addObject(
-                "finalList",worksList);
-        List<Works> innovationList = scoreService.getInnovationAward(model);
-        modelAndView.addObject(
-                "innovationList",innovationList);
-        List<Works>usefulList = scoreService.getUsefulAward(model);
-        modelAndView.addObject(
-                "usefulList",usefulList);
+//        List<Works> worksList = worksService.getSumUpAward(model);
+//        modelAndView.addObject(
+//                "finalList",worksList);
+//        List<Works> innovationList = worksService.getInnovationAward(model);
+//        modelAndView.addObject(
+//                "innovationList",innovationList);
+//        List<Works>usefulList = worksService.getUsefulAward(model);
+//        modelAndView.addObject(
+//                "usefulList",usefulList);
         return modelAndView;
     }
 

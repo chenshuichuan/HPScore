@@ -172,7 +172,6 @@ public class ScoreServiceImpl implements ScoreService {
         return 1;
     }
 
-
     //计算相对分的平均分、最大分、最小分,返回计算出的平均分表
     @Override
     public List<RelativeScore> calculteRelativeScoreAverageAndMaxAndMin(String model) {
@@ -406,53 +405,4 @@ public class ScoreServiceImpl implements ScoreService {
         return innovationScoreList;
     }
 
-
-    //获取works作品表，
-    @Override
-    public List<Works> selectFinalScoreRanking(String model){
-        List<Works> worksList = worksRepository.findByModel(model);
-
-        if (worksList!=null&&worksList.size()>=2){
-            //按照平均分排序
-            ScoreUtil.sortWorks(worksList);
-        }
-        return worksList;
-    }
-
-    //获得综合奖列表 按照相对分平均分排序
-    @Override
-    public List<Works> getSumUpAward(String model){
-        return selectFinalScoreRanking(model);
-    }
-
-    //获得创新奖列表 按照平均分排序
-    @Override
-    public List<Works> getInnovationAward(String model){
-        List<InnovationScore>innovationScoreList = calculateInnovationScore(model);
-        List<Works> worksList = new ArrayList<>();
-        for (InnovationScore innovationScore: innovationScoreList){
-            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
-            Works works1 = new Works(works);
-            works1.setFinalScore(innovationScore.getAverage());//将平均分设置为创新奖的平均分
-            worksList.add(works1);
-        }
-        //按照平均分排序
-        ScoreUtil.sortWorks(worksList);
-        return worksList;
-    }
-    //获得实用奖列表 按照平均分排序
-    @Override
-    public List<Works> getUsefulAward(String model){
-        List<InnovationScore> innovationScoreList = calculateUsefulScore(model);
-        List<Works> worksList = new ArrayList<>();
-        for (InnovationScore innovationScore: innovationScoreList){
-            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),model);
-            Works works1 = new Works(works);
-            works1.setFinalScore(innovationScore.getAverage());//将平均分设置为实用奖的平均分
-            worksList.add(new Works(works1));
-        }
-        //按照平均分排序
-        ScoreUtil.sortWorks(worksList);
-        return worksList;
-    }
 }

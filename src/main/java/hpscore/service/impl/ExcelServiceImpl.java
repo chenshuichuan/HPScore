@@ -4,6 +4,7 @@ package hpscore.service.impl;
 import hpscore.domain.*;
 import hpscore.repository.UserRepository;
 import hpscore.service.*;
+import hpscore.tools.ScoreUtil;
 import hpscore.tools.StringUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -29,7 +30,8 @@ public class ExcelServiceImpl implements ExcelService {
     private PingweiScoreService pingweiScoreService;
     @Autowired
     private PingweiService pingweiService;
-
+    @Autowired
+    private WorksService worksService;
     //原始打分审核表
     @Override
     public String reviewExcel(String model) {
@@ -380,17 +382,7 @@ public class ExcelServiceImpl implements ExcelService {
         List<RelativeScore>relativeScoreList =
                 scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
         //按照平均分排序
-        Collections.sort(relativeScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof RelativeScore && o2 instanceof RelativeScore){
-                    RelativeScore e1 = (RelativeScore) o1;
-                    RelativeScore e2 = (RelativeScore) o2;
-                    return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为RelativeScore类型");
-            }
-        });
+        ScoreUtil.sortRelativeScore(relativeScoreList);
         String excelName = "2018泛珠赛总决赛终评相对平均分统计表("+model+")";
         String sheetName = "相对平均分统计表("+model+")";
         Sheet sheet = wb.createSheet(sheetName);
@@ -453,7 +445,7 @@ public class ExcelServiceImpl implements ExcelService {
                                     String[] headers,String model,List<String> pingweiStrList){
         //所有作品的创新分
         List<InnovationScore>innovationScoreList = scoreService.calculateInnovationScore(model);
-
+        ScoreUtil.sortInnovationScore(innovationScoreList);
         String sheetName = "创新分统计表("+model+")";
         String titleName = "2018泛珠赛总决赛终评创新分统计表("+model+")";
         Sheet sheet = wb.createSheet(sheetName);
@@ -518,7 +510,7 @@ public class ExcelServiceImpl implements ExcelService {
                                     String[] headers,String model,List<String> pingweiStrList){
         //所有作品的创新分
         List<InnovationScore>innovationScoreList = scoreService.calculateUsefulScore(model);
-
+        ScoreUtil.sortInnovationScore(innovationScoreList);
         String sheetName = "实用分统计表("+model+")";
         String titleName = "2018泛珠赛总决赛终评实用分统计表("+model+")";
 
@@ -588,13 +580,13 @@ public class ExcelServiceImpl implements ExcelService {
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
 
-        List<Works> worksList = scoreService.getSumUpAward(model);
+        List<Works> worksList = worksService.getSumUpAward(model);
         CreateSumUpExcel(wb, styles,headers,model,"综合奖", worksList);
 
-        worksList = scoreService.getInnovationAward(model);
+        worksList = worksService.getInnovationAward(model);
         CreateSumUpExcel(wb, styles,headers,model,"创新奖", worksList);
 
-        worksList = scoreService.getUsefulAward(model);
+        worksList = worksService.getUsefulAward(model);
         CreateSumUpExcel(wb, styles,headers,model,"实用奖", worksList);
         // Write the output to a file
         String file = excelName+".xls";

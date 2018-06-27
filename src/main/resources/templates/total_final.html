@@ -24,9 +24,39 @@
     <script th:src="@{js/html5shiv.js}"></script>
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
+    <style>
+        /*加载动画*/
+        .spinner {
+            width: 50px;
+            height: 50px;
+            background-color: #67CF22;
 
+            margin: 20px auto;
+            -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+            animation: rotateplane 1.2s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes rotateplane {
+            0% { -webkit-transform: perspective(120px) }
+            50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+            100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+        }
+
+        @keyframes rotateplane {
+            0% {
+                transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+                -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+            } 50% {
+                  transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+                  -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+              } 100% {
+                    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+                    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+                }
+        }
+
+    </style>
 </head>
-
 <body class="sticky-header">
 <section>
     <!-- left side start-->
@@ -89,26 +119,16 @@
                                                 <th>指导老师</th>
                                                 <th>研发学生</th>
                                                 <th>相对平均分</th>
+                                                <th>排名</th>
                                                 <th>获奖等级</th>
                                             </tr>
                                             </thead>
                                             <tbody id="final-score-tb-body">
 
-                                            <tr th:each="workf:${finalList}">
-                                                <td th:text="${workf.code}">序号</td>
-                                                <td th:text="${workf.bianHao}">编号</td>
-                                                <td th:text="${workf.name}">作品名称</td>
-                                                <td th:text="${workf.partName}">分赛区名称</td>
-                                                <td th:text="${workf.school}">学校名称</td>
-                                                <td th:text="${workf.teachers}">指导老师</td>
-                                                <td th:text="${workf.students}">研发学生</td>
-                                                <td th:text="${workf.finalScore}">平均分</td>
-                                                <td th:text="${workf.ranking}"> </td>
-                                            </tr>
-
                                             </tbody>
                                         </table>
                                     </div>
+                                    <div id="final-score-tb-body-spinner"></div>
                                 </div>
                                 <div class="tab-pane fade" id="innovation-score">
                                     <!--创新平均分-->
@@ -125,27 +145,18 @@
                                                 <th>指导老师</th>
                                                 <th>研发学生</th>
                                                 <th>创新平均分</th>
+                                                <th>排名</th>
                                                 <th>获奖等级</th>
                                             </tr>
                                             </thead>
                                             <tbody id="innovation-score-tb-body">
-
-                                            <tr th:each="worki:${innovationList}">
-                                                <td th:text="${worki.code}">序号</td>
-                                                <td th:text="${worki.bianHao}">编号</td>
-                                                <td th:text="${worki.name}">作品名称</td>
-                                                <td th:text="${worki.partName}">分赛区名称</td>
-                                                <td th:text="${worki.school}">学校名称</td>
-                                                <td th:text="${worki.teachers}">指导老师</td>
-                                                <td th:text="${worki.students}">研发学生</td>
-                                                <td th:text="${worki.finalScore}">平均分</td>
-                                                <td th:text="${worki.ranking}"> </td>
-                                            </tr>
                                             </tbody>
                                         </table>
 
 
                                     </div>
+
+                                    <div id="innovation-score-tb-body-spinner"></div>
                                 </div>
                                 <div class="tab-pane fade" id="useful-score">
                                     <!--实用平均分-->
@@ -162,26 +173,29 @@
                                                 <th>指导老师</th>
                                                 <th>研发学生</th>
                                                 <th>实用平均分</th>
+                                                <th>排名</th>
                                                 <th>获奖等级</th>
                                             </tr>
                                             </thead>
                                             <tbody id="useful-score-tb-body">
-                                            <tr th:each="worku:${usefulList}">
-                                                <td th:text="${worku.code}">序号</td>
-                                                <td th:text="${worku.bianHao}">编号</td>
-                                                <td th:text="${worku.name}">作品名称</td>
-                                                <td th:text="${worku.partName}">分赛区名称</td>
-                                                <td th:text="${worku.school}">学校名称</td>
-                                                <td th:text="${worku.teachers}">指导老师</td>
-                                                <td th:text="${worku.students}">研发学生</td>
-                                                <td th:text="${worku.finalScore}">平均分</td>
-                                                <td th:text="${worku.ranking}"> </td>
-                                            </tr>
+                                            <!--<tr th:each="worku:${usefulList}">-->
+                                                <!--<td th:text="${worku.code}">序号</td>-->
+                                                <!--<td th:text="${worku.bianHao}">编号</td>-->
+                                                <!--<td th:text="${worku.name}">作品名称</td>-->
+                                                <!--<td th:text="${worku.partName}">分赛区名称</td>-->
+                                                <!--<td th:text="${worku.school}">学校名称</td>-->
+                                                <!--<td th:text="${worku.teachers}">指导老师</td>-->
+                                                <!--<td th:text="${worku.students}">研发学生</td>-->
+                                                <!--<td th:text="${worku.finalScore}">平均分</td>-->
+                                                <!--<td th:text="${worku.ranking}"> </td>-->
+                                            <!--</tr>-->
                                             </tbody>
                                         </table>
 
 
                                     </div>
+
+                                    <div id="useful-score-tb-body-spinner"></div>
                                 </div>
                             </div>
 
@@ -199,6 +213,7 @@
     <!-- main content end-->
 </section>
 
+
 <!-- Placed js at the end of the document so the pages load faster -->
 <script src="../static/js/jquery-1.10.2.min.js" th:src="@{js/jquery-1.10.2.min.js}"></script>
 <script src="../static/js/jquery-ui-1.9.2.custom.min.js" th:src="@{js/jquery-ui-1.9.2.custom.min.js}"></script>
@@ -215,24 +230,13 @@
 <script src="../static/js/scripts.js"  th:src="@{js/scripts.js}"></script>
 <!--title time initialization-->
 <script src="../static/js/myjsfile.js" th:src="@{js/myjsfile.js}"></script>
-
+<script src="../static/js/final_score.js" th:src="@{js/final_score.js}"></script>
 <script>
     $(document).ready(function () {
         var model = getCookie("model");
         $("#head-title").append("最终作品获奖排名-"+model);
         $("#total_final").addClass("active");
-
-//        $('#final-score-tb').dataTable( {
-//            "aaSorting": [[ 10, "desc" ]]
-//        } );
-//
-//        $('#innovation-score-tb').dataTable( {
-//            "aaSorting": [[ 10, "desc" ]]
-//        } );
-//        $('#useful-score-tb').dataTable( {
-//            "aaSorting": [[ 10, "desc" ]]
-//        } );
-
+        setTbBodyData();
         $("#export-excel").click(function () {
             //alert("export-url open!");
             $("#export-excel").attr("disabled",true);
@@ -249,21 +253,6 @@
             });
         });
     });
-
-</script>
-<script>
-    $(function(){
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            // 获取已激活的标签页的名称
-            var activeTab = $(e.target).text();
-            // 获取前一个激活的标签页的名称
-            var previousTab = $(e.relatedTarget).text();
-            $(".active-tab span").html(activeTab);
-            $(".previous-tab span").html(previousTab);
-        });
-    });
-
-
 </script>
 </body>
 </html>

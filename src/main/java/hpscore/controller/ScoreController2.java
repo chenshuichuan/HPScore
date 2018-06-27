@@ -213,8 +213,8 @@ public class ScoreController2 {
             e.printStackTrace();
         }
         try {
-            fis.close();
-            os.close();
+            if(fis!=null)fis.close();
+            if(os!=null)os.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

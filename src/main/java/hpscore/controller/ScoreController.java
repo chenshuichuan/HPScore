@@ -136,8 +136,28 @@ public class ScoreController {
         }
         return map;
     }
+   //计算获奖作品表请求
+   @RequestMapping(value = "/countAward")
+   @ResponseBody
+   public Map<String,Object> countAward(
+           HttpServletRequest request, HttpServletResponse response,
+           @RequestParam("model")String model){
+       Map<String,Object> map =new HashMap<String,Object>();
+       System.out.println("执行生成分数任务：executeGenerateAward");
+       List<InnovationScore> innovationScoreList1 = scoreService.calculateInnovationScore(model);
+       //按照平均分排序
+       ScoreUtil.sortInnovationScore(innovationScoreList1);
+       worksService.saveAsAward(innovationScoreList1,"创新分");
 
-
+       List<InnovationScore> innovationScoreList2 = scoreService.calculateUsefulScore(model);
+       ScoreUtil.sortInnovationScore(innovationScoreList2);
+       worksService.saveAsAward(innovationScoreList2,"实用分");
+       System.out.println("executeGenerateAward 执行完成，下面执行：excelService.finalScoreExcel 生成作品获奖表");
+       excelService.finalScoreExcel(model);
+       map.put("result",0);
+       map.put("message","您没有计算相对分的权限！");
+       return map;
+   }
     //计算相对分请求
     /**
      *@Author: Ricardo
@@ -154,8 +174,6 @@ public class ScoreController {
 
         Map<String,Object> map =new HashMap<String,Object>();
         User user = userRepository.findByName(editor);
-
-
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
@@ -194,9 +212,12 @@ public class ScoreController {
                        map.put("message","第"+pingweiList.get(index)+"位的委评相对分计算出错！");
                    }
                    else{
-                       for (int i=0;i<5;i++)
+                       //计算其他平均分以及生成相应的四种表格
+                       for (int i=0;i<4;i++)
                            generateExcelThreadService.executeAsyncTask(i,model);
 
+                       //计算创新分、实用分排名，以及生成相应排名表
+                       generateExcelThreadService.executeGenerateAward(model);
                        action+=",相对分计算成功！";
                        map.put("result",1);
                        map.put("message","相对分计算成功！");
@@ -211,8 +232,6 @@ public class ScoreController {
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
-
-
     //根据model查询作品的所有相对评分记录，并返回
     @RequestMapping(value = "/selectRelativeScoreByModel",method = RequestMethod.GET)
     public Map<String,Object> selectRelativeScoreByModel(
@@ -328,6 +347,55 @@ public class ScoreController {
             map.put("result",0);
             map.put("message","获取表格失败！数据存在问题，请检查！");
         }
+        return map;
+    }
+
+
+    //计算相对分获奖表
+    @RequestMapping(value = "/selectRelativeAward",method = RequestMethod.GET)
+    public Map<String,Object> selectRelativeAward(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<Works> worksList = worksService.getSumUpAward(model);
+        //计算成功
+        if (worksList!=null) {
+            map.put("result",1);
+            map.put("scoreList",worksList);
+            map.put("message","相对分平均分计算成功！");
+        }
+        else{
+            map.put("result",0);
+            map.put("scoreList",null);
+            map.put("message","平均分计算失败！");
+        }
+        return map;
+    }
+
+    //返回创新分获奖表
+    @RequestMapping(value = "/selectInnovationAward",method = RequestMethod.GET)
+    public Map<String,Object> selectInnovationAward(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<Works> worksList = worksService.getInnovationAward(model);
+        //计算成功
+        map.put("result",1);
+        map.put("scoreList",worksList);
+        map.put("message","获取创新性分数成功！");
+        return map;
+    }
+    //返回实用性分数排名
+    @RequestMapping(value = "/selectUsefulAward",method = RequestMethod.GET)
+    public Map<String,Object> selectUsefulAward(
+            @RequestParam("model")String model){
+
+        Map<String,Object> map =new HashMap<String,Object>();
+        List<Works> worksList = worksService.getUsefulAward(model);
+        //计算成功
+        map.put("result",1);
+        map.put("scoreList",worksList);
+        map.put("message","获取实用性分数成功！");
         return map;
     }
 }

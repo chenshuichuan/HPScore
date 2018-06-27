@@ -18,6 +18,7 @@
     <script th:src="@{js/html5shiv.js}"></script>
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
+    
     <style>
         /*水波按钮效果*/
         button{
@@ -79,6 +80,37 @@
         table tr td{
             font-size: small;
         }
+
+        /*加载动画*/
+        .spinner {
+            width: 50px;
+            height: 50px;
+            background-color: #67CF22;
+
+            margin: 20px auto;
+            -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+            animation: rotateplane 1.2s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes rotateplane {
+            0% { -webkit-transform: perspective(120px) }
+            50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+            100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+        }
+
+        @keyframes rotateplane {
+            0% {
+                transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+                -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+            } 50% {
+                  transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+                  -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+              } 100% {
+                    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+                    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+                }
+        }
+
     </style>
 </head>
 
@@ -140,22 +172,15 @@
             </div>
             <!--预测参数 end-->
 
-            <!--&lt;!&ndash;Striped Progress Bars start&ndash;&gt;-->
-            <!--<div class="row" style="visibility: visible;">-->
-                <!--<div class="col-md-3"></div>-->
-                <!--<div class="col-md-6" style="text-align: center;">-->
-                    <!--<div>正在<span>加载数据</span></div>-->
-                    <!--<div class="progress progress-striped active progress-sm"-->
-                         <!--style="background-color: rgba(0,0,0,0.45);">-->
-                        <!--<div style="width: 45%;" aria-valuemax="100" aria-valuemin="0" aria-valuenow="45"-->
-                             <!--role="progressbar" class="progress-bar progress-bar-success">-->
-                            <!--<span class="sr-only">45% Complete</span>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="col-md-3"></div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash;Striped Progress Bars end&ndash;&gt;-->
+
+            <!--预测参数 start-->
+            <div class="row" id="my-spinner">
+                <div class="col-md-12">
+                    <div style="color: #4c4ae1;text-align: center;">正在计算 .... </div>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <!--预测参数 end-->
 
             <div class="row">
                 <div class="col-sm-12">
@@ -189,6 +214,7 @@
                                         </table>
 
                                     </div>
+                                    <div id="final-score-tb-body-spinner"></div>
                                 </div>
                                 <div class="tab-pane fade" id="innovation-score">
                                     <!--创新平均分-->
@@ -202,6 +228,8 @@
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    <div id="innovation-score-tb-body-spinner"></div>
                                 </div>
                                 <div class="tab-pane fade" id="useful-score">
                                     <!--实用平均分-->
@@ -213,9 +241,8 @@
                                             <td>useful</td>
                                             </tbody>
                                         </table>
-
-
                                     </div>
+                                    <div id="useful-score-tb-body-spinner"></div>
                                 </div>
                             </div>
                         </div>
@@ -230,7 +257,6 @@
     </div>
     <!-- main content end-->
 </section>
-
 <!-- Placed js at the end of the document so the pages load faster -->
 <script src="../static/js/jquery-1.10.2.min.js" th:src="@{js/jquery-1.10.2.min.js}"></script>
 <script src="../static/js/jquery-ui-1.9.2.custom.min.js" th:src="@{js/jquery-ui-1.9.2.custom.min.js}"></script>
@@ -239,16 +265,11 @@
 <script src="../static/js/jquery.nicescroll.js" th:src="@{js/jquery.nicescroll.js}"></script>
 <script src="../static/js/util-cookie.js" th:src="@{js/util-cookie.js}"></script>
 
+
 <!--common scripts for all pages-->
 <script src="../static/js/scripts.js"  th:src="@{js/scripts.js}"></script>
 <!--title time initialization-->
 <script src="../static/js/myjsfile.js" th:src="@{js/myjsfile.js}"></script>
-
-<!--&lt;!&ndash;dynamic table&ndash;&gt;-->
-<!--<script src="../static/plugins/advanced-datatable/js/jquery.dataTables.js" th:src="@{plugins/advanced-datatable/js/jquery.dataTables.js}"></script>-->
-<!--<script src="../static/plugins/data-tables/DT_bootstrap.js" th:src="@{plugins/data-tables/DT_bootstrap.js}"></script>-->
-<!--&lt;!&ndash;dynamic table initialization &ndash;&gt;-->
-<!--<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>-->
 
 <!--title time initialization-->
 <script src="../static/js/count.js" th:src="@{js/count.js}"></script>
@@ -260,10 +281,11 @@
         $("#head-title").append("计算最终相对分-"+model);
         $("#count").addClass("active");
         $("#tb-title").text("平均分统计表-"+model);
-        //selectRelativeScoreByModel();
         setHeader(pingweiList.length);
         setTbBodyData();
         setClickListener();
+        var myspinner=document.getElementById("my-spinner");
+        myspinner.style.display='none';
     });
     /*]]>*/
 </script>

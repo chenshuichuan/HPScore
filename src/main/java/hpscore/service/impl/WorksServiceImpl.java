@@ -1,10 +1,17 @@
 package hpscore.service.impl;
 
 
+import hpscore.controller.CountController;
+import hpscore.domain.Award;
+import hpscore.domain.InnovationScore;
 import hpscore.domain.PingweiScore;
 import hpscore.domain.Works;
+import hpscore.repository.AwardRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.WorksService;
+import hpscore.tools.ScoreUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +25,13 @@ import java.util.List;
  */
 @Service
 public class WorksServiceImpl implements WorksService {
+    private final static Logger logger = LoggerFactory.getLogger(CountController.class);
 
     @Autowired
     WorksRepository worksRepository;
+    @Autowired
+    AwardRepository awardRepository;
+
     @Override
     public int add(Works works) {
         Works works1 = worksRepository.save(works);
@@ -86,5 +97,81 @@ public class WorksServiceImpl implements WorksService {
         //按照作品编号排序
         Collections.sort(stringList);
         return stringList;
+    }
+
+    //将award数据转化为works数据
+    @Override
+    public List<Works> awardToWorks(List<Award> awardList) {
+        List<Works> worksList = new ArrayList<>();
+        for (Award award: awardList){
+            Works works = worksRepository.findOne(award.getWorksId());
+            if(works!=null&&works.getModel().equals(award.getModel())){
+                Works works1 = new Works(works);
+                works1.setRanking(award.getRanking());
+                works1.setFinalScore(award.getScore());
+                worksList.add(works1);
+            }
+            else logger.error("awardToWorks error!");
+        }
+        return worksList;
+    }
+
+    //获取相对分的works作品表，
+    @Override
+    public List<Works> selectFinalScoreRanking(String model){
+        List<Works> worksList = worksRepository.findByModel(model);
+
+        if (worksList!=null&&worksList.size()>=2){
+            //按照平均分排序
+            ScoreUtil.sortWorks(worksList);
+        }
+        return worksList;
+    }
+    //获得综合奖列表 按照相对分平均分排序
+    @Override
+    public List<Works> getSumUpAward(String model){
+        return selectFinalScoreRanking(model);
+    }
+
+    //获得创新奖列表 按照平均分排序
+    @Override
+    public List<Works> getInnovationAward(String model){
+        List<Award> awardList = awardRepository.findByModelAndScoreType(model,"创新分");
+        List<Works> worksList =  awardToWorks(awardList);
+        //按照平均分排序
+        ScoreUtil.sortWorks(worksList);
+        return worksList;
+    }
+    //获得实用奖列表 按照平均分排序
+    @Override
+    public List<Works> getUsefulAward(String model){
+        List<Award> awardList = awardRepository.findByModelAndScoreType(model,"实用分");
+        List<Works> worksList =  awardToWorks(awardList);
+        //按照平均分排序
+        ScoreUtil.sortWorks(worksList);
+        return worksList;
+    }
+
+    @Override
+    public int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType) {
+        for (InnovationScore innovationScore: innovationScoreList){
+            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),
+                    innovationScore.getModel());
+            if (works!=null){
+                Award award = awardRepository.findByWorksIdAndModelAndScoreType(works.getId()
+                ,works.getModel(),scoreType);
+                if (award==null){
+                    award = new Award(works.getId(),innovationScore.getModel(),innovationScore.getAverage(),
+                            scoreType);
+                }
+                else {
+                    award.setScore(innovationScore.getAverage());
+                }
+                award.setRanking(innovationScore.getRanking());
+                awardRepository.save(award);
+            }
+            else logger.error("saveAsAward:作品code="+innovationScore.getProId()+"不存在！");
+        }
+        return 0;
     }
 }
