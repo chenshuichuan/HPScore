@@ -30,6 +30,7 @@
         td{
             text-align: left;
         }
+
     </style>
 </head>
 <body class="sticky-header">
@@ -58,7 +59,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <span >Excel列表</span>
+                            <span >日志列表</span>
                             <span class="tools pull-right" >
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                             </span>
@@ -127,9 +128,10 @@
 <script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>
 <script>
     $(document).ready(function(){
-        $("#head-title").append("日志查看");
+        var model = getCookie("model");
+        $("#head-title").append("日志查看-"+model);
         $("#log_infor").addClass("active");
-
+        $("#system-manage").addClass("nav-active");
         $('#log-infor-tb').dataTable( {
             "aaSorting": [[ 10, "desc" ]]
         } );

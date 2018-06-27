@@ -64,8 +64,8 @@ public class GenerateExcelThreadServiceImpl implements GenerateExcelThreadServic
             case 0: excelService.reviewExcel(model);break;
             case 1: excelService.reviewTransferExcel(model);break;
             case 2: excelService.relativeScoreExcel(model);break;
-            case 3: excelService.finalScoreExcel(model);break;
-            //case 4: excelService.scoringSumUpExcel(model);break;
+            case 3: excelService.scoringSumUpExcel(model);break;
+            //case 4: excelService.finalScoreExcel(model);break;
             default:break;
         }
 

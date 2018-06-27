@@ -3,7 +3,7 @@
 $.ajaxSetup({
     async:true
 });
-function appendSpinner() {
+function appendSpinnerToTable() {
     var str = " <!--预测参数 start-->\n" +
         "            <div class=\"row\" id=\"my-spinner\">\n" +
         "                <div class=\"col-md-12\">\n" +
@@ -56,7 +56,7 @@ function setTbbody(tbBodyId,data) {
     }
 }
 function setTbBodyData() {
-    appendSpinner();
+    appendSpinnerToTable();
     var model = getCookie("model");
     var url1 = "/score/calculteRelativeScoreAverageAndMaxAndMin?model=" + model;
     selectScoreByModel("#final-score-tb-body",url1);
@@ -80,8 +80,16 @@ function selectScoreByModel(tbBodyId,url) {
 }
 
 function countScore(model, editor) {
+    //根据权限和model设置页面显示
+    //禁用按钮
+    var myspinner=document.getElementById("my-spinner");
+    myspinner.style.display='block';
+    $("#spinner-text").text("正在计算 ...");
+    document.getElementById("count-bt").disabled=true;
+    document.getElementById("export-excel1").disabled=true;
+    document.getElementById("export-excel2").disabled=true;
+    document.getElementById("export-excel3").disabled=true;
     var url = "/score/countScore?model=" + model + "&editor=" + editor;
-
     $.get(url, function (data, status) {
         //alert(data.result);
         if (data.result ===1) {
@@ -94,27 +102,38 @@ function countScore(model, editor) {
             alert(data.message);
         }
         document.getElementById("count-bt").disabled=false;
-        document.getElementById("export-excel1").disabled=true;
-        document.getElementById("export-excel2").disabled=true;
-        document.getElementById("export-excel3").disabled=true;
-        var myspinner=document.getElementById("my-spinner");
+        document.getElementById("export-excel1").disabled=false;
+        document.getElementById("export-excel2").disabled=false;
+        document.getElementById("export-excel3").disabled=false;
         myspinner.style.display='none';
     });
 }
 //打分转换表
 function getExcelByName(exportBtId,model, excelName) {
-    //alert("export-url open!");
-    $(exportBtId).attr("disabled",true);
+    // //alert("export-url open!");
+    // $(exportBtId).attr("disabled",true);
+    var myspinner=document.getElementById("my-spinner");
+    myspinner.style.display='block';
+    $("#spinner-text").text("正在加载 ...");
+    document.getElementById("count-bt").disabled=true;
+    document.getElementById("export-excel1").disabled=true;
+    document.getElementById("export-excel2").disabled=true;
+    document.getElementById("export-excel3").disabled=true;
     var url = "/score/generateExcelByFileAndModel?file="+excelName+"&model="+model;
     $.get(url, function (data, status) {
-        alert(data.result);
+        //alert(data.result);
         if (data.result === 1) {
-            alert('获取Excel表成功!');
+            //alert('获取Excel表成功!');
             window.open("/score/getExcel1?fileName="+data.fileName);
         } else {
             alert('获取Excel表失败!');
         }
-        $(exportBtId).attr("disabled",false);
+        //$(exportBtId).attr("disabled",false);
+        document.getElementById("count-bt").disabled=false;
+        document.getElementById("export-excel1").disabled=false;
+        document.getElementById("export-excel2").disabled=false;
+        document.getElementById("export-excel3").disabled=false;
+        myspinner.style.display='none';
     });
 }
 
@@ -122,18 +141,10 @@ function getExcelByName(exportBtId,model, excelName) {
 function setClickListener() {
     var editor = getCookie("user");
     var model = getCookie("model");
+
     //计算请求监听
     $("#count-bt").click(function (e) {
-        //根据权限和model设置页面显示
-        //禁用按钮
-        var myspinner=document.getElementById("my-spinner");
-        myspinner.style.display='block';
-        document.getElementById("count-bt").disabled=true;
-        document.getElementById("export-excel1").disabled=true;
-        document.getElementById("export-excel2").disabled=true;
-        document.getElementById("export-excel3").disabled=true;
         countScore(model, editor);
-
     });
     var export1="#export-excel1";
     var export2="#export-excel2";

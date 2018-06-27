@@ -78,15 +78,6 @@ public class RecordController {
 
         //generateExcelThreadService.executeGenerateAward();
         ModelAndView modelAndView = new ModelAndView("total_final");
-//        List<Works> worksList = worksService.getSumUpAward(model);
-//        modelAndView.addObject(
-//                "finalList",worksList);
-//        List<Works> innovationList = worksService.getInnovationAward(model);
-//        modelAndView.addObject(
-//                "innovationList",innovationList);
-//        List<Works>usefulList = worksService.getUsefulAward(model);
-//        modelAndView.addObject(
-//                "usefulList",usefulList);
         return modelAndView;
     }
 

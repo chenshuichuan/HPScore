@@ -12,6 +12,7 @@ import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.*;
 import hpscore.service.impl.GenerateExcelThreadServiceImpl;
+import hpscore.tools.FileUtil;
 import hpscore.tools.ScoreUtil;
 import hpscore.tools.ServletUtil;
 import hpscore.tools.StringUtil;
@@ -322,23 +323,34 @@ public class ScoreController {
             @RequestParam("file")String file,@RequestParam("model")String model){
 
         Map<String,Object> map =new HashMap<String,Object>();
-        String fileName = "";
+        String fileName = null;
         if(file.equals("打分审核表")){
-            fileName = excelService.reviewExcel(model);
+            String excelName = "2018泛珠赛全国总决赛终评评委打分审核表("+model+").xls";
+            if(FileUtil.FileExists(excelName))fileName=excelName;
+            else fileName = excelService.reviewExcel(model);
         }
         if(file.equals("打分转换表")){
-            fileName = excelService.reviewTransferExcel(model);
+            String excelName = "2018泛珠赛全国总决赛终评评委打分转换表("+model+").xls";
+            if(FileUtil.FileExists(excelName))fileName=excelName;
+            else
+                fileName = excelService.reviewTransferExcel(model);
         }
         if(file.equals("打分统计表")){
-            fileName = excelService.scoringSumUpExcel(model);
+            String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+").xls";
+            if(FileUtil.FileExists(excelName))fileName=excelName;
+            else fileName = excelService.scoringSumUpExcel(model);
         }
         if(file.equals("平均分统计表")){
-            fileName = excelService.relativeScoreExcel(model);
+            String excelName = "2018泛珠赛全国总决赛终评平均分统计表("+model+").xls";
+            if(FileUtil.FileExists(excelName))fileName=excelName;
+            else fileName = excelService.relativeScoreExcel(model);
         }
         if(file.equals("作品获奖表")){
-            fileName = excelService.finalScoreExcel(model);
+            String excelName = "2018泛珠赛总决赛作品获奖表("+model+").xls";
+            if(FileUtil.FileExists(excelName))fileName=excelName;
+            else  fileName = excelService.finalScoreExcel(model);
         }
-        if(fileName!=null){
+        if(fileName!=null&&fileName.length()>0){
             map.put("result",1);
             map.put("fileName",fileName);
             map.put("message","获取表格成功！");

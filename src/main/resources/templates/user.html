@@ -130,7 +130,7 @@
                         <th>ID</th>
                         <th>账号</th>
                         <th>密码</th>
-                        <th>权限</th>
+                        <th>权限(管理员:0/普通账号:1)</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -180,6 +180,7 @@
     $(document).ready(function () {
         $("#head-title").append("账号管理");
         $("#user").addClass("active");
+        $("#system-manage").addClass("nav-active");
         setClickListener(userList);
     });
     /*]]>*/

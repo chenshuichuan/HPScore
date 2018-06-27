@@ -397,7 +397,7 @@ public class ExcelServiceImpl implements ExcelService {
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellValue(excelName);
         titleCell.setCellStyle(styles.get("title"));
-        String str = StringUtil.getNextCell( 'A', 20);
+        String str = StringUtil.getNextCell( 'A', headers.length-1);
         //
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$"+str+"$1"));
 
@@ -427,7 +427,8 @@ public class ExcelServiceImpl implements ExcelService {
                 else if(j>2&&j<=(pingweiStrList.size()+2)){
                     cell.setCellValue(relativeScoreList.get(i).getpScores()[j-3]);
                 }
-                else if(j==20)cell.setCellValue(relativeScoreList.get(i).getAverage());
+                //最后一列
+                else if(j==(headers.length-1))cell.setCellValue(relativeScoreList.get(i).getAverage());
             }
         }
         sheet.setColumnWidth(0, 6*256); //6 characters wide
@@ -435,7 +436,7 @@ public class ExcelServiceImpl implements ExcelService {
         sheet.setColumnWidth(2, 30*256); //30 characters wide
 
         for (int i = 3; i < headers.length; i++) {
-            sheet.setColumnWidth(i, 8*256); //30 characters wide
+            sheet.setColumnWidth(i, 10*256); //30 characters wide
         }
         return  0;
     }
@@ -460,7 +461,7 @@ public class ExcelServiceImpl implements ExcelService {
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellValue(titleName);
         titleCell.setCellStyle(styles.get("title"));
-        String str = StringUtil.getNextCell( 'A', 20);
+        String str = StringUtil.getNextCell( 'A', headers.length-1);
         //
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$"+str+"$1"));
 
@@ -490,7 +491,7 @@ public class ExcelServiceImpl implements ExcelService {
                 else if(j>2&&j<=(pingweiStrList.size()+2)){
                     cell.setCellValue(innovationScoreList.get(i).getpScores()[j-3]);
                 }
-                else if(j==20)cell.setCellValue(innovationScoreList.get(i).getAverage());
+                else if(j==(headers.length-1))cell.setCellValue(innovationScoreList.get(i).getAverage());
             }
         }
 
@@ -526,7 +527,7 @@ public class ExcelServiceImpl implements ExcelService {
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellValue(titleName);
         titleCell.setCellStyle(styles.get("title"));
-        String str = StringUtil.getNextCell( 'A', 20);
+        String str = StringUtil.getNextCell( 'A', headers.length-1);
         //
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$"+str+"$1"));
 
@@ -556,7 +557,7 @@ public class ExcelServiceImpl implements ExcelService {
                 else if(j>2&&j<=(pingweiStrList.size()+2)){
                     cell.setCellValue(innovationScoreList.get(i).getpScores()[j-3]);
                 }
-                else if(j==20)cell.setCellValue(innovationScoreList.get(i).getAverage());
+                else if(j==(headers.length-1))cell.setCellValue(innovationScoreList.get(i).getAverage());
             }
         }
         sheet.setColumnWidth(0, 6*256); //30 characters wide
@@ -576,7 +577,7 @@ public class ExcelServiceImpl implements ExcelService {
         String[] headers = {
                 "序号","作品编号", "作品名称",
                 "分赛区名称","学校名称",
-                "指导老师", "研发学生", "获奖等级"};
+                "指导老师", "研发学生","分数","排名", "获奖等级"};
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
 
@@ -633,7 +634,7 @@ public class ExcelServiceImpl implements ExcelService {
         Cell titleCell = titleRow.createCell(0);
         titleCell.setCellValue("2018泛珠赛总决赛作品获奖表("+model+typeName+")");
         titleCell.setCellStyle(styles.get("title"));
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$H$1"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$J$1"));
 
         //header row
         Row headerRow = sheet.createRow(1);
@@ -658,7 +659,8 @@ public class ExcelServiceImpl implements ExcelService {
                     case 4: cell.setCellValue(worksList.get(i).getSchool());break;
                     case 5: cell.setCellValue(worksList.get(i).getTeachers());break;
                     case 6: cell.setCellValue(worksList.get(i).getStudents());break;
-                    //case 6: cell.setCellValue(worksList.get(i).getFinalScore());break;
+                    case 7: cell.setCellValue(worksList.get(i).getFinalScore());break;
+                    case 8: cell.setCellValue(worksList.get(i).getRanking());break;
 //                    case 6: cell.setCellValue(null);break;
                 }
             }
@@ -670,7 +672,9 @@ public class ExcelServiceImpl implements ExcelService {
         for (int i = 2; i <7; i++) {
             sheet.setColumnWidth(i, 30*256); //30 characters wide
         }
-
+        for (int i = 7; i <headers.length; i++) {
+            sheet.setColumnWidth(i, 8*256); //30 characters wide
+        }
         return  0;
     }
     ////评分统计表，各个子项的平均分
@@ -709,17 +713,7 @@ public class ExcelServiceImpl implements ExcelService {
         List<RelativeScore>relativeScoreList =
                 scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
         //按照总分的平均分排序
-        Collections.sort(relativeScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof RelativeScore && o2 instanceof RelativeScore){
-                    RelativeScore e1 = (RelativeScore) o1;
-                    RelativeScore e2 = (RelativeScore) o2;
-                    return StringUtil.compareTwoDouble(e1.getAverage(),e2.getAverage());
-                }
-                throw new ClassCastException("不能转换为RelativeScore类型");
-            }
-        });
+        ScoreUtil.sortRelativeScore(relativeScoreList);
         String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+")";
 
         Sheet sheet = wb.createSheet(excelName);
@@ -773,6 +767,8 @@ public class ExcelServiceImpl implements ExcelService {
                 }
                 else if(j==9){
                     cell.setCellValue(relativeScoreList.get(i).getAverage());
+                }else if(j==10){
+                    cell.setCellValue(relativeScoreList.get(i).getRanking());
                 }
             }
         }

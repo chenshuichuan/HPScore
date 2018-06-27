@@ -155,13 +155,16 @@
                                         <button id="count-bt" class="btn btn-primary btn-lg" type="button">计算相对分</button>
                                     </div>
                                     <div class="col-md-3" style="text-align: center;">
-                                        <button id="export-excel1" type="button" class="btn btn-success">导出评分转换表</button>
+                                        <button id="export-excel1" type="button" class="btn btn-success">评分转换表</button>
+                                        <div>(原始评分转换为相对分的表)</div>
                                     </div>
                                     <div class="col-md-3" style="text-align: center;">
-                                        <button id="export-excel2" type="button" class="btn btn-success">导出评分统计表</button>
+                                        <button id="export-excel2" type="button" class="btn btn-success">各项统计表</button>
+                                        <div>(各项评分以及相对分的统计表)</div>
                                     </div>
                                     <div class="col-md-3" style="text-align: center;">
-                                        <button id="export-excel3" type="button" class="btn btn-success">导出评分平均分表</button>
+                                        <button id="export-excel3" type="button" class="btn btn-success">平均分表</button>
+                                        <div>(相对分、创新分、实用分的平均分表)</div>
                                     </div>
                                 </div>
                             </div>
@@ -176,7 +179,7 @@
             <!--预测参数 start-->
             <div class="row" id="my-spinner">
                 <div class="col-md-12">
-                    <div style="color: #4c4ae1;text-align: center;">正在计算 .... </div>
+                    <div style="color: #4c4ae1;text-align: center;" id="spinner-text">正在计算 .... </div>
                     <div class="spinner"></div>
                 </div>
             </div>
@@ -264,8 +267,6 @@
 <script src="../static/js/bootstrap.min.js" th:src="@{js/bootstrap.min.js}"></script>
 <script src="../static/js/jquery.nicescroll.js" th:src="@{js/jquery.nicescroll.js}"></script>
 <script src="../static/js/util-cookie.js" th:src="@{js/util-cookie.js}"></script>
-
-
 <!--common scripts for all pages-->
 <script src="../static/js/scripts.js"  th:src="@{js/scripts.js}"></script>
 <!--title time initialization-->

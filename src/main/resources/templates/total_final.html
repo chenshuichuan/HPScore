@@ -88,7 +88,7 @@
                         <header class="panel-heading">
                             <span >作品获奖表</span>
                             <span class="tools" style="margin-left: 100px;">
-                                <button id="export-excel" type="button" class="btn btn-success">导出作品获奖表</button>
+                                <button id="export-excel" type="button" class="btn btn-success">作品获奖表</button>
                             </span>
                             <span class="tools pull-right" >
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
@@ -213,7 +213,6 @@
     <!-- main content end-->
 </section>
 
-
 <!-- Placed js at the end of the document so the pages load faster -->
 <script src="../static/js/jquery-1.10.2.min.js" th:src="@{js/jquery-1.10.2.min.js}"></script>
 <script src="../static/js/jquery-ui-1.9.2.custom.min.js" th:src="@{js/jquery-ui-1.9.2.custom.min.js}"></script>
@@ -242,9 +241,9 @@
             $("#export-excel").attr("disabled",true);
             var url = "/score/generateExcelByFileAndModel?file=作品获奖表&model="+model;
             $.get(url, function (data, status) {
-                alert(data.result);
+                //alert(data.result);
                 if (data.result === 1) {
-                    alert('获取Excel表成功!');
+                    //alert('获取Excel表成功!');
                     window.open("/score/getExcel1?fileName="+data.fileName);
                 } else {
                     alert('获取Excel表失败!');
