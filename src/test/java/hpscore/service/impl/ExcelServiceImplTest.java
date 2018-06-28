@@ -40,8 +40,8 @@ public class ExcelServiceImplTest {
     private UserRepository userRepository;
     @Autowired
     private ScoreService scoreService;
-    private String model1="本科组";
-    //private String model1="高专高职组";
+    //private String model1="本科组";
+    private String model1="高职高专组";
 
     @Test
     public void reviewExcel() throws Exception {

@@ -5,12 +5,11 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
-import hpscore.domain.LogInfo;
-import hpscore.domain.Score;
-import hpscore.domain.User;
-import hpscore.domain.Works;
+import hpscore.domain.*;
 import hpscore.repository.LogInfoRepository;
+import hpscore.repository.PingweiRepository;
 import hpscore.repository.UserRepository;
+import hpscore.repository.WorksRepository;
 import hpscore.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +47,11 @@ public class RecordController {
     private PingweiService pingweiService;
     @Autowired
     private LogInfoRepository logInfoRepository;
+
+    @Autowired
+    private WorksRepository worksRepository;
+    @Autowired
+    private PingweiRepository pingweiRepository;
 
     @Autowired
     private GenerateExcelThreadService generateExcelThreadService;
@@ -98,13 +102,33 @@ public class RecordController {
         return modelAndView;
     }
 
-    //日志管理
+    //账号管理
     @RequestMapping(value = "/user.html")
     public ModelAndView user(HttpServletRequest request, HttpServletResponse response){
         ModelAndView modelAndView = new ModelAndView("user");
         List<User>userList = userRepository.findAll();
         modelAndView.addObject(
                 "userList",userList);
+        return modelAndView;
+    }
+
+    //评委管理
+    @RequestMapping(value = "/pingwei.html")
+    public ModelAndView pingwei(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = new ModelAndView("pingwei");
+        List<Pingwei>pingweiList = pingweiRepository.findAll();
+        modelAndView.addObject(
+                "pingweiList",pingweiList);
+        return modelAndView;
+    }
+
+    //作品管理
+    @RequestMapping(value = "/works.html")
+    public ModelAndView works(HttpServletRequest request, HttpServletResponse response){
+        ModelAndView modelAndView = new ModelAndView("works");
+        List<Works>worksList = worksRepository.findAll();
+        modelAndView.addObject(
+                "worksList",worksList);
         return modelAndView;
     }
 }

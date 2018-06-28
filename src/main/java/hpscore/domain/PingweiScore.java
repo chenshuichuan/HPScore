@@ -41,14 +41,13 @@ public class PingweiScore {
     private String model;
 
     //作品编号
-    private String BianHao;
+    private String bianHao;
 
     public String getBianHao() {
-        return BianHao;
+        return bianHao;
     }
-
     public void setBianHao(String bianHao) {
-        BianHao = bianHao;
+        this.bianHao = bianHao;
     }
 
     public PingweiScore(int id, String pid, String proId,

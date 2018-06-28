@@ -5,15 +5,14 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
-import hpscore.domain.InnovationScore;
-import hpscore.domain.RelativeScore;
-import hpscore.domain.Score;
+import hpscore.domain.Pingwei;
 import hpscore.domain.User;
 import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
-import hpscore.service.*;
-import hpscore.tools.StringUtil;
+import hpscore.repository.WorksRepository;
+import hpscore.service.LogInfoService;
+import hpscore.service.WorksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,45 +20,47 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *@ClassName: IndexController
+ *@ClassName: PingweiController
  *@Description: TODO
  *@Author: Ricardo
  *@Date: 2018/5/22 21:29
  **/
 @RestController
-@RequestMapping("/user")
-public class UserAndLogInfoController {
+@RequestMapping("/pingwei")
+public class PingweiController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserAndLogInfoController.class);
-
-
-    @Autowired
-    private UserRepository userRepository;
+    private final static Logger logger = LoggerFactory.getLogger(PingweiController.class);
     @Autowired
     private WorksService worksService;
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private WorksRepository worksRepository;
+    @Autowired
+    private PingweiRepository pingweiRepository;
     @Autowired
     private LogInfoService logInfoService;
 
-    //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
-    @RequestMapping(value = "/getUserByName",method = RequestMethod.GET)
+    //根据评委序号和model查询该评委是否已经存在，并返回
+    @RequestMapping(value = "/getPingweiByCodeAndModel",method = RequestMethod.GET)
     public Map<String,Object> getUserByName(
-            @RequestParam("name")String name){
+            @RequestParam("code")String code, @RequestParam("model")String model){
         Map<String,Object> map =new HashMap<String,Object>();
-        User user = userRepository.findByName(name);
+        Pingwei pingwei = pingweiRepository.findByCodeAndModel(code,model);
         //为查找到数据是score为null
-        if (user!=null) {
+        if (pingwei!=null) {
             map.put("result",1);
-            map.put("user",user);
+            map.put("pingwei",pingwei);
             map.put("message","找到对应数据");
         }
         else{
             map.put("result",0);
-            map.put("user",null);
+            map.put("pingwei",null);
             map.put("message","未找到对应数据");
         }
 
@@ -67,8 +68,8 @@ public class UserAndLogInfoController {
     }
 
     //根据user id 删除user
-    @RequestMapping(value = "/deleteUserById",method = RequestMethod.GET)
-    public Map<String,Object> deleteUserById(
+    @RequestMapping(value = "/deletePingweiById",method = RequestMethod.GET)
+    public Map<String,Object> deletePingweiById(
             HttpServletRequest request, HttpServletResponse response,
             @RequestParam("id")String id){
         int idInt = Integer.parseInt(id);
@@ -83,60 +84,58 @@ public class UserAndLogInfoController {
         String action =this.getClass().getName()+ ".getUserByName-参数：id="+id;
 
         Map<String,Object> map =new HashMap<String,Object>();
-        User user = userRepository.findOne(idInt);
-        //为查找到数据是score为null
-        if (user!=null) {
-            userRepository.delete(idInt);
-            action+=",成功删除"+user.getName()+"账号";
+        Pingwei pingwei = pingweiRepository.findOne(idInt);
+        //为查找到数据是pingwei为null
+        if (pingwei!=null) {
+            pingweiRepository.delete(idInt);
+            action+=",成功删除"+pingwei.getCode()+"评委记录";
             map.put("result",1);
-            map.put("message","成功删除"+user.getName()+"账号");
+            map.put("message","成功删除"+pingwei.getCode()+"评委记录");
         }
         else{
-            action+=",删除账号失败！";
+            action+=",删除评委失败！";
             map.put("result",0);
-            map.put("message","删除账号失败！");
+            map.put("message","删除评委失败！");
         }
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
 
-    //更新user数据
+    //更新pingwei数据
     @RequestMapping(value = "/update")
     @ResponseBody
     public Map<String,Object> update(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map =new HashMap<String,Object>();
         String idStr = request.getParameter("id");
         String name = request.getParameter("name");
-        String password = request.getParameter("password");
-        String roleStr = request.getParameter("role");
+        String code = request.getParameter("code");
+        String model = request.getParameter("model");
         int id = Integer.parseInt(idStr);
-        int role = Integer.parseInt(roleStr);
-
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
         String userName= user1.getName();
         String ip = (String)request.getSession().getAttribute("ip");
-        String model = (String)request.getSession().getAttribute("model");
+
         System.out.println("getgetAttribute(\"model\")="+model);
         long startTime = System.currentTimeMillis();
         String action =this.getClass().getName()+ ".update-参数：id="+id+",name="+name+
-                ", password="+password+",role="+role;
+                ", code="+code+",model="+model;
 
-        User user = userRepository.findOne(id);
-        if(user!=null){
+        Pingwei pingwei = pingweiRepository.findOne(id);
+        if(pingwei!=null){
             logger.info("---更新user数据，正在写入数据库-----");
-            user.setName(name);
-            user.setPassword(password);
-            user.setRole(role);
-            userRepository.save(user);
+            pingwei.setName(name);
+            pingwei.setCode(code);
+            pingwei.setModel(model);
+            pingweiRepository.save(pingwei);
 
-            action+=",成功更改账号记录！";
+            action+=",成功更改评委信息！";
             map.put("result",1);
-            map.put("message","成功更改账号记录！");
+            map.put("message","成功更改评委信息！");
         }else{
-            action+=",更改账号记录失败！";
+            action+=",更改评委信息失败！";
             map.put("result",0);
-            map.put("message","更改账号记录失败！请检查数据是否已存在！");
+            map.put("message","更改评委信息失败！请检查数据是否已存在！");
         }
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
@@ -154,32 +153,30 @@ public class UserAndLogInfoController {
     public Map<String,Object> add(HttpServletRequest request, HttpServletResponse response){
         Map<String,Object> map =new HashMap<String,Object>();
         String name = request.getParameter("name");
-        String password = request.getParameter("password");
-        String roleStr = request.getParameter("role");
-        int role = Integer.parseInt(roleStr);
+        String code = request.getParameter("code");
+        String model = request.getParameter("model");
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
         String userName= user1.getName();
         String ip = (String)request.getSession().getAttribute("ip");
-        String model = (String)request.getSession().getAttribute("model");
         System.out.println("getgetAttribute(\"model\")="+model);
         long startTime = System.currentTimeMillis();
         String action =this.getClass().getName()+ ".update-参数：name="+name+
-                ", password="+password+",role="+role;
+                ", code="+code+",role="+model;
 
-        User user = userRepository.findByName(name);
-        if(user==null){
-            logger.info("---添加user数据，正在写入数据库-----");
-            userRepository.save(new User (name,password,role));
+        Pingwei pingwei = pingweiRepository.findByCodeAndModel(code,model);
+        if(pingwei==null){
+            logger.info("---添加评委数据，正在写入数据库-----");
+            pingweiRepository.save(new Pingwei (name,code,model));
 
-            action+=",成功添加账号记录！";
+            action+=",成功添加评委记录！";
             map.put("result",1);
-            map.put("message","成功添加账号记录！");
+            map.put("message","成功添加评委记录！");
         }else{
-            action+=",添加user记录失败！";
+            action+=",添加评委记录失败！";
             map.put("result",0);
-            map.put("message","添加账号记录失败！请检查数据是否已存在！");
+            map.put("message","添加评委记录失败！请检查数据是否已存在！");
         }
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;

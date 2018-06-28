@@ -19,7 +19,7 @@ function appendSpinnerToTable() {
 function setHeader(pingweiSize) {
     var index=0;
     var strOrigin="<tr>" +
-        "        <th>作品序号</th>" ;
+        "        <th>作品编号</th>" ;
 
     for (index=1;index<=pingweiSize;index++){
         strOrigin = strOrigin+
@@ -45,7 +45,7 @@ function setTbbody(tbBodyId,data) {
     for (var i=0;i<data.length;i++){
         var index=0;
         var strOrigin="<tr>" +
-            "<td>"+data[i].proId+"</td>" ;
+            "<td>"+data[i].bianHao+"</td>" ;
         var pScores = data[i].pScores;
         for (index=0;index<pScores.length;index++){
             strOrigin = strOrigin+ "<td>"+pScores[index]+"</td>" ;

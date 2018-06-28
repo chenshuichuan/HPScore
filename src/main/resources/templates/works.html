@@ -7,13 +7,16 @@
           content="admin, dashboard, bootstrap, template, flat, modern, theme, responsive, fluid, retina, backend, html5, css, css3">
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
-    <title>评分录入记录</title>
     <link rel="shortcut icon" href="../static/images/invoice-logo.jpg"
           th:href="@{images/invoice-logo.jpg}" type="image/png">
+
+    <title>计分系统</title>
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css" th:href="@{css/font-awesome.min.css}"/>
     <!--dynamic table-->
     <link href="../static/plugins/advanced-datatable/css/demo_page.css"  th:href="@{plugins/advanced-datatable/css/demo_page.css}"  rel="stylesheet"/>
     <link href="../static/plugins/advanced-datatable/css/demo_table.css" th:href="@{plugins/advanced-datatable/css/demo_table.css}" rel="stylesheet"/>
     <link href="../static/plugins/data-tables/DT_bootstrap.css" th:href="@{plugins/data-tables/DT_bootstrap.css}"/>
+
     <!--common-->
     <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet">
     <link href="../static/css/style-responsive.css" th:href="@{css/style-responsive.css}" rel="stylesheet">
@@ -24,13 +27,11 @@
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
 </head>
-
 <body class="sticky-header">
 <section>
     <!-- left side start-->
     <div class="left-side sticky-left-side"  th:include="left_side_template :: leftside"></div>
     <!-- left side end-->
-
     <!-- main content start-->
     <div class="main-content">
         <!-- header section start-->
@@ -46,55 +47,56 @@
             <!--title end-->
         </div>
         <!-- header section end-->
-
+        
         <!--body wrapper start-->
         <div class="wrapper">
-
-            <!--所有股票聚类结果 start-->
             <div class="row">
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <span>添加过的记录</span>
-                            <span class="tools" style="margin-left: 100px;">
-                                <button id="export-excel" type="button" class="btn btn-success">导出打分审核表</button>
-                            </span>
-                            <span class="tools pull-right">
+                            <span >所有作品</span>
+                            <span class="tools pull-right" >
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                             </span>
+
                         </header>
                         <div class="panel-body">
-                            <table style="margin-bottom: 20px;">
-                                <thead>
-                                <tr>
-                                    <th>评委：</th>
-                                    <th>
-                                        <select id="select-pingwei" class="form-control" style="width: 150px;">
-                                            <option th:each="pingwei,iterStat:${pingweiList}"
-                                                    th:value="${pingwei}"
-                                                    th:text="${pingwei}"></option>
-                                        </select>
-                                    </th>
-                                </tr>
-                                </thead>
-                            </table>
+                            <div style="margin-bottom: 20px;"><button id="bt-add"  type="button" class="btn btn-success">
+                                <span style="color: #1b2128;">新增账号</span>
+                                <i class="fa fa-plus-circle"></i></button>
+                            </div>
+                            <!--所有账号列表-->
                             <div class="adv-table">
-                                <table class="display table table-bordered table-striped" id="search-table">
+                                <table class="display table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th>作品编号</th>
-                                        <th>作品名称</th>
-                                        <th>选题</th>
-                                        <th>科学性</th>
-                                        <th>创新性</th>
-                                        <th>难/易程度</th>
-                                        <th>价值及效果</th>
-                                        <th>文档及答辩</th>
-                                        <th>总分</th>
+                                        <th>ID</th>
+                                        <th>账号</th>
+                                        <th>密码</th>
+                                        <th>权限</th>
+                                        <th>修改</th>
+                                        <th>删除</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="scores-list">
-
+                                    <tbody>
+                                    <tr th:each="user:${userList}" >
+                                        <td  th:text="${user.id}">
+                                        </td>
+                                        <td  th:text="${user.name}">
+                                        </td>
+                                        <td  th:text="${user.password}">
+                                        </td>
+                                        <td  th:text="${user.role}">
+                                        </td>
+                                        <td>
+                                            <button th:id="'change-'+${user.name}" type="button" class="btn btn-info"
+                                                    >修改</button>
+                                        </td>
+                                        <td>
+                                            <button th:id="'delete-'+${user.name}" type="button" class="btn btn-danger"
+                                                    >删除</button>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -102,7 +104,7 @@
                     </section>
                 </div>
             </div>
-            <!--所有股票聚类结果 end-->
+
         </div>
         <!--body wrapper end-->
         <!--footer section start-->
@@ -112,6 +114,43 @@
     <!-- main content end-->
 </section>
 
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">更改账号信息</h4>
+            </div>
+            <div class="modal-body">
+                <table class="display table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>账号</th>
+                        <th>密码</th>
+                        <th>权限(管理员:0/普通账号:1)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="user-id"></td>
+                        <td><input id="user-name" type="text" class="form-control"/></td>
+                        <td><input id="user-password"type="text" class="form-control" /></td>
+                        <td><input id="user-role" type="text" class="form-control"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="bt-action">保存更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- Placed js at the end of the document so the pages load faster -->
 <!-- Placed js at the end of the document so the pages load faster -->
 <script src="../static/js/jquery-1.10.2.min.js" th:src="@{js/jquery-1.10.2.min.js}"></script>
 <script src="../static/js/jquery-ui-1.9.2.custom.min.js" th:src="@{js/jquery-ui-1.9.2.custom.min.js}"></script>
@@ -126,76 +165,25 @@
 <!--title time initialization-->
 <script src="../static/js/myjsfile.js" th:src="@{js/myjsfile.js}"></script>
 
+
 <!--dynamic table-->
 <script src="../static/plugins/advanced-datatable/js/jquery.dataTables.js" th:src="@{plugins/advanced-datatable/js/jquery.dataTables.js}"></script>
 <script src="../static/plugins/data-tables/DT_bootstrap.js" th:src="@{plugins/data-tables/DT_bootstrap.js}"></script>
 <!--dynamic table initialization -->
-<!--<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>-->
+<script src="../static/plugins/advanced-datatable/dynamic_table_init.js" th:src="@{plugins/advanced-datatable/dynamic_table_init.js}"></script>
 
-<script>
-    //根据评委和model查询该评委的所有打分数据
+<script src="../static/js/works.js" th:src="@{js/works.js}"></script>
 
-    $.ajaxSettings.async = false;
-    function selectByPidAndModel(pid,model){
-        var url = "/pingweiScore/selectByPidAndModel?pid="+pid+"&model="+model;
-        var result = null;
-        $.get(url,function(data,status){
-            //alert("数据: " + data + "\n状态: " + status);
-            if(data.result===1) {
-                result = data.pingweiScoreList;
-            }
-        });
-        //var str ="return result="+result;
-        //alert(str);
-        return result;
-    }
-    $(document).ready(function(){
-        var model = getCookie("model");
-        if(model==="本科组") $("#head-title").append("评分录入记录-"+model);
-        else $("#head-title").append("评分录入记录-"+model);
-        $("#record3").addClass("active");
-
-        $("#export-excel").click(function () {
-            //alert("export-url open!");
-            $("#export-excel").attr("disabled",true);
-            var url = "/score/generateExcelByFileAndModel?file=打分审核表&model="+model;
-            $.get(url, function (data, status) {
-                //alert(data.result);
-                if (data.result === 1) {
-                    //alert('获取Excel表成功!');
-                    window.open("/score/getExcel1?fileName="+data.fileName);
-                } else {
-                    alert('获取Excel表失败!');
-                }
-                $("#export-excel").attr("disabled",false);
-            });
-        });
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var userList = /*[[${userList}]]*/ 2;
+    $(document).ready(function () {
+        $("#head-title").append("账号管理");
+        $("#works").addClass("active");
+        $("#system-manage").addClass("nav-active");
+        setClickListener(userList);
     });
-    //监听选择框改变事件
-    document.getElementById('select-pingwei').addEventListener('change',function(){
-        var pingwei = $("#select-pingwei").val();
-        var model = getCookie("model");
-        $("#scores-list").empty();
-
-        var pingweiScoreList = selectByPidAndModel(pingwei,model);
-        if(pingweiScoreList!==null){
-            for (var i=0;i<pingweiScoreList.length;i++){
-                var str ="<tr>"+
-                    "<td>"+pingweiScoreList[i].bianHao+"</td>"+
-                    "<td>"+pingweiScoreList[i].proName+"</td>"+
-                    "<td>"+pingweiScoreList[i].option1+"</td>"+
-                    "<td>"+pingweiScoreList[i].option2+"</td>"+
-                    "<td>"+pingweiScoreList[i].option3+"</td>"+
-                    "<td>"+pingweiScoreList[i].option4+"</td>"+
-                    "<td>"+pingweiScoreList[i].option5+"</td>"+
-                    "<td>"+pingweiScoreList[i].option6+"</td>"+
-                    "<td>"+pingweiScoreList[i].totalScore+"</td>"+
-                    "</tr>";
-                $("#scores-list").append(str);
-            }
-        }
-    });
+    /*]]>*/
 </script>
-
 </body>
 </html>

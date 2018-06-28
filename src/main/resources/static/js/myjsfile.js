@@ -21,6 +21,8 @@ $(document).ready(function(){
         count.style.display='none';
         var total_final=document.getElementById("total_final");
         total_final.style.display='none';
+        var system_manage=document.getElementById("system-manage");
+        system_manage.style.display='none';
     }
     // //不是本科组，隐藏record1
     // if(model != "本科组"){

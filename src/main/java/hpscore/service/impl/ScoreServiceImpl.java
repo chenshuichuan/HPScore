@@ -319,7 +319,7 @@ public class ScoreServiceImpl implements ScoreService {
         for (Works works: worksList){
             InnovationScore innovationScore =
                     new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
-
+            innovationScore.setBianHao(works.getBianHao());
             int maxScore = 0;
             int minScore = 100;
             int totalScore = 0;
@@ -349,6 +349,7 @@ public class ScoreServiceImpl implements ScoreService {
         }
         return innovationScoreList;
     }
+    //根据评委序号和该评委分数，设置分数属于哪个评委，所以程序数据中，评委序号必须从1开始
     private InnovationScore setInnovation(String pid,int score,InnovationScore innovationScore){
         int pidNumber = Integer.parseInt(pid);
         if (pidNumber>innovationScore.getpScores().length||pidNumber<=0){
@@ -372,7 +373,7 @@ public class ScoreServiceImpl implements ScoreService {
         for (Works works: worksList){
             InnovationScore innovationScore =
                     new InnovationScore(works.getCode(),works.getName(),model,pingweiList.size());
-
+            innovationScore.setBianHao(works.getBianHao());
             int maxScore = 0;
             int minScore = 100;
             int totalScore = 0;

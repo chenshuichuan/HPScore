@@ -18,7 +18,7 @@ public class InnovationScore {
 
     private String proId;//作品code
 
-    private String BianHao;//作品编号
+    private String bianHao;//作品编号
     private String proName;//作品name
     private int maxScore;
     private int minScore;
@@ -47,11 +47,11 @@ public class InnovationScore {
         return pScores;
     }
     public String getBianHao() {
-        return BianHao;
+        return bianHao;
     }
 
     public void setBianHao(String bianHao) {
-        BianHao = bianHao;
+        this.bianHao = bianHao;
     }
 
     public void setpScores(int[] pScores) {

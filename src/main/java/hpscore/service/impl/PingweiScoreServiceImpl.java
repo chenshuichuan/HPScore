@@ -94,20 +94,6 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
                 e.printStackTrace();
             }
         }
-
-        //按照作品编号排序
-        Collections.sort(pingweiScoreList,new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                if(o1 instanceof PingweiScore && o2 instanceof PingweiScore){
-                    PingweiScore e1 = (PingweiScore) o1;
-                    PingweiScore e2 = (PingweiScore) o2;
-                    return e1.getProId().compareTo(e2.getProId());
-                }
-                throw new ClassCastException("不能转换为PingweiScore类型");
-            }
-        });
-
         return pingweiScoreList;
     }
 

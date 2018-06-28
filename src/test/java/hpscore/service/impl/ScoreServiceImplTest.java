@@ -41,8 +41,10 @@ public class ScoreServiceImplTest {
 
     @Autowired
     private PingweiService pingweiService;
-    private String model1="本科组";
-    //private String model1="高专高职组";
+    //private String model1="本科组";
+    private String model1="高职高专组";
+    //private int[] optionlist={10,15,20,20,20,15};
+    private int[] optionlist={10,15,10,25,25,15};
     @Test
     public void checkIfAllTheSameTimes() throws Exception {
 
@@ -76,9 +78,8 @@ public class ScoreServiceImplTest {
     @Test
     public void GenerateScoreData() throws Exception {
 
-        scoreRepository.deleteAll();
-        //int[] optionlist={10,15,20,20,20,15};
-        int[] optionlist={10,15,10,25,25,15};
+        //scoreRepository.deleteAll();
+
         List<Works> worksList = worksRepository.findByModel(model1);
         List<String>pingweiList = pingweiService.selectAllCodeByModel(model1);
         for(Works works:worksList){

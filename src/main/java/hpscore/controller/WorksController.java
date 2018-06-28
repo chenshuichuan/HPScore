@@ -5,15 +5,11 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
-import hpscore.domain.InnovationScore;
-import hpscore.domain.RelativeScore;
-import hpscore.domain.Score;
 import hpscore.domain.User;
-import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
-import hpscore.service.*;
-import hpscore.tools.StringUtil;
+import hpscore.service.LogInfoService;
+import hpscore.service.WorksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *@ClassName: IndexController
@@ -30,10 +27,10 @@ import java.util.*;
  *@Date: 2018/5/22 21:29
  **/
 @RestController
-@RequestMapping("/user")
-public class UserAndLogInfoController {
+@RequestMapping("/works")
+public class WorksController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserAndLogInfoController.class);
+    private final static Logger logger = LoggerFactory.getLogger(WorksController.class);
 
 
     @Autowired
@@ -46,7 +43,7 @@ public class UserAndLogInfoController {
     private LogInfoService logInfoService;
 
     //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
-    @RequestMapping(value = "/getUserByName",method = RequestMethod.GET)
+    @RequestMapping(value = "/getWorksByName",method = RequestMethod.GET)
     public Map<String,Object> getUserByName(
             @RequestParam("name")String name){
         Map<String,Object> map =new HashMap<String,Object>();

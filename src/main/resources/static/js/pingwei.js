@@ -6,12 +6,12 @@ $.ajaxSetup({
 
 
 //按键监听
-function setClickListener(userList) {
+function setClickListener(pingweiList) {
     var editor = getCookie("user");
     var model = getCookie("model");
-    for (var i=0; i<userList.length;i++) {
-        var changeId= "#change-"+userList[i].name;
-        var deleteId= "#delete-"+userList[i].name;
+    for (var i=0; i<pingweiList.length;i++) {
+        var changeId= "#change-"+pingweiList[i].code;
+        var deleteId= "#delete-"+pingweiList[i].code;
 
         $(changeId).click(function (e) {
            //alert("change");
@@ -19,15 +19,15 @@ function setClickListener(userList) {
            setCookie("bt-action","change");
             var myId=$(this).attr("id");
             var index = myId.indexOf('-');
-            var name=myId.substring(index+1,myId.length);//得到选取的账号名称
-            //从后台获取完整user信息
-            var user = getUserByName(name);
-            if (user!==null){
-                setModalText(user.id,user.name,user.password,user.role);
+            var code=myId.substring(index+1,myId.length);//得到选取的账号名称
+            //从后台获取完整pingwei信息
+            var pingwei = getPingweiByCodeAndModel(code,model);
+            if (pingwei!==null){
+                setModalText(pingwei.id,pingwei.name,pingwei.code,pingwei.model);
                 $("#myModal").modal("show");
             }
             else {
-                alert("选取的用户不存在！");
+                alert("选取的评委不存在！");
             }
         });
 
@@ -37,15 +37,15 @@ function setClickListener(userList) {
             setCookie("bt-action","delete");
             var myId=$(this).attr("id");
             var index = myId.indexOf('-');
-            var name=myId.substring(index+1,myId.length);//得到选取的账号名称
-            //从后台获取完整user信息
-            var user = getUserByName(name);
-            if (user!==null){
-                setModalText(user.id,user.name,user.password,user.role);
+            var code=myId.substring(index+1,myId.length);//得到选取的账号名称
+            //从后台获取完整pingwei信息
+            var pingwei = getPingweiByCodeAndModel(code,model);
+            if (pingwei!==null){
+                setModalText(pingwei.id,pingwei.name,pingwei.code,pingwei.model);
                 $("#myModal").modal("show");
             }
             else {
-                alert("选取的用户不存在！");
+                alert("选取的评委不存在！");
             }
         });
     }
@@ -55,35 +55,32 @@ function setClickListener(userList) {
         alert("#bt-action="+action);
         //更改
         if (action==="change"){
-            var id = $("#user-id").text();
-            var name= $("#user-name").val();
-            var password = $("#user-password").val();
-            var role = $("#user-role").val();
-            updateUser(id,name,password,role)
+            var id = $("#pingwei-id").text();
+            var name= $("#pingwei-name").val();
+            var code = $("#pingwei-code").val();
+            var model = $("#pingwei-model").val();
+            updatePingwei(id,name,code,model)
         }
         //删除
         else if (action==="delete"){
-            var id = $("#user-id").text();
-            deleteUserByName(id);
+            var id = $("#pingwei-id").text();
+            deletePingweiById(id);
         }
         //添加
         else if (action==="add"){
-            var name= $("#user-name").val();
-            var password = $("#user-password").val();
-            var role = $("#user-role").val();
+            var name= $("#pingwei-name").val();
+            var code = $("#pingwei-code").val();
+            var model = $("#pingwei-model").val();
 
-            var result = getUserByName(name);
+            var result = getPingweiByCodeAndModel(code,model);
             if(result!==null){
-                alert("已存在该名称的账号！")
+                alert("已存在该组别该序号的评委！")
             }
             else {
-                addUser(name,password,role);
+                addPingwei(name,code,model);
             }
         }
-        //重新加载
-        window.location.reload();
     });
-
 
     $("#bt-add").click(function (e) {
         setCookie("bt-action","add");
@@ -92,9 +89,9 @@ function setClickListener(userList) {
     });
 }
 
-//根据id从数据库删除user
-function deleteUserByName(id) {
-    var url = "/user/deleteUserById?id="+id;
+//根据id从数据库删除pingwei
+function deletePingweiById(id) {
+    var url = "/pingwei/deletePingweiById?id="+id;
     var result = null;
     $.get(url,function(data,status){
         //alert("数据: " + data + "\n状态: " + status);
@@ -108,14 +105,14 @@ function deleteUserByName(id) {
     });
     return result;
 }
-//根据name从数据库查找user
-function getUserByName(name) {
-    var url = "/user/getUserByName?name="+name;
+//根据code和model从数据库查找pingwei
+function getPingweiByCodeAndModel(code,model) {
+    var url = "/pingwei/getPingweiByCodeAndModel?code="+code+"&model="+model;
     var result = null;
     $.get(url,function(data,status){
         //alert("数据: " + data + "\n状态: " + status);
         if(data.result===1) {
-            result = data.user;
+            result = data.pingwei;
             if (result!==null){
                 // setModalText(result.id,result.name,result.password,result.role);
                 // $("#myModal").modal("show");
@@ -128,20 +125,20 @@ function getUserByName(name) {
     return result;
 }
 //根据user设置modal的内容
-function setModalText(id,name,password,role) {
-    $("#user-id").text(id);
-    $("#user-name").val(name);
-    $("#user-password").val(password);
-    $("#user-role").val(role);
+function setModalText(id,name,code,model) {
+    $("#pingwei-id").text(id);
+    $("#pingwei-name").val(name);
+    $("#pingwei-code").val(code);
+    $("#pingwei-model").val(model);
 }
-//添加user
-function addUser(name,password,role) {
+//添加pingwei
+function addPingwei(name,code,model) {
     var result =1;
-    $.post("/user/add",
+    $.post("/pingwei/add",
         {
             "name": name,
-            "password": password,
-            "role": role
+            "code": code,
+            "model": model
         },
         function(data,status){
             //alert(data.result);
@@ -158,15 +155,15 @@ function addUser(name,password,role) {
     return result;
 }
 
-//修改user
-function updateUser(id,name,password,role) {
+//修改Pingwei
+function updatePingwei(id,name,code,model) {
     var result =1;
-    $.post("/user/update",
+    $.post("/pingwei/update",
         {
             "id": id,
             "name": name,
-            "password": password,
-            "role": role
+            "code": code,
+            "model": model
         },
         function(data,status){
             //alert(data.result);
