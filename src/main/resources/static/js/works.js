@@ -6,12 +6,12 @@ $.ajaxSetup({
 
 
 //按键监听
-function setClickListener(pingweiList) {
+function setClickListener(worksList) {
     var editor = getCookie("user");
     var model = getCookie("model");
-    for (var i=0; i<pingweiList.length;i++) {
-        var changeId= "#change-"+pingweiList[i].code;
-        var deleteId= "#delete-"+pingweiList[i].code;
+    for (var i=0; i<worksList.length;i++) {
+        var changeId= "#"+worksList[i].id+"change-"+worksList[i].code;
+        var deleteId= "#"+worksList[i].id+"delete-"+worksList[i].code;
 
         $(changeId).click(function (e) {
            //alert("change");
@@ -20,10 +20,11 @@ function setClickListener(pingweiList) {
             var myId=$(this).attr("id");
             var index = myId.indexOf('-');
             var code=myId.substring(index+1,myId.length);//得到选取的账号名称
-            //从后台获取完整pingwei信息
-            var pingwei = getPingweiByCodeAndModel(code,model);
-            if (pingwei!==null){
-                setModalText(pingwei.id,pingwei.name,pingwei.code,pingwei.model);
+            //从后台获取完整works信息
+            var works = getWorksByCodeAndModel(code,model);
+            if (works!==null){
+                setModalText(works.id,works.code,works.bianHao,works.name,works.partName,works.school,
+                    works.teachers,works.students,works.model);
                 $("#myModal").modal("show");
             }
             else {
@@ -39,9 +40,10 @@ function setClickListener(pingweiList) {
             var index = myId.indexOf('-');
             var code=myId.substring(index+1,myId.length);//得到选取的账号名称
             //从后台获取完整pingwei信息
-            var pingwei = getPingweiByCodeAndModel(code,model);
-            if (pingwei!==null){
-                setModalText(pingwei.id,pingwei.name,pingwei.code,pingwei.model);
+            var works = getWorksByCodeAndModel(code,model);
+            if (works!==null){
+                setModalText(works.id,works.code,works.bianHao,works.name,works.partName,works.school,
+                    works.teachers,works.students,works.model);
                 $("#myModal").modal("show");
             }
             else {
@@ -52,26 +54,27 @@ function setClickListener(pingweiList) {
 
     $("#bt-action").click(function (e) {
         var action = getCookie("bt-action");
-        alert("#bt-action="+action);
+        //alert("#bt-action="+action);
+        var id = $("#works-id").text();
+        var code= $("#works-code").val();
+        var bianHao=$("#works-bianhao").val();
+        var name = $("#works-name").val();
+        var partName = $("#works-partName").val();
+        var school = $("#works-school").val();
+        var teachers = $("#works-teachers").val();
+        var students = $("#works-students").val();
+        var model = $("#works-model").val();
         //更改
         if (action==="change"){
-            var id = $("#pingwei-id").text();
-            var name= $("#pingwei-name").val();
-            var code = $("#pingwei-code").val();
-            var model = $("#pingwei-model").val();
-            updatePingwei(id,name,code,model)
+            updateWorks(id,code,bianHao,name,partName,school,teachers,students,model);
         }
         //删除
         else if (action==="delete"){
-            var id = $("#pingwei-id").text();
-            deletePingweiById(id);
+            deleteWorksById(id);
         }
         //添加
         else if (action==="add"){
-            var name= $("#pingwei-name").val();
-            var code = $("#pingwei-password").val();
-            var model = $("#pingwei-role").val();
-
+            addWorks(code,bianHao,name,partName,school,teachers,students,model);
             var result = getPingweiByCodeAndModel(code,model);
             if(result!==null){
                 alert("已存在该名称的账号！")
@@ -80,8 +83,6 @@ function setClickListener(pingweiList) {
                 addPingwei(name,code,model);
             }
         }
-        //重新加载
-        window.location.reload();
     });
 
     $("#bt-add").click(function (e) {
@@ -91,28 +92,30 @@ function setClickListener(pingweiList) {
     });
 }
 
-//根据id从数据库删除pingwei
-function deletePingweiById(id) {
-    var url = "/pingwei/deletePingweiById?id="+id;
+//根据id从数据库删除works
+function deleteWorksById(id) {
+    var url = "/works/deleteWorksById?id="+id;
     var result = null;
     $.get(url,function(data,status){
         //alert("数据: " + data + "\n状态: " + status);
         if(data.result===1) {
             $("#myModal").modal("hide");
             alert(data.message);
+            //重新加载
+            window.location.reload();
         }
         else alert(data.message);
     });
     return result;
 }
-//根据code和model从数据库查找pingwei
-function getPingweiByCodeAndModel(code,model) {
-    var url = "/pingwei/getPingweiByCodeAndModel?code="+code+"&model="+model;
+//根据code和model从数据库查找works
+function getWorksByCodeAndModel(code,model) {
+    var url = "/works/getWorksByCodeAndModel?code="+code+"&model="+model;
     var result = null;
     $.get(url,function(data,status){
         //alert("数据: " + data + "\n状态: " + status);
         if(data.result===1) {
-            result = data.pingwei;
+            result = data.works;
             if (result!==null){
                 // setModalText(result.id,result.name,result.password,result.role);
                 // $("#myModal").modal("show");
@@ -124,20 +127,30 @@ function getPingweiByCodeAndModel(code,model) {
     });
     return result;
 }
-//根据user设置modal的内容
-function setModalText(id,name,code,model) {
-    $("#pingwei-id").text(id);
-    $("#pingwei-name").val(name);
-    $("#pingwei-code").val(code);
-    $("#pingwei-model").val(model);
+//根据works设置modal的内容
+function setModalText(id,code,bianHao,name,partName,school,teachers,students,model) {
+    $("#works-id").text(id);
+    $("#works-code").val(code);
+    $("#works-bianhao").val(bianHao);
+    $("#works-name").val(name);
+    $("#works-partName").val(partName);
+    $("#works-school").val(school);
+    $("#works-teachers").val(teachers);
+    $("#works-students").val(students);
+    $("#works-model").val(model);
 }
-//添加pingwei
-function addPingwei(name,code,model) {
+//添加works
+function addWorks(code,bianHao,name,partName,school,teachers,students,model) {
     var result =1;
-    $.post("/pingwei/add",
+    $.post("/works/add",
         {
-            "name": name,
             "code": code,
+            "bianHao": bianHao,
+            "name": name,
+            "partName": partName,
+            "school": school,
+            "teachers": teachers,
+            "students": students,
             "model": model
         },
         function(data,status){
@@ -145,6 +158,8 @@ function addPingwei(name,code,model) {
             if (data.result === 1) {
                 alert(data.message);
                 $("#myModal").modal("hide");
+                //重新加载
+                window.location.reload();
             } else {
                 result=0;
                 alert(data.message);
@@ -154,13 +169,18 @@ function addPingwei(name,code,model) {
 }
 
 //修改Pingwei
-function updatePingwei(id,name,code,model) {
+function updateWorks(id,code,bianHao,name,partName,school,teachers,students,model) {
     var result =1;
-    $.post("/pingwei/update",
+    $.post("/works/update",
         {
             "id": id,
-            "name": name,
             "code": code,
+            "bianHao": bianHao,
+            "name": name,
+            "partName": partName,
+            "school": school,
+            "teachers": teachers,
+            "students": students,
             "model": model
         },
         function(data,status){
@@ -168,6 +188,8 @@ function updatePingwei(id,name,code,model) {
             if (data.result === 1) {
                 alert(data.message);
                 $("#myModal").modal("hide");
+                //重新加载
+                window.location.reload();
             } else {
                 result=0;
                 alert(data.message);

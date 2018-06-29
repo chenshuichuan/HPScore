@@ -10,8 +10,8 @@ function setClickListener(pingweiList) {
     var editor = getCookie("user");
     var model = getCookie("model");
     for (var i=0; i<pingweiList.length;i++) {
-        var changeId= "#change-"+pingweiList[i].code;
-        var deleteId= "#delete-"+pingweiList[i].code;
+        var changeId= "#"+pingweiList[i].id+"change-"+pingweiList[i].code;
+        var deleteId= "#"+pingweiList[i].id+"delete-"+pingweiList[i].code;
 
         $(changeId).click(function (e) {
            //alert("change");

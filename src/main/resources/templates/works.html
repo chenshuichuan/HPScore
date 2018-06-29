@@ -27,6 +27,9 @@
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
 </head>
+
+
+
 <body class="sticky-header">
 <section>
     <!-- left side start-->
@@ -62,38 +65,44 @@
                         </header>
                         <div class="panel-body">
                             <div style="margin-bottom: 20px;"><button id="bt-add"  type="button" class="btn btn-success">
-                                <span style="color: #1b2128;">新增账号</span>
+                                <span style="color: #1b2128;">新增作品</span>
                                 <i class="fa fa-plus-circle"></i></button>
                             </div>
                             <!--所有账号列表-->
                             <div class="adv-table">
-                                <table class="display table table-bordered table-striped">
+                                <table class="display table table-bordered table-striped" id="works-tb">
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>账号</th>
-                                        <th>密码</th>
-                                        <th>权限</th>
-                                        <th>修改</th>
+                                        <th>序号</th>
+                                        <th>作品编号</th>
+                                        <th>作品名称</th>
+                                        <th>分赛区</th>
+                                        <th>学校</th>
+                                        <th>指导老师</th>
+                                        <th>学生</th>
+                                        <th>组别</th>
+                                        <th>更改</th>
                                         <th>删除</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user:${userList}" >
-                                        <td  th:text="${user.id}">
-                                        </td>
-                                        <td  th:text="${user.name}">
-                                        </td>
-                                        <td  th:text="${user.password}">
-                                        </td>
-                                        <td  th:text="${user.role}">
-                                        </td>
+                                    <tr th:each="works:${worksList}" >
+                                        <td  th:text="${works.id}"></td>
+                                        <td  th:text="${works.code}"></td>
+                                        <td  th:text="${works.bianHao}"></td>
+                                        <td  th:text="${works.name}"></td>
+                                        <td  th:text="${works.partName}"></td>
+                                        <td  th:text="${works.school}"></td>
+                                        <td  th:text="${works.teachers}"></td>
+                                        <td  th:text="${works.students}"></td>
+                                        <td  th:text="${works.model}"></td>
                                         <td>
-                                            <button th:id="'change-'+${user.name}" type="button" class="btn btn-info"
+                                            <button th:id="${works.id}+'change-'+${works.code}" type="button" class="btn btn-info"
                                                     >修改</button>
                                         </td>
                                         <td>
-                                            <button th:id="'delete-'+${user.name}" type="button" class="btn btn-danger"
+                                            <button th:id="${works.id}+'delete-'+${works.code}" type="button" class="btn btn-danger"
                                                     >删除</button>
                                         </td>
                                     </tr>
@@ -117,28 +126,51 @@
 
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: 900px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">更改账号信息</h4>
+                <h4 class="modal-title" id="myModalLabel">更改作品信息</h4>
             </div>
             <div class="modal-body">
                 <table class="display table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>账号</th>
-                        <th>密码</th>
-                        <th>权限(管理员:0/普通账号:1)</th>
+                        <th>序号</th>
+                        <th>作品编号</th>
+                        <th>作品名称</th>
+                        <th>分赛区</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td id="user-id"></td>
-                        <td><input id="user-name" type="text" class="form-control"/></td>
-                        <td><input id="user-password"type="text" class="form-control" /></td>
-                        <td><input id="user-role" type="text" class="form-control"/></td>
+                        <td id="works-id"></td>
+                        <td><input id="works-code" type="text" class="form-control"/></td>
+                        <td><input id="works-bianhao"type="text" class="form-control" /></td>
+                        <td><input id="works-name" type="text" class="form-control"/></td>
+                        <td><input id="works-partName" type="text" class="form-control"/></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table class="display table table-bordered table-striped">
+                    <thead>
+                    <tr><th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                        <th>学校</th>
+                        <th>指导老师</th>
+                        <th>学生</th>
+                        <th>组别(本科组/高职高专组)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td><input id="works-school"type="text" class="form-control" /></td>
+                        <td><input id="works-teachers" type="text" class="form-control"/></td>
+                        <td><input id="works-students" type="text" class="form-control"/></td>
+                        <td><input id="works-model"type="text" class="form-control" /></td>
                     </tr>
                     </tbody>
                 </table>
@@ -176,12 +208,16 @@
 
 <script th:inline="javascript">
     /*<![CDATA[*/
-    var userList = /*[[${userList}]]*/ 2;
+    var worksList = /*[[${worksList}]]*/ 2;
     $(document).ready(function () {
-        $("#head-title").append("账号管理");
+        $("#head-title").append("作品管理");
         $("#works").addClass("active");
         $("#system-manage").addClass("nav-active");
-        setClickListener(userList);
+        setClickListener(worksList);
+
+        $('#works-tb').dataTable( {
+            "aaSorting": [[ 10, "desc" ]]
+        } );
     });
     /*]]>*/
 </script>

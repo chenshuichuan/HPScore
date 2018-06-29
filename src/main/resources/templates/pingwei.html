@@ -89,11 +89,11 @@
                                         <td  th:text="${pingwei.model}">
                                         </td>
                                         <td>
-                                            <button th:id="'change-'+${pingwei.code}" type="button" class="btn btn-info"
+                                            <button th:id="${pingwei.id}+'change-'+${pingwei.code}" type="button" class="btn btn-info"
                                                     >修改</button>
                                         </td>
                                         <td>
-                                            <button th:id="'delete-'+${pingwei.code}" type="button" class="btn btn-danger"
+                                            <button th:id="${pingwei.id}+'delete-'+${pingwei.code}" type="button" class="btn btn-danger"
                                                     >删除</button>
                                         </td>
                                     </tr>
@@ -130,7 +130,7 @@
                         <th>ID</th>
                         <th>名称</th>
                         <th>序号(同组序号要从1开始)</th>
-                        <th>组别</th>
+                        <th>组别(本科组/高职高专组)</th>
                     </tr>
                     </thead>
                     <tbody>
