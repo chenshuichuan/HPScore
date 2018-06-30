@@ -2,8 +2,10 @@ package hpscore.repository;
 
 import hpscore.domain.Score;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,4 +35,11 @@ public interface ScoreRepository extends JpaRepository<Score,Integer>{
     //查找记录录入次数少于2次的记录
     @Query("from Score s where s.editTimes<:edit_times")
     List<Score> findScoreLessThanEditTimes(@Param("edit_times")int edit_times);
+
+
+    //transaction要加在modify后面！
+    @Modifying
+    @Transactional
+    @Query("delete from Score where model = ?1")
+    void deleteByModel(String model);
 }

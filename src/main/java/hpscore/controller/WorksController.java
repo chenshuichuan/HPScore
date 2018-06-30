@@ -46,7 +46,7 @@ public class WorksController {
 
     //根据作品code和model查询该作品是否已经存在，并返回
     @RequestMapping(value = "/getWorksByCodeAndModel",method = RequestMethod.GET)
-    public Map<String,Object> getUserByName(
+    public Map<String,Object> getWorksByCodeAndModel(
             @RequestParam("code")String code, @RequestParam("model")String model){
         Map<String,Object> map =new HashMap<String,Object>();
         Works works = worksRepository.findByCodeAndModel(code,model);

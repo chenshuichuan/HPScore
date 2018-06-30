@@ -41,8 +41,8 @@ public class ScoreServiceImplTest {
 
     @Autowired
     private PingweiService pingweiService;
-    //private String model1="本科组";
-    private String model1="高职高专组";
+    private String model1="本科组";
+    //private String model1="高职高专组";
     //private int[] optionlist={10,15,20,20,20,15};
     private int[] optionlist={10,15,10,25,25,15};
     @Test
@@ -78,10 +78,12 @@ public class ScoreServiceImplTest {
     @Test
     public void GenerateScoreData() throws Exception {
 
-        //scoreRepository.deleteAll();
+        scoreRepository.deleteByModel(model1);
 
         List<Works> worksList = worksRepository.findByModel(model1);
+        System.out.println("works size="+worksList.size());
         List<String>pingweiList = pingweiService.selectAllCodeByModel(model1);
+        System.out.println("pingwei size="+pingweiList.size());
         for(Works works:worksList){
             for (String pid: pingweiList){
                 Score score = new Score(pid,works.getCode(),

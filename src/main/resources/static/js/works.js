@@ -28,7 +28,7 @@ function setClickListener(worksList) {
                 $("#myModal").modal("show");
             }
             else {
-                alert("选取的用户不存在！");
+                alert("选取的作品不存在！");
             }
         });
 
@@ -47,7 +47,7 @@ function setClickListener(worksList) {
                 $("#myModal").modal("show");
             }
             else {
-                alert("选取的用户不存在！");
+                alert("选取的作品不存在！");
             }
         });
     }
@@ -77,7 +77,7 @@ function setClickListener(worksList) {
             addWorks(code,bianHao,name,partName,school,teachers,students,model);
             var result = getPingweiByCodeAndModel(code,model);
             if(result!==null){
-                alert("已存在该名称的账号！")
+                alert("已存在该序号/组别的作品！")
             }
             else {
                 addPingwei(name,code,model);
@@ -121,7 +121,7 @@ function getWorksByCodeAndModel(code,model) {
                 // $("#myModal").modal("show");
             }
             else {
-                alert("选取的用户不存在！");
+                //alert("选取的作品不存在！");
             }
         }
     });

@@ -87,6 +87,16 @@ function setModalText(pid,proId,data,options,editor) {
     $('#option36').val(option6);
     $('#editor2').text(editor);
 }
+//判断正整数
+function checkInt(str)
+{
+    var re = /^[1-9]+[0-9]*]*$/;
+    if (!re.test(str)) {
+        //alert("请输入正整数");
+        return false;
+    }
+    else return true;
+}
 //根据model检查数据合法性
 function IsDataOk(options,model) {
     var benke = [10,15,20,20,20,15];
@@ -99,10 +109,20 @@ function IsDataOk(options,model) {
     }
     else temp = gaozhi;
     for (var i = 0;i<6;i++){
-        if(options[i].length<=0)result=0;
+        if(options[i].length<=0){
+            result=0;
+            break;
+        }
+        //不是整数
+        if(!checkInt(options[i])){
+            result=0;
+            break;
+        }
+        //超过该项的分数域
         var value =parseInt(options[i]);
         if(value>temp[i]||value<=0){
             result=0;
+            break;
         }
     }
     if(result===0)alert("数据不合法！请重新输入！");
@@ -143,7 +163,7 @@ function IsDataOk2(pid,proId, options,model,editor){
 function generateEditTable() {
     var model =  getCookie("model");
     var header1="<tr>" +
-        "<th>作品</th>" +
+        "<th>作品序号</th>" +
         "<th>选题</th>" +
         "<th>科学性</th>" +
         "<th>创新性</th>" +
@@ -153,7 +173,7 @@ function generateEditTable() {
         "<th>编辑/保存</th>" +
         "</tr>";
     var header2="<tr>" +
-        "<th>作品</th>" +
+        "<th>作品序号</th>" +
         "<th>选题</th>" +
         "<th>技术性</th>" +
         "<th>创新性</th>" +
@@ -166,7 +186,7 @@ function generateEditTable() {
     else $("#edit-header").append(header2);
 
     var header5="<tr>" +
-        "<th>作品</th>" +
+        "<th>作品序号</th>" +
         "<th>选题</th>" +
         "<th>科学性</th>" +
         "<th>创新性</th>" +
@@ -175,7 +195,7 @@ function generateEditTable() {
         "<th>文档质量及答辩效果</th>" +
         "</tr>";
     var header6="<tr>" +
-        "<th>作品</th>" +
+        "<th>作品序号</th>" +
         "<th>选题</th>" +
         "<th>技术性</th>" +
         "<th>创新性</th>" +

@@ -26,6 +26,14 @@
     <script th:src="@{js/html5shiv.js}"></script>
     <script th:src="@{js/respond.min.js}"></script>
     <![endif]-->
+    <style>
+        .emphasize{
+            color: #4c4ae1;
+        }
+        img{
+            width:100%;height: auto;
+        }
+    </style>
 </head>
 <body class="sticky-header">
 <section>
@@ -54,7 +62,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            <span >Excel列表</span>
+                            <span >Excel文件列表</span>
                             <span class="tools pull-right" >
                                 <a href="javascript:;" class="fa fa-chevron-down"></a>
                             </span>
@@ -66,17 +74,21 @@
                                 <table class="display table table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <th>Excel文件</th>
+                                        <th>文件名</th>
+                                        <th style="text-align: center;">文件大小</th>
+                                        <th style="text-align: center;">更新时间</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="fileName:${fileList}">
+                                    <tr th:each="fileInfo:${fileInfoList}">
                                         <td style="color: rgb(13,225,137);font-size: 20px; text-align: left;">
-                                            <a href="#" th:href="|/score/getExcel1?fileName=${fileName}|">
+                                            <a href="#" th:href="|/score/getExcel1?fileName=${fileInfo.name}|">
                                                 <i class="fa fa-file-excel-o"></i>
-                                                <span  th:text="${fileName}"></span>
+                                                <span  th:text="${fileInfo.name}">文件名</span>
                                             </a>
                                         </td>
+                                        <td><span style="color: #1f7be1;" th:text="${fileInfo.size}">10</span>&nbsp;KB</td>
+                                        <td th:text="${fileInfo.updateTime}"></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -86,40 +98,65 @@
                 </div>
             </div>
 
-            <!--<div class="row">-->
-                <!--<div class="col-sm-12">-->
-                    <!--<section class="panel">-->
-                        <!--<header class="panel-heading">-->
-                            <!--<span >Excel列表</span>-->
-                            <!--<span class="tools pull-right" >-->
-                                <!--<a href="javascript:;" class="fa fa-chevron-down"></a>-->
-                            <!--</span>-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <span >评分录入说明</span>
+                            <span class="emphasize">(重要)</span>
+                            <span class="tools pull-right" >
+                                <a href="javascript:;" class="fa fa-chevron-down"></a>
+                            </span>
 
-                        <!--</header>-->
-                        <!--<div class="panel-body">-->
-                            <!--<ul id="myTab" class="nav nav-tabs">-->
-                                <!--<li class="active"><a href="#final-score" data-toggle="tab">-->
-                                    <!--相对平均分</a>-->
-                                <!--</li>-->
-                                <!--<li><a href="#innovation-score" data-toggle="tab">创新平均分</a></li>-->
-                                <!--<li><a href="#useful-score" data-toggle="tab">实用平均分</a></li>-->
-                            <!--</ul>-->
-                            <!--<div id="myTabContent" class="tab-content">-->
-                                <!--<div class="tab-pane fade in active" id="final-score">-->
-                                   <!---->
-                                <!--</div>-->
-                                <!--<div class="tab-pane fade" id="innovation-score">-->
-                                   <!---->
-                                <!--</div>-->
-                                <!--<div class="tab-pane fade" id="useful-score">-->
-                                   <!---->
-                                <!--</div>-->
-                            <!--</div>-->
+                        </header>
+                        <div class="panel-body" style="background-color: rgba(0,0,0,0.19);color: rgba(0,0,0,0.99);">
+                            <div>
+                                <h3>1.进入<span class="emphasize">评分录入</span>页面</h3>
+                                <h5>每次进入<span class="emphasize">评分录入</span>页面，或是<span class="emphasize">更改</span>
+                                    录入评分的评委，都会弹出<span class="emphasize">当前录入评委编号</span>的提示</h5>
+                                <h5>如下图：进入评分录入页面</h5>
+                                <img src="../static/images/index/评分录入1.jpg" th:src="@{images/index/评分录入1.jpg}"/>
+                            </div>
+                            <div>
+                                <h3>2.录入<span class="emphasize">评分记录</span></h3>
+                                <h5>开始输入某评委的对某作品的评分，<span class="emphasize">保存</span>按钮将变为红色，代表该行数据正处于<span class="emphasize">编辑</span>
+                                    状态。</h5>
+                                <h5>点击<span class="emphasize">保存</span>按钮，保存数据；如果存在<span class="emphasize">非数值、空值、超出限定值</span>
+                                    则显示数据不合法，需要重新编辑</h5>
+                                <h5>如下图：输入空值</h5>
+                                <img src="../static/images/index/评分录入2.jpg" th:src="@{images/index/评分录入2.jpg}"/>
+                            </div>
+                            <div>
+                                <h3>3.数据不一致</h3>
+                                <h5>录入数据时，如若该次保存数据和数据库中已有<span class="emphasize">数据不一致</span>，则会弹出“数据不一致提示”</h5>
+                                <h5>如下图：提示数据不一致</h5>
+                                <img src="../static/images/index/评分录入3.jpg" th:src="@{images/index/评分录入3.jpg}"/>
+                                <h5>并且随后显示不一致的<span class="emphasize">记录对比</span></h5>
+                                <h4 style="color: rgba(225,11,15,0.99);">请在此时仔细核查评分记录！</h4>
+                                <h5>如下图：显示差异</h5>
+                                <img src="../static/images/index/评分录入4.jpg" th:src="@{images/index/评分录入4.jpg}"/>
+                                <h5>确认更改记录后，点击<span class="emphasize">强制保存</span>，保存评分记录，保存成功或保存失败都会产生相应的提示信息</h5>
+                                <h5>如下图：强制保存成功</h5>
+                                <img src="../static/images/index/评分录入5.jpg" th:src="@{images/index/评分录入5.jpg}"/>
+                            </div>
+                            <div>
+                                <h3>4.编辑页面</h3>
+                                <h5>录入评分信息后，如果该行评分信息未保存，则“<span class="emphasize">保存</span>”按钮为红色，如果该行未编辑过，或是已经成功保存，
+                                    则“<span class="emphasize">保存</span>”按钮为绿色</h5>
+                                <h5>如下图：作品1的评分已经保存成功，作品2和作品3评分处于正在编辑状态，<span class="emphasize">未保存</span></h5>
+                                <img src="../static/images/index/评分录入6.jpg" th:src="@{images/index/评分录入6.jpg}"/>
+                                <h5>如果<span class="emphasize">更换</span>录入评分的评委，即使当前页面仍存在前面的数据，也可以直接在对应作品上进行编辑/录入</h5>
+                                <h5>但是<span class="emphasize">建议</span>，点击<span class="emphasize">清空输入框</span>按钮，清空当前输入页面所有数据，重新输入</h5>
+                                <h5>如下图：</h5>
+                                <img src="../static/images/index/评分录入7.jpg" th:src="@{images/index/评分录入7.jpg}"/>
 
-                        <!--</div>-->
-                    <!--</section>-->
-                <!--</div>-->
-            <!--</div>-->
+
+                                
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
         </div>
         <!--body wrapper end-->
         <!--footer section start-->
@@ -143,6 +180,7 @@
 <script src="../static/js/scripts.js"  th:src="@{js/scripts.js}"></script>
 <!--title time initialization-->
 <script src="../static/js/myjsfile.js" th:src="@{js/myjsfile.js}"></script>
+
 
 
 <!--dynamic table-->

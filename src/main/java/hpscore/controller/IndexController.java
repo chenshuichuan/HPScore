@@ -5,6 +5,7 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
+import hpscore.domain.FileInfo;
 import hpscore.tools.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static hpscore.tools.FileUtil.readFileInfo;
 
 /**
  *@ClassName: IndexController
@@ -37,9 +41,14 @@ public class IndexController {
         //List<String> models =indexService.getModels();
 
         ModelAndView modelAndView = new ModelAndView("index");
-        List<String> fileList = FileUtil.readfiles("./");
-        System.out.println("controller -- index --- index.html = "+fileList.size());
-        modelAndView.addObject("fileList", fileList);
+        List<FileInfo> fileInfoList = null;
+        try {
+            fileInfoList = readFileInfo(".");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("controller -- index --- index.html = "+fileInfoList.size());
+        modelAndView.addObject("fileInfoList", fileInfoList);
         return modelAndView;
     }
 
