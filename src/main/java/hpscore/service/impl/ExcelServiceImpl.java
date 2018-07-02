@@ -154,10 +154,10 @@ public class ExcelServiceImpl implements ExcelService {
 
         //finally set column widths, the width is measured in units of 1/256th of a character width
         sheet.setColumnWidth(0, 10*256); //30 characters wide
-        sheet.setColumnWidth(1, 30*256); //30 characters wide
-
-        for (int i = 2; i < 10; i++) {
-            sheet.setColumnWidth(i, 10*256); //30 characters wide
+        sheet.setColumnWidth(1, 10*256); //30 characters wide
+        sheet.setColumnWidth(2, 30*256); //30 characters wide
+        for (int i = 3; i < headers.length; i++) {
+            sheet.setColumnWidth(i, 9*256); //30 characters wide
         }
         return  0;
     }

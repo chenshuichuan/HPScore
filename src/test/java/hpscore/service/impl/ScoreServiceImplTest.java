@@ -43,8 +43,8 @@ public class ScoreServiceImplTest {
     private PingweiService pingweiService;
     private String model1="本科组";
     //private String model1="高职高专组";
-    //private int[] optionlist={10,15,20,20,20,15};
-    private int[] optionlist={10,15,10,25,25,15};
+    private int[] optionlist={10,15,20,20,20,15};
+    //private int[] optionlist={10,15,10,25,25,15};
     @Test
     public void checkIfAllTheSameTimes() throws Exception {
 

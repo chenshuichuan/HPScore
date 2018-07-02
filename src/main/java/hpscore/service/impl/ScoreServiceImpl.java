@@ -208,7 +208,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
             //计算平均分
             for (int i=0;i<7;i++){
-                average[i] = (totalScore[i]-maxScore[i]-minScore[i])/(double)pingweiSize;
+                average[i] = (totalScore[i]-maxScore[i]-minScore[i])/(double)(pingweiSize-2);
                 //保留三位小数
                 average[i] = ScoreUtil.DecimalDouble(average[i],3);
             }
@@ -338,7 +338,7 @@ public class ScoreServiceImpl implements ScoreService {
                     innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
                 }
             }
-            double average = (double)(totalScore-maxScore-minScore)/(double)pingweiList.size();
+            double average = (double)(totalScore-maxScore-minScore)/(double)(pingweiList.size()-2);
             //保留三位小数
             average = ScoreUtil.DecimalDouble(average,3);
 
@@ -392,7 +392,7 @@ public class ScoreServiceImpl implements ScoreService {
                     innovationScore = setInnovation(pingwei.getCode(),0, innovationScore);
                 }
             }
-            double average = (double)(totalScore-maxScore-minScore)/(double)pingweiList.size();
+            double average = (double)(totalScore-maxScore-minScore)/(double)(pingweiList.size()-2);
             //保留三位小数
             average = ScoreUtil.DecimalDouble(average,3);
 
