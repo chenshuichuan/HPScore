@@ -21,6 +21,12 @@ import java.util.Map;
 /**
  * Created by tengj on 2017/4/10.
  */
+/**
+ *@Author: Ricardo
+ *@Description: 登录控制器
+ *@Date: 20:08 2018/7/13
+ *@param:
+ **/
 @Controller
 public class LoginController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -29,6 +35,13 @@ public class LoginController {
     private UserRepository userRepository;
     @Autowired
     private LogInfoService logInfoService;
+
+    /**
+     *@Author: Ricardo
+     *@Description: 登录请求
+     *@Date: 20:08 2018/7/13
+     *@param: 
+     **/
     @RequestMapping(value = "/userlogin")
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request,
@@ -41,8 +54,6 @@ public class LoginController {
         String ip = request.getRemoteAddr();
         long startTime = System.currentTimeMillis();
         String action = this.getClass().getName()+".login,";
-
-        //System.out.println("login -- login --- ,userName="+user.getName()+",role="+user.getRole());
         if(user!=null){
 
             request.getSession().setAttribute("user",user);
@@ -63,6 +74,12 @@ public class LoginController {
         return map;
     }
 
+    /**
+     *@Author: Ricardo
+     *@Description: 退出请求
+     *@Date: 20:09 2018/7/13
+     *@param:
+     **/
     @RequestMapping(value = "/logout")
     @ResponseBody
     public Map<String,Object> logout(HttpServletRequest request, HttpServletResponse response){

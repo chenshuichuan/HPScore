@@ -35,7 +35,6 @@ public class UserAndLogInfoController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserAndLogInfoController.class);
 
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -45,7 +44,6 @@ public class UserAndLogInfoController {
     @Autowired
     private LogInfoService logInfoService;
 
-    //根据评委以及作品和model查询该作品评分记录是否已经存在，并返回
     @RequestMapping(value = "/getUserByName",method = RequestMethod.GET)
     public Map<String,Object> getUserByName(
             @RequestParam("name")String name){

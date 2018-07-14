@@ -46,7 +46,7 @@ $(document).ready(function(){
 
     var userName = getCookie("user");
     $("#record1").click(function (e) {
-        var url = "/record1?editor="+userName+"&model="+model;
+        var url = "/record1?model="+model;
         window.location.href = url;
     });
 
@@ -59,7 +59,7 @@ $(document).ready(function(){
         window.location.href = url;
     });
     $("#total_final").click(function (e) {
-        var url = "/total_final?model="+model;
+        var url = "/total_final";
         window.location.href = url;
     });
 });

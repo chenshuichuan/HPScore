@@ -22,9 +22,9 @@ public class PingweiScore {
     private String pid;
     //评委id或name
     private String pName;
-    //作品id或name
+    //作品id
     private String proId;
-    //作品id或name
+    //作品name
     private String proName;
     //6个评分项
     private int option1;

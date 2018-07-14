@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  *@ClassName: PingweiController
- *@Description: TODO
+ *@Description: 评委表控制器
  *@Author: Ricardo
  *@Date: 2018/5/22 21:29
  **/
@@ -67,7 +67,7 @@ public class PingweiController {
         return map;
     }
 
-    //根据user id 删除user
+    //根据评委 id 删除评委信息
     @RequestMapping(value = "/deletePingweiById",method = RequestMethod.GET)
     public Map<String,Object> deletePingweiById(
             HttpServletRequest request, HttpServletResponse response,
@@ -141,7 +141,7 @@ public class PingweiController {
         return map;
     }
 
-    //添加user数据
+    //添加评委数据
     /**
      *@Author: Ricardo
      *@Description:

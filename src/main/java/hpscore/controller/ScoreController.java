@@ -87,56 +87,12 @@ public class ScoreController {
     }
 
 
-
-    //更新数据
     /**
      *@Author: Ricardo
-     *@Description:
-     *@Date: 23:43 2018/6/9
+     *@Description: 已经废弃
+     *@Date: 21:01 2018/7/13
      *@param:
      **/
-    @RequestMapping(value = "/add_get")
-    @ResponseBody
-    public Map<String,Object> add(
-            @RequestParam("pid")String pid,
-            @RequestParam("proId")String proId,
-            @RequestParam("option1")String option1Str,
-            @RequestParam("option2")String option2Str,
-            @RequestParam("option3")String option3Str,
-            @RequestParam("option4")String option4Str,
-            @RequestParam("option5")String option5Str,
-            @RequestParam("option6")String option6Str,
-            @RequestParam("model")String model,
-            @RequestParam("editor")String editor){
-
-        Map<String,Object> map =new HashMap<String,Object>();
-
-        int option1 = Integer.parseInt(option1Str);
-        int option2 = Integer.parseInt(option2Str);
-        int option3 = Integer.parseInt(option3Str);
-        int option4 = Integer.parseInt(option4Str);
-        int option5 = Integer.parseInt(option5Str);
-        int option6 = Integer.parseInt(option6Str);
-
-        Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
-        if(score ==null){
-            logger.info("---添加评分数据，正在写入数据库-----");
-
-            int editTimes = 0;
-            Score temp = new Score(pid,proId,
-                    option1, option2, option3, option4, option5, option6,
-                    editTimes+1,model);
-            temp.setEditor1(editor);
-
-            scoreService.add(temp);
-            map.put("result",1);
-            map.put("message","成功添加评分记录！");
-        }else{
-            map.put("result",0);
-            map.put("message","添加评分记录失败！请检查数据是否已存在！");
-        }
-        return map;
-    }
    //计算获奖作品表请求
    @RequestMapping(value = "/countAward")
    @ResponseBody
@@ -159,10 +115,10 @@ public class ScoreController {
        map.put("message","您没有计算相对分的权限！");
        return map;
    }
-    //计算相对分请求
+
     /**
      *@Author: Ricardo
-     *@Description:
+     *@Description: 计算相对分请求
      *@Date: 23:43 2018/6/9
      *@param:
      **/
@@ -233,6 +189,12 @@ public class ScoreController {
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
+    /**
+     *@Author: Ricardo
+     *@Description: 已经弃用了
+     *@Date: 21:10 2018/7/13
+     *@param: 
+     **/
     //根据model查询作品的所有相对评分记录，并返回
     @RequestMapping(value = "/selectRelativeScoreByModel",method = RequestMethod.GET)
     public Map<String,Object> selectRelativeScoreByModel(

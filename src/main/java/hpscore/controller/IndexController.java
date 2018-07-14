@@ -23,7 +23,7 @@ import static hpscore.tools.FileUtil.readFileInfo;
 
 /**
  *@ClassName: IndexController
- *@Description: TODO
+ *@Description: 首页控制器
  *@Author: Ricardo
  *@Date: 2018/5/22 21:29
  **/
@@ -43,11 +43,11 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView("index");
         List<FileInfo> fileInfoList = null;
         try {
+            //读取当前目录下的Excel文件列表
             fileInfoList = readFileInfo(".");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("controller -- index --- index.html = "+fileInfoList.size());
         modelAndView.addObject("fileInfoList", fileInfoList);
         return modelAndView;
     }

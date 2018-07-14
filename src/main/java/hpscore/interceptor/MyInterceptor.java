@@ -19,6 +19,12 @@ public class MyInterceptor implements HandlerInterceptor {
     @Autowired
     LogInfoService logInfoService;
 
+    /**
+     *@Author: Ricardo
+     *@Description: 请求拦截
+     *@Date: 20:31 2018/7/13
+     *@param: 
+     **/
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
@@ -31,6 +37,7 @@ public class MyInterceptor implements HandlerInterceptor {
         String target = method.getDeclaringClass().getName() + "."
                 + method.getName();
         System.out.println("用户:"+ip+",访问目标:"+target);
+        //查看是否已经登录
         User user=(User)request.getSession().getAttribute("user");
 
         if(null==user){

@@ -58,8 +58,7 @@ public class RecordController {
 
     //本科组评分录入
     @RequestMapping(value = "/record1")
-    public ModelAndView record1(@RequestParam("editor")String editor,
-                                @RequestParam("model")String model){
+    public ModelAndView record1(@RequestParam("model")String model){
         ModelAndView modelAndView = new ModelAndView("record1");
 
         modelAndView.addObject("worksList", worksService.selectAllCodeByModel(model));
@@ -67,7 +66,7 @@ public class RecordController {
         return modelAndView;
     }
 
-    //评委打分导出
+    //评分审核页面
     @RequestMapping(value = "/record3")
     public ModelAndView record3(@RequestParam("model")String model){
 
@@ -76,9 +75,9 @@ public class RecordController {
         return modelAndView;
     }
 
-    //总分平均分排名
+    //作品获奖页面
     @RequestMapping(value = "/total_final")
-    public ModelAndView total_final(@RequestParam("model")String model){
+    public ModelAndView total_final(){
 
         //generateExcelThreadService.executeGenerateAward();
         ModelAndView modelAndView = new ModelAndView("total_final");

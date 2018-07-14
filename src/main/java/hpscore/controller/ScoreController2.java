@@ -192,34 +192,6 @@ public class ScoreController2 {
     }
 
 
-    //http://localhost:3388/images/getImagesByName.do?modelName=model1&name=551
-    @RequestMapping(value = "/getExcel")
-    @ResponseBody
-    public String getExcel(HttpServletRequest request, HttpServletResponse response, Model modelView,
-                           @RequestParam("fileName")String filename) {
-        FileInputStream fis = null;
-        OutputStream os = null;
-        try {
-            //String path1 = System.getProperty("user.dir");
-            fis = new FileInputStream(filename);
-            os = response.getOutputStream();
-            int count = 0;
-            byte[] buffer = new byte[1024 * 8];
-            while ((count = fis.read(buffer)) != -1) {
-                os.write(buffer, 0, count);
-                os.flush();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            if(fis!=null)fis.close();
-            if(os!=null)os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "ok";
-    }
     @RequestMapping(value = "/getExcel1")
     @ResponseBody
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
