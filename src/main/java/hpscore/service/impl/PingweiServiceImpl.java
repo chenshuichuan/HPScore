@@ -24,7 +24,7 @@ public class PingweiServiceImpl implements PingweiService {
     @Override
     public int add(Pingwei works) {
         Pingwei works1 = pingweiRepository.save(works);
-        if (null != works1) return 1;
+        if (null != works1) {return 1;}
         return 0;
     }
 
@@ -49,23 +49,30 @@ public class PingweiServiceImpl implements PingweiService {
     }
 
     @Override
-    public List<Pingwei> selectAll() {
-        return pingweiRepository.findAll();
+    public List<Pingwei> selectAll(int year) {
+        return pingweiRepository.findByYear(year);
     }
 
     @Override
-    public List<String> selectAllName() {
+    public List<String> selectAllName(int year) {
         List<String> stringList = new ArrayList<>();
-        List<Pingwei> pingweiList = pingweiRepository.findAll();
+        List<Pingwei> pingweiList = pingweiRepository.findByYear(year);
         for (Pingwei pingwei: pingweiList){
             stringList.add(pingwei.getName());
         }
         return stringList;
     }
+    /**
+     * @Author haien
+     * @Description 根据组别查找所有评委序号，并按从小到大排序
+     * @Date 8:06 2018/7/21
+     * @Param [model]
+     * @return java.util.List<java.lang.String>
+     **/
     @Override
-    public List<String> selectAllCodeByModel(String model) {
+    public List<String> selectAllCodeByModelAndYear(String model,int year) {
         List<String> stringList = new ArrayList<>();
-        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
+        List<Pingwei> pingweiList = pingweiRepository.findByModelAndYear(model,year);
         for (Pingwei pingwei: pingweiList){
             stringList.add(pingwei.getCode());
         }

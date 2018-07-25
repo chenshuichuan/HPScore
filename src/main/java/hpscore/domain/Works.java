@@ -16,17 +16,21 @@ public class Works {
     @GeneratedValue
     private int id;
     private String name;
-    private String code;//序号
+    //序号（从1~24的那个，对应proId）
+    private String code;
     private String model;
     private double finalScore;
-    private String school;//
-    private String teachers;//
+    private String school;
+    private String teachers;
     private String students;
     private int ranking;
     //分赛区名称
     private String partName;
     //作品编号
     private String bianHao;
+    private int year;
+
+
 
     public String getBianHao() {
         return bianHao;
@@ -56,6 +60,7 @@ public class Works {
         this.students=works.students;
         this.ranking=works.ranking;
         this.partName=works.partName;
+        this.year=works.year;
     }
     public Works(String name, String code, String model) {
         this.name = name;
@@ -136,4 +141,11 @@ public class Works {
         this.model = model;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
 }

@@ -1,10 +1,5 @@
 package hpscore.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * Created by ricardo on 2018/6/6.
  */
@@ -16,8 +11,8 @@ public class RelativeScore {
     private String bianHao;//作品编号
     private String proName;//作品name
     private double maxScore;
-    private double minScore;
     private double average;
+    private double minScore;
     private double[] pAverage;//6个单项的平均分
     //评委们的相对分
     private double[]pScores;

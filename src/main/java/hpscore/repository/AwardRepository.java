@@ -1,7 +1,6 @@
 package hpscore.repository;
 
 import hpscore.domain.Award;
-import hpscore.domain.Works;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.List;
 /*
 * Integer 是id 的类型*/
 public interface AwardRepository extends JpaRepository<Award,Integer>{
-    List<Award> findByModelAndScoreType(String model,String scoreType);
+    List<Award> findByModelAndScoreTypeAndYear(String model,String scoreType,int year);
+    //不需要再加一个model吧？
     Award findByWorksIdAndModelAndScoreType(int worksId, String model,String scoreType);
 }

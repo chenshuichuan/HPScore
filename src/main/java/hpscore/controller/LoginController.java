@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +40,6 @@ public class LoginController {
         long startTime = System.currentTimeMillis();
         String action = this.getClass().getName()+".login,";
 
-        //System.out.println("login -- login --- ,userName="+user.getName()+",role="+user.getRole());
         if(user!=null){
 
             request.getSession().setAttribute("user",user);

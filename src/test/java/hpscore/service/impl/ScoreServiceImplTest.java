@@ -1,9 +1,7 @@
 package hpscore.service.impl;
 
-import hpscore.domain.Pingwei;
 import hpscore.domain.Score;
 import hpscore.domain.Works;
-import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.PingweiService;
@@ -16,11 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by:Ricardo
@@ -45,11 +42,12 @@ public class ScoreServiceImplTest {
     //private String model1="高职高专组";
     private int[] optionlist={10,15,20,20,20,15};
     //private int[] optionlist={10,15,10,25,25,15};
+    private int year=2018;
     @Test
     public void checkIfAllTheSameTimes() throws Exception {
 
-        List<String> pingweiList = pingweiService.selectAllCodeByModel(model1);
-        int index = scoreService.checkIfAllTheSameTimes(model1,pingweiList);
+        List<String> pingweiList = pingweiService.selectAllCodeByModelAndYear(model1,year);
+        int index = scoreService.checkIfAllTheSameTimes(model1,pingweiList,2018);
         System.out.println("index = "+index);
         Assert.assertThat(index,equalTo(pingweiList.size()));
     }
@@ -58,8 +56,8 @@ public class ScoreServiceImplTest {
     @Test
     public void calculateRelativeScore() throws Exception {
 
-        List<String> pingweiList = pingweiService.selectAllCodeByModel(model1);
-        int index = scoreService.calculateRelativeScore(model1,pingweiList);
+        List<String> pingweiList = pingweiService.selectAllCodeByModelAndYear(model1,year);
+        int index = scoreService.calculateRelativeScore(model1,pingweiList,2018);
         if(index!=pingweiList.size()){
            System.out.println("第"+pingweiList.get(index)+"位的委评相对分计算出错！");
         }
@@ -69,7 +67,7 @@ public class ScoreServiceImplTest {
     @Test
     public void calculateByCodeAndModel() throws Exception {
 
-        int index = scoreService.calculateByCodeAndModel( "1", model1);
+        int index = scoreService.calculateByCodeAndModel( "1", model1,2018);
         Assert.assertThat(index,is(1));
     }
 
@@ -78,11 +76,11 @@ public class ScoreServiceImplTest {
     @Test
     public void GenerateScoreData() throws Exception {
 
-        scoreRepository.deleteByModel(model1);
+        scoreRepository.deleteByModelAndYear(model1,year);
 
-        List<Works> worksList = worksRepository.findByModel(model1);
+        List<Works> worksList = worksRepository.findByModelAndYear(model1,year);
         System.out.println("works size="+worksList.size());
-        List<String>pingweiList = pingweiService.selectAllCodeByModel(model1);
+        List<String>pingweiList = pingweiService.selectAllCodeByModelAndYear(model1,year);
         System.out.println("pingwei size="+pingweiList.size());
         for(Works works:worksList){
             for (String pid: pingweiList){
@@ -94,14 +92,14 @@ public class ScoreServiceImplTest {
                         ScoreUtil.GetRandomNumber(5,optionlist[4]),
                         ScoreUtil.GetRandomNumber(5,optionlist[5]),
                         2,
-                        works.getModel()
-                        );
+                        works.getModel(),
+                        year);
                 score.setEditor1("editor"+pingweiList.get(
                         ScoreUtil.GetRandomNumber(0,pingweiList.size())));
                 scoreRepository.save(score);
             }
         }
-        List<Score>scoreList = scoreRepository.findByModel(model1);
+        List<Score>scoreList = scoreRepository.findByModelAndYear(model1,year);
         Assert.assertThat(scoreList.size(),
                 is(pingweiList.size()*worksList.size()));
     }

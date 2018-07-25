@@ -14,7 +14,8 @@ import java.util.List;
 /*
 * Integer 是id 的类型*/
 public interface PingweiRepository extends JpaRepository<Pingwei,Integer>{
-    List<Pingwei> findByModel(String model);
-    Pingwei findByNameAndModel(String name,String model);
-    Pingwei findByCodeAndModel(String code,String model);
+    List<Pingwei> findByYear(int year);
+    List<Pingwei> findByModelAndYear(String model,int year);
+    Pingwei findByNameAndModelAndYear(String name,String model,int year);
+    Pingwei findByCodeAndModelAndYear(String code,String model,int year);
 }

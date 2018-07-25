@@ -15,15 +15,15 @@ public interface WorksService {
     int update(Works works);
     int delete(Works works);
 
-    List<Works> selectAll();
-    List<String> selectAllName();
-    List<String> selectAllCodeByModel(String model);
+    List<Works> selectAll(int year);
+    List<String> selectAllName(int year);
+    List<String> selectAllCodeByModelAndYear(String model,int year);
 
     List<Works> awardToWorks(List<Award> awardList);
-    List<Works> selectFinalScoreRanking(String model);
-    List<Works> getSumUpAward(String model);
-    List<Works> getInnovationAward(String model);
-    List<Works> getUsefulAward(String model);
+    List<Works> selectFinalScoreRanking(String model,int year);
+    List<Works> getSumUpAward(String model,int year);
+    List<Works> getInnovationAward(String model,int year);
+    List<Works> getUsefulAward(String model,int year);
 
-    int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType);
+    int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType,int year);
 }

@@ -1,4 +1,5 @@
-package hpscore.controller;/**
+package hpscore.controller;
+/**
  * Created by:Ricardo
  * Description:
  * Date: 2018/5/22
@@ -9,7 +10,6 @@ import hpscore.domain.Pingwei;
 import hpscore.domain.User;
 import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
-import hpscore.repository.UserRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.LogInfoService;
 import hpscore.service.WorksService;
@@ -47,12 +47,13 @@ public class PingweiController {
     private LogInfoService logInfoService;
 
     //根据评委序号和model查询该评委是否已经存在，并返回
-    @RequestMapping(value = "/getPingweiByCodeAndModel",method = RequestMethod.GET)
+    @RequestMapping(value = "/getPingweiByCodeAndModelAndYear",method = RequestMethod.GET)
     public Map<String,Object> getUserByName(
-            @RequestParam("code")String code, @RequestParam("model")String model){
+            @RequestParam("code")String code, @RequestParam("model")String model,@RequestParam("year")String year1){
+        int year = Integer.parseInt(year1);
         Map<String,Object> map =new HashMap<String,Object>();
-        Pingwei pingwei = pingweiRepository.findByCodeAndModel(code,model);
-        //为查找到数据是score为null
+        Pingwei pingwei = pingweiRepository.findByCodeAndModelAndYear(code,model,year);
+
         if (pingwei!=null) {
             map.put("result",1);
             map.put("pingwei",pingwei);
@@ -141,7 +142,7 @@ public class PingweiController {
         return map;
     }
 
-    //添加user数据
+    //添加评委数据
     /**
      *@Author: Ricardo
      *@Description:
@@ -155,6 +156,8 @@ public class PingweiController {
         String name = request.getParameter("name");
         String code = request.getParameter("code");
         String model = request.getParameter("model");
+        String year1 = request.getParameter("year");
+        int year=Integer.parseInt(year1);
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
@@ -165,10 +168,10 @@ public class PingweiController {
         String action =this.getClass().getName()+ ".update-参数：name="+name+
                 ", code="+code+",role="+model;
 
-        Pingwei pingwei = pingweiRepository.findByCodeAndModel(code,model);
+        Pingwei pingwei = pingweiRepository.findByCodeAndModelAndYear(code,model,year);
         if(pingwei==null){
             logger.info("---添加评委数据，正在写入数据库-----");
-            pingweiRepository.save(new Pingwei (name,code,model));
+            pingweiRepository.save(new Pingwei (name,code,model,year));
 
             action+=",成功添加评委记录！";
             map.put("result",1);

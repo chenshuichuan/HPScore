@@ -9,7 +9,6 @@ import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.PingweiScoreService;
-import hpscore.service.ScoreService;
 import hpscore.tools.ScoreUtil;
 import hpscore.tools.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,23 +32,23 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
     @Autowired
     PingweiRepository pingweiRepository;
     @Override
-    public List<PingweiScore> selectAll() {
-        List<Score> scoreList= scoreRepository.findAll();
-        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
+    public List<PingweiScore> selectAll(int year) {
+        List<Score> scoreList= scoreRepository.findByYear(year);
+        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore(scoreList);
         return pingweiScoreList;
     }
 
     @Override
-    public List<PingweiScore> selectByModel(String model) {
-        List<Score> scoreList= scoreRepository.findByModel(model);
-        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
+    public List<PingweiScore> selectByModel(String model,int year) {
+        List<Score> scoreList= scoreRepository.findByModelAndYear(model,year);
+        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore(scoreList);
         return pingweiScoreList;
     }
 
     //根据model和评委id ，返回该评委的评分数据
     @Override
-    public List<PingweiScore> selectByPidAndModel(String pid, String model) {
-        List<Score> scoreList= scoreRepository.findByPidAndModel(pid,model);
+    public List<PingweiScore> selectByPidAndModelAndYear(String pid, String model,int year) {
+        List<Score> scoreList= scoreRepository.findByPidAndModelAndYear(pid,model,year);
         List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
         //按照作品id排序
         Collections.sort(pingweiScoreList,new Comparator() {
@@ -78,11 +77,11 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
                 double decimalDouble = ScoreUtil.DecimalDouble(score.getFinalScore(),3);
                 pingweiScore.setFinalScore(decimalDouble);
 
-                Pingwei pingwei = pingweiRepository.findByCodeAndModel(score.getPid(),score.getModel());
-                if (pingwei!=null)pingweiScore.setpName(pingwei.getName());
+                Pingwei pingwei = pingweiRepository.findByCodeAndModelAndYear(score.getPid(),score.getModel(),score.getYear());
+                if (pingwei!=null){pingweiScore.setpName(pingwei.getName());}
                 else
                     throw new Exception("要查找的评委不存在！");
-                Works works = worksRepository.findByCodeAndModel(score.getProId(),score.getModel());
+                Works works = worksRepository.findByCodeAndModelAndYear(score.getProId(),score.getModel(),score.getYear());
                 if(works!=null){
                     pingweiScore.setProName(works.getName());
                     pingweiScore.setBianHao(works.getBianHao());
@@ -97,14 +96,14 @@ public class PingweiScoreServiceImpl implements PingweiScoreService {
         return pingweiScoreList;
     }
 
-    //根据model和评委id ，返回该评委的评分数据
+    //根据model和评委序号 ，返回该评委的评分数据
     @Override
-    public List<PingweiScore> selectByPidAndEditorAndModel(String pid,String editor, String model) {
-        List<Score> scoreList= scoreRepository.findByPidAndEditor1AndModel(pid,editor,model);
-        List<Score> scoreList2= scoreRepository.findByPidAndEditor2AndModel(pid,editor,model);
+    public List<PingweiScore> selectByPidAndEditorAndModelAndYear(String pid,String editor, String model,int year) {
+        List<Score> scoreList= scoreRepository.findByPidAndEditor1AndModelAndYear(pid,editor,model,year);
+        List<Score> scoreList2= scoreRepository.findByPidAndEditor2AndModelAndYear(pid,editor,model,year);
         scoreList.addAll(scoreList2);
 
-        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore( scoreList);
+        List<PingweiScore>pingweiScoreList =ScoreToPingweiScore(scoreList);
         //按照作品id排序
         Collections.sort(pingweiScoreList,new Comparator() {
             @Override

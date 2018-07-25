@@ -8,7 +8,6 @@ package hpscore.tools;/**
 import hpscore.domain.FileInfo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
@@ -35,31 +34,6 @@ public class FileUtil {
 
         String encoding = System.getProperty("file.encoding");
         System.out.println(encoding);
-//       List<String> fileList = FileUtil.readfiles( ".");
-//       for (String file: fileList){
-//           String pattern = ".*\\.xls";
-//           boolean isMatch = Pattern.matches(pattern, file);
-//           if(isMatch){
-//               System.out.println(file);
-//               //获得将要操作的文件
-//               Path path = Paths.get(file);
-//               //获取访问基本属性的BasicFileAttributeView
-//               BasicFileAttributeView basicView = Files.getFileAttributeView(
-//                       path, BasicFileAttributeView.class);
-//               //获取访问基本属性的BasucFileAttributes
-//               BasicFileAttributes basicAttribs = basicView.readAttributes();
-//               //访问文件的基本属性
-//               //创建时间
-//               System.out.println(new Date(basicAttribs.creationTime().toMillis()).toString());
-//               //最后访问时间
-//               System.out.println(new Date(basicAttribs.lastAccessTime().toMillis()));
-//               //最后修改时间
-//               System.out.println(new Date(basicAttribs.lastModifiedTime().toMillis()));
-//               //文件大小
-//               System.out.println(basicAttribs.size());
-//           }
-//       }
-
         List<FileInfo> fileInfoList = readFileInfo(".");
         for (FileInfo fileInfo: fileInfoList){
             System.out.println("name = "+fileInfo.getName());
@@ -113,6 +87,13 @@ public class FileUtil {
         return fileList;
     }
 
+    /**
+     * @Author haien
+     * @Description 读取项目中的Excel表格，提取表格名称、大小和更新时间
+     * @Date 10:08 2018/7/25
+     * @Param [filepath]
+     * @return java.util.List<hpscore.domain.FileInfo>
+     **/
     public static List<FileInfo> readFileInfo(String filepath) throws IOException {
         //获取系统编码
         String encoding = System.getProperty("file.encoding");

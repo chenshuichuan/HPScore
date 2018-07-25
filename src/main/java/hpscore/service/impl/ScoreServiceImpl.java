@@ -7,14 +7,13 @@ import hpscore.repository.ScoreRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.ScoreService;
 import hpscore.tools.ScoreUtil;
-import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tengj on 2017/4/7.
@@ -59,15 +58,15 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Score> selectAll() {
-        return scoreRepository.findAll();
+    public List<Score> selectAll(int year) {
+        return scoreRepository.findByYear(year);
     }
 
     //返回该editor编辑过的model类型的记录数据
     @Override
-    public List<Score> selectByEditorAndModel(String editor, String model) {
-        List<Score> scores1 = scoreRepository.findByEditor1AndModel(editor,model);
-        List<Score> scores2 = scoreRepository.findByEditor2AndModel(editor,model);
+    public List<Score> selectByEditorAndModelAndYear(String editor, String model,int year) {
+        List<Score> scores1 = scoreRepository.findByEditor1AndModelAndYear(editor,model,year);
+        List<Score> scores2 = scoreRepository.findByEditor2AndModelAndYear(editor,model,year);
         if(scores1!=null){
             if(scores2!=null)scores1.addAll(scores2);
         }
@@ -75,25 +74,25 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public List<Score> selectByModel(String model) {
+    public List<Score> selectByModelAndYear(String model,int year) {
 
-        return scoreRepository.findByModel(model);
+        return scoreRepository.findByModelAndYear(model,year);
     }
 
     @Override
-    public Score selectByPidAndProIdAndModel(String pid, String proId, String model) {
-        return scoreRepository.findByPidAndProIdAndModel(pid,proId,model);
+    public Score selectByPidAndProIdAndModelAndYear(String pid, String proId, String model,int year) {
+        return scoreRepository.findByPidAndProIdAndModelAndYear(pid,proId,model,year);
     }
 
 
     // //检查是否每个评委都对所有作品进行了相同数量的评分记录，如：每个评委都有24条评分记录
     @Override
-    public int checkIfAllTheSameTimes(String model,List<String> pingweiList){
+    public int checkIfAllTheSameTimes(String model,List<String> pingweiList,int year){
 
         int index=0;
         int times=0;
         for (String code:pingweiList){
-            List<Score> scores = scoreRepository.findByPidAndModel(code,model);
+            List<Score> scores = scoreRepository.findByPidAndModelAndYear(code,model,year);
             if(index>0){
                 if(times!=scores.size()){
                     break;
@@ -104,14 +103,14 @@ public class ScoreServiceImpl implements ScoreService {
         }
         return index;
     }
-    // //根据传入的评委id（code）列表计算相对分
+    //根据传入的评委code列表计算相对分
     @Override
-    public int calculateRelativeScore(String model,List<String> pingweiList){
+    public int calculateRelativeScore(String model,List<String> pingweiList,int year){
         //出错标志
         int index=0;
         int flag = 0;
         for (String code:pingweiList){
-            flag = calculateByCodeAndModel( code, model);
+            flag = calculateByCodeAndModel(code, model,year);
             if(flag==0){
                 logger.info("calculateRelativeScore error:"+code);
                 break;
@@ -123,8 +122,8 @@ public class ScoreServiceImpl implements ScoreService {
 
     //根据评委的pid(对应code)和model计算该评委的所有评分的相对分，
     @Override
-    public int calculateByCodeAndModel(String code,String model){
-        List<Score> scores = scoreRepository.findByPidAndModel(code,model);
+    public int calculateByCodeAndModel(String code,String model,int year){
+        List<Score> scores = scoreRepository.findByPidAndModelAndYear(code,model,year);
         int maxScore=0;
         int minScore=100;
         //找到该评委的最大最小值分数
@@ -144,7 +143,7 @@ public class ScoreServiceImpl implements ScoreService {
             return 0;
         }
         //保存查询到的最大最小分
-        Pingwei pingwei = pingweiRepository.findByCodeAndModel(code,model);
+        Pingwei pingwei = pingweiRepository.findByCodeAndModelAndYear(code,model,year);
         if (pingwei!=null){
             pingwei.setMaxScore(maxScore);
             pingwei.setMinScore(minScore);
@@ -174,18 +173,20 @@ public class ScoreServiceImpl implements ScoreService {
 
     //计算相对分的平均分、最大分、最小分,返回计算出的平均分表
     @Override
-    public List<RelativeScore> calculteRelativeScoreAverageAndMaxAndMin(String model) {
+    public List<RelativeScore> calculteRelativeScoreAverageAndMaxAndMin(String model,int year) {
 
-        ////得到相关model的所有数据，要求此时score表的相对分已经计算完成，否则得出的分数无意义
-        List<Works> worksList = worksRepository.findByModel(model);
-        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
+        //得到相关model的所有数据，要求此时score表的相对分已经计算完成，否则得出的分数无意义
+        //获得本组所有作品
+        List<Works> worksList = worksRepository.findByModelAndYear(model,year);
+        //获得本组所有评委
+        List<Pingwei> pingweiList = pingweiRepository.findByModelAndYear(model,year);
         if(pingweiList==null||pingweiList.size()==0)return null;
         int pingweiSize = pingweiList.size();
 
         List<RelativeScore> relativeScoreList = new ArrayList<>();
         //根据作品构造相对平均分、创新平均分，实用平均分等
         for(Works works: worksList){
-            List<Score> scoreList = scoreRepository.findByProIdAndModel(works.getCode(),model);
+            List<Score> scoreList = scoreRepository.findByProIdAndModelAndYear(works.getCode(),model,year);
             double[] maxScore ={0,0,0,0,0,0,0};//相对分最大分、6个单项的最大分
             double[] minScore ={100,100,100,100,100,100,100};
             double[] totalScore = {0,0,0,0,0,0,0};//总分
@@ -206,7 +207,7 @@ public class ScoreServiceImpl implements ScoreService {
                 //
                 CompareToMaxAndMin(maxScore,minScore,totalScore,score);
             }
-            //计算平均分
+            //计算相对平均分
             for (int i=0;i<7;i++){
                 average[i] = (totalScore[i]-maxScore[i]-minScore[i])/(double)(pingweiSize-2);
                 //保留三位小数
@@ -224,7 +225,7 @@ public class ScoreServiceImpl implements ScoreService {
             relativeScoreList.add(relativeScore);
 
             //相对分平均分写入作品表
-            Works works1 = worksRepository.findByCodeAndModel(relativeScore.getProId(),model);
+            Works works1 = worksRepository.findByCodeAndModelAndYear(relativeScore.getProId(),model,year);
             if(works1!=null){
                 works1.setFinalScore(average[0]);
                 worksRepository.save(works1);
@@ -309,11 +310,11 @@ public class ScoreServiceImpl implements ScoreService {
 
     //计算创新性分数
     @Override
-    public List<InnovationScore> calculateInnovationScore(String model){
+    public List<InnovationScore> calculateInnovationScore(String model,int year){
         List<InnovationScore> innovationScoreList = new ArrayList<>();
 
-        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
-        List<Works> worksList = worksRepository.findByModel(model);
+        List<Pingwei> pingweiList = pingweiRepository.findByModelAndYear(model,year);
+        List<Works> worksList = worksRepository.findByModelAndYear(model,year);
 
         //以model下的所有作品为循环构建
         for (Works works: worksList){
@@ -324,8 +325,8 @@ public class ScoreServiceImpl implements ScoreService {
             int minScore = 100;
             int totalScore = 0;
             for (Pingwei pingwei:pingweiList){
-                Score score = scoreRepository.findByPidAndProIdAndModel(
-                        pingwei.getCode(),works.getCode(),model);
+                Score score = scoreRepository.findByPidAndProIdAndModelAndYear(
+                        pingwei.getCode(),works.getCode(),model,year);
                 if(score!=null){
                     innovationScore = setInnovation(pingwei.getCode(),score.getOption3(), innovationScore);
                     //计算该作品的最大最小分
@@ -363,11 +364,11 @@ public class ScoreServiceImpl implements ScoreService {
 
     //计算实用性分数
     @Override
-    public List<InnovationScore> calculateUsefulScore(String model){
+    public List<InnovationScore> calculateUsefulScore(String model,int year){
         List<InnovationScore> innovationScoreList = new ArrayList<>();
 
-        List<Pingwei> pingweiList = pingweiRepository.findByModel(model);
-        List<Works> worksList = worksRepository.findByModel(model);
+        List<Pingwei> pingweiList = pingweiRepository.findByModelAndYear(model,year);
+        List<Works> worksList = worksRepository.findByModelAndYear(model,year);
 
         //以model下的所有作品为循环构建
         for (Works works: worksList){
@@ -378,8 +379,8 @@ public class ScoreServiceImpl implements ScoreService {
             int minScore = 100;
             int totalScore = 0;
             for (Pingwei pingwei:pingweiList){
-                Score score = scoreRepository.findByPidAndProIdAndModel(
-                        pingwei.getCode(),works.getCode(),model);
+                Score score = scoreRepository.findByPidAndProIdAndModelAndYear(
+                        pingwei.getCode(),works.getCode(),model,year);
                 if(score!=null){
                     innovationScore = setInnovation(pingwei.getCode(),score.getOption5(), innovationScore);
                     //计算该作品的最大最小分

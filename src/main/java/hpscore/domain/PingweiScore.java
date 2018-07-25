@@ -1,10 +1,5 @@
 package hpscore.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * Created by ricardo on 2018/6/6.
  */
@@ -18,9 +13,9 @@ public class PingweiScore {
 
     //对应Score表的记录
     private int id;
-    //评委id或name
+    //评委序号
     private String pid;
-    //评委id或name
+    //评委name
     private String pName;
     //作品id或name
     private String proId;
