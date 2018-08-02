@@ -13,9 +13,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
 
 /**
  * Created by:Ricardo
@@ -34,9 +31,9 @@ public class WorksRepositoryTest {
     public void findByModel() throws Exception {
 
         //Works works = new Works()
-        List<Works> worksList =  worksRepository.findByModel("本科组");
+        List<Works> worksList =  worksRepository.findByModelAndYear("本科组",2018);
         Assert.assertThat(worksList.size(),is(3));
-        List<Works> worksList2 =  worksRepository.findByModel("高职高专组");
+        List<Works> worksList2 =  worksRepository.findByModelAndYear("高职高专组",2018);
         Assert.assertThat(worksList2.size(),is(4));
     }
 
@@ -44,20 +41,20 @@ public class WorksRepositoryTest {
     public void findByNameAndModel() throws Exception {
         //Works works = new Works()
 
-        Works works =  worksRepository.findByNameAndModel("5","高职高专组");
+        Works works =  worksRepository.findByNameAndModelAndYear("5","高职高专组",2018);
         Assert.assertThat(works.getCode(),equalTo("5"));
 
-        Works works2 =  worksRepository.findByNameAndModel("作品1","本科组");
+        Works works2 =  worksRepository.findByNameAndModelAndYear("作品1","本科组",2018);
         Assert.assertThat(works2.getCode(),is("作品1"));
     }
 
     @Test
     public void findByCodeAndModel() throws Exception {
 
-        Works works =  worksRepository.findByCodeAndModel("5","高职高专组");
+        Works works =  worksRepository.findByCodeAndModelAndYear("5","高职高专组",2018);
         Assert.assertThat(works.getCode(),equalTo("5"));
 
-        Works works2 =  worksRepository.findByCodeAndModel("1","本科组");
+        Works works2 =  worksRepository.findByCodeAndModelAndYear("1","本科组",2018);
         Assert.assertThat(works2.getCode(),is("1"));
     }
 

@@ -5,15 +5,11 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
-import hpscore.domain.InnovationScore;
-import hpscore.domain.RelativeScore;
-import hpscore.domain.Score;
 import hpscore.domain.User;
-import hpscore.repository.PingweiRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
-import hpscore.service.*;
-import hpscore.tools.StringUtil;
+import hpscore.service.LogInfoService;
+import hpscore.service.WorksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *@ClassName: IndexController
@@ -49,7 +46,6 @@ public class UserAndLogInfoController {
             @RequestParam("name")String name){
         Map<String,Object> map =new HashMap<String,Object>();
         User user = userRepository.findByName(name);
-        //为查找到数据是score为null
         if (user!=null) {
             map.put("result",1);
             map.put("user",user);
@@ -82,7 +78,7 @@ public class UserAndLogInfoController {
 
         Map<String,Object> map =new HashMap<String,Object>();
         User user = userRepository.findOne(idInt);
-        //为查找到数据是score为null
+
         if (user!=null) {
             userRepository.delete(idInt);
             action+=",成功删除"+user.getName()+"账号";

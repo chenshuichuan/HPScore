@@ -15,9 +15,9 @@ public class Score {
     @Id
     @GeneratedValue
     private int id;
-    //评委id或name
+    //评委序号
     private String pid;
-    //作品id或name
+    //作品序号
     private String proId;
 
     //6个评分项
@@ -30,7 +30,7 @@ public class Score {
 
     //原始总分
     private int totalScore;
-    //最终相对分
+    //相对分
     private double finalScore;
     private int editTimes;
     //第一个记录员
@@ -38,12 +38,15 @@ public class Score {
     //第二个记录员
     private String editor2;
     private String model;
+
+    private int year;
+
     public Score() {
     }
 
     public Score(String pid, String proId,
                  int option1, int option2, int option3, int option4, int option5, int option6,
-                  int editTimes, String model) {
+                  int editTimes, String model,int year) {
         this.pid = pid;
         this.proId = proId;
         this.option1 = option1;
@@ -55,6 +58,7 @@ public class Score {
         this.totalScore = option1+option2+option3+option4+option5+option6;
         this.editTimes = editTimes;
         this.model = model;
+        this.year=year;
     }
 
     public int getId() {
@@ -175,5 +179,13 @@ public class Score {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }

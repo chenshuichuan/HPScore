@@ -14,8 +14,8 @@ import java.util.List;
 /*
 * Integer 是id 的类型*/
 public interface WorksRepository extends JpaRepository<Works,Integer>{
-    List<Works> findByModel(String model);
-    Works findByNameAndModel(String name,String model);
-    Works findByCodeAndModel(String code,String model);
-
+    List<Works> findByYear(int year);
+    List<Works> findByModelAndYear(String model,int year);
+    Works findByNameAndModelAndYear(String name,String model,int year);
+    Works findByCodeAndModelAndYear(String code,String model,int year);
 }

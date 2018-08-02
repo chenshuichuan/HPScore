@@ -30,11 +30,11 @@ public class CountController {
     private PingweiService pingweiService;
 
     @RequestMapping("/count")
-    public ModelAndView count(@RequestParam("model")String model){
-        //List<String> models =indexService.getModels();
+    public ModelAndView count(@RequestParam("model")String model,@RequestParam("year")String year1){
 
+        int year = Integer.parseInt(year1);
         ModelAndView modelAndView = new ModelAndView("count");
-        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModel(model));
+        modelAndView.addObject("pingweiList", pingweiService.selectAllCodeByModelAndYear(model,year));
 
         return modelAndView;
     }

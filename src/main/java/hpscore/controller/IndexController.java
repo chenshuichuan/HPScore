@@ -6,10 +6,8 @@ package hpscore.controller;/**
  */
 
 import hpscore.domain.FileInfo;
-import hpscore.tools.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +36,6 @@ public class IndexController {
 
     @RequestMapping("/index.html")
     public ModelAndView index(){
-        //List<String> models =indexService.getModels();
 
         ModelAndView modelAndView = new ModelAndView("index");
         List<FileInfo> fileInfoList = null;
@@ -52,6 +49,13 @@ public class IndexController {
         return modelAndView;
     }
 
+    /**
+     * @Author haien
+     * @Description 某个小功能，免说明
+     * @Date 17:53 2018/7/21
+     * @Param [modelName]
+     * @return org.springframework.web.servlet.ModelAndView
+     **/
     @RequestMapping("/test.html")
     public ModelAndView test(@RequestParam("name")String modelName){
 

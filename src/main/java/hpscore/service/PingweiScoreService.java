@@ -1,9 +1,7 @@
 package hpscore.service;
 
 
-import hpscore.domain.Pingwei;
 import hpscore.domain.PingweiScore;
-import hpscore.domain.Score;
 
 import java.util.List;
 
@@ -12,8 +10,8 @@ import java.util.List;
  */
 public interface PingweiScoreService {
 
-    List<PingweiScore> selectAll();
-    List<PingweiScore> selectByModel(String model);
-    List<PingweiScore> selectByPidAndModel(String pid, String model);
-    List<PingweiScore> selectByPidAndEditorAndModel(String pid,String editor, String model);
+    List<PingweiScore> selectAll(int year);
+    List<PingweiScore> selectByModel(String model,int year);
+    List<PingweiScore> selectByPidAndModelAndYear(String pid, String model,int year);
+    List<PingweiScore> selectByPidAndEditorAndModelAndYear(String pid,String editor, String model,int year);
 }

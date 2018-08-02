@@ -1,15 +1,16 @@
 package hpscore.service.impl;
 
 
-import hpscore.domain.*;
-import hpscore.repository.UserRepository;
+import hpscore.domain.InnovationScore;
+import hpscore.domain.PingweiScore;
+import hpscore.domain.RelativeScore;
+import hpscore.domain.Works;
 import hpscore.service.*;
 import hpscore.tools.ScoreUtil;
 import hpscore.tools.StringUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,8 @@ public class ExcelServiceImpl implements ExcelService {
     private WorksService worksService;
     //原始打分审核表
     @Override
-    public String reviewExcel(String model) {
-        List<String> pingweiList = pingweiService.selectAllCodeByModel(model);
+    public String reviewExcel(String model,int year) {
+        List<String> pingweiList = pingweiService.selectAllCodeByModelAndYear(model,year);
         String[] headers =null;
         if(model.equals("本科组")){
            String[] header1 = {
@@ -54,11 +55,11 @@ public class ExcelServiceImpl implements ExcelService {
             headers = header2;
         }
 
-        String excelName = "2018泛珠赛全国总决赛终评评委打分审核表("+model+")";
+        String excelName = year+"泛珠赛全国总决赛终评评委打分审核表("+model+")";
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
         for (int i = 0; i < pingweiList.size(); i++) {
-            CreatePingweiScore(wb, styles, headers,pingweiList.get(i), model);
+            CreatePingweiScore(wb, styles, headers,pingweiList.get(i), model,year);
         }
         // Write the output to a file
         String file = excelName+".xls";
@@ -78,10 +79,10 @@ public class ExcelServiceImpl implements ExcelService {
     }
     //根据给定的评委的所有作品评分数据，创建评委打分审核表
     private int CreatePingweiScore(Workbook wb, Map<String, CellStyle> styles,
-                                   String[] headers,String pid, String model){
+                                   String[] headers,String pid, String model,int year){
         //所有作品的分
         List<PingweiScore> pingweiScoreList =
-                pingweiScoreService.selectByPidAndModel(pid,model);
+                pingweiScoreService.selectByPidAndModelAndYear(pid,model,year);
 
         //按照序号排序
         Collections.sort(pingweiScoreList,new Comparator() {
@@ -96,7 +97,7 @@ public class ExcelServiceImpl implements ExcelService {
             }
         });
 
-        String titleName = "2018泛珠赛全国总决赛终评评委打分审核表("+model+")";
+        String titleName = year+"泛珠赛全国总决赛终评评委打分审核表("+model+")";
         String pingweiName = "评委"+pid;
 
         Sheet sheet = wb.createSheet(pingweiName);
@@ -139,7 +140,6 @@ public class ExcelServiceImpl implements ExcelService {
                 switch (j){
                     case 0: cell.setCellValue(pingweiScoreList.get(i).getProId());break;
                     case 1: cell.setCellValue(pingweiScoreList.get(i).getBianHao());break;
-
                     case 2: cell.setCellValue(pingweiScoreList.get(i).getProName());break;
                     case 3: cell.setCellValue(pingweiScoreList.get(i).getOption1());break;
                     case 4: cell.setCellValue(pingweiScoreList.get(i).getOption2());break;
@@ -164,8 +164,8 @@ public class ExcelServiceImpl implements ExcelService {
 
     //打分转换表，增加相对分列
     @Override
-    public String reviewTransferExcel(String model) {
-        List<String> pingweiList = pingweiService.selectAllCodeByModel(model);
+    public String reviewTransferExcel(String model,int year) {
+        List<String> pingweiList = pingweiService.selectAllCodeByModelAndYear(model,year);
         String[] headers =null;
         if(model.equals("本科组")){
             String[] header1 = {
@@ -184,11 +184,11 @@ public class ExcelServiceImpl implements ExcelService {
             headers = header2;
         }
 
-        String excelName = "2018泛珠赛全国总决赛终评评委打分转换表("+model+")";
+        String excelName = year+"泛珠赛全国总决赛终评评委打分转换表("+model+")";
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
         for (int i = 0; i < pingweiList.size(); i++) {
-            CreateTransferScore(wb, styles, headers,pingweiList.get(i), model);
+            CreateTransferScore(wb, styles, headers,pingweiList.get(i), model,year);
         }
         // Write the output to a file
         String file = excelName+".xls";
@@ -208,10 +208,10 @@ public class ExcelServiceImpl implements ExcelService {
     }
     //根据给定的评委的所有作品评分数据，
     private int CreateTransferScore(Workbook wb, Map<String, CellStyle> styles,
-                                   String[] headers,String pid, String model){
+                                   String[] headers,String pid, String model,int year){
         //所有作品的分
         List<PingweiScore> pingweiScoreList =
-                pingweiScoreService.selectByPidAndModel(pid,model);
+                pingweiScoreService.selectByPidAndModelAndYear(pid,model,year);
 
         //按照序号排序
         Collections.sort(pingweiScoreList,new Comparator() {
@@ -226,7 +226,7 @@ public class ExcelServiceImpl implements ExcelService {
             }
         });
 
-        String titleName = "2018泛珠赛全国总决赛终评评委打分转换表("+model+")";
+        String titleName = year+"泛珠赛全国总决赛终评评委打分转换表("+model+")";
         String pingweiName = "评委"+pid;
 
         Sheet sheet = wb.createSheet(pingweiName);
@@ -295,9 +295,9 @@ public class ExcelServiceImpl implements ExcelService {
 
     //相对分、创新分、实用分  的平均分
     @Override
-    public String relativeScoreExcel(String model) {
+    public String relativeScoreExcel(String model,int year) {
         //评委pid已经按照序号大小排序
-        List<String> pingweiStrList = pingweiService.selectAllCodeByModel(model);
+        List<String> pingweiStrList = pingweiService.selectAllCodeByModelAndYear(model,year);
         String[] headers =new String[pingweiStrList.size()+4];
         int i = 0;
         headers[i++]="序号";
@@ -307,16 +307,16 @@ public class ExcelServiceImpl implements ExcelService {
             headers[i++]="评委"+pid;
         }
         headers[i++]="平均分";
-
-        String excelName = "2018泛珠赛全国总决赛终评平均分统计表("+model+")";
+        //工作簿名，显示在首页上供下载的
+        String excelName = year+"泛珠赛全国总决赛终评平均分统计表("+model+")";
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
         //相对分
-        CreateRelativeScore(wb, styles,headers,model,pingweiStrList);
+        CreateRelativeScore(wb, styles,headers,model,pingweiStrList,year);
         //创新分
-        CreateInnovationScore(wb, styles,headers,model,pingweiStrList);
+        CreateInnovationScore(wb, styles,headers,model,pingweiStrList,year);
         //实用分
-        CreateUsefulScore(wb, styles,headers,model,pingweiStrList);
+        CreateUsefulScore(wb, styles,headers,model,pingweiStrList,year);
         // Write the output to a file
         String file = excelName+".xls";
         FileOutputStream out = null;
@@ -340,30 +340,46 @@ public class ExcelServiceImpl implements ExcelService {
     private static Map<String, CellStyle> createStyles(Workbook wb){
         Map<String, CellStyle> styles = new HashMap<>();
         CellStyle style;
+
+        /*设置标题格式*/
         Font titleFont = wb.createFont();
+        //字号
         titleFont.setFontHeightInPoints((short)18);
+        //加粗
         titleFont.setBold(true);
+        //设置单元格样式
         style = wb.createCellStyle();
+        //水平居中
         style.setAlignment(HorizontalAlignment.CENTER);
+        //垂直居中
         style.setVerticalAlignment(VerticalAlignment.CENTER);
+        //将字体样式加入到样式当中
         style.setFont(titleFont);
+        //将样式应用到标题当中
         styles.put("title", style);
 
+        /*设置表头格式*/
         Font monthFont = wb.createFont();
         monthFont.setFontHeightInPoints((short)11);
         monthFont.setBold(true);
+        //字体颜色
         monthFont.setColor(IndexedColors.BLACK.getIndex());
         style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         style.setFont(monthFont);
+        //自动换行
         style.setWrapText(true);
+        //应用到表头
         styles.put("header", style);
 
+        /*设置单元格*/
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setWrapText(true);
+        //右边框
         cellStyle.setBorderRight(BorderStyle.THIN);
+        //右边框颜色
         cellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
@@ -371,24 +387,31 @@ public class ExcelServiceImpl implements ExcelService {
         cellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        //应用到单元格
         styles.put("cell", cellStyle);
 
-        return styles;
+        return styles;//styles：应用单元-单元属性的Map集合
     }
 
     private int CreateRelativeScore(Workbook wb, Map<String, CellStyle> styles,
-                                    String[] headers,String model,List<String> pingweiStrList){
+                                    String[] headers,String model,List<String> pingweiStrList,int year){
         //所有作品的相对分
         List<RelativeScore>relativeScoreList =
-                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
+                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model,year);
         //按照平均分排序
         ScoreUtil.sortRelativeScore(relativeScoreList);
-        String excelName = "2018泛珠赛总决赛终评相对平均分统计表("+model+")";
+        String excelName = year+"泛珠赛总决赛终评相对平均分统计表("+model+")";
+        //表名，显示在Excel表格上的
         String sheetName = "相对平均分统计表("+model+")";
+        //传入表名，创建一张空表
         Sheet sheet = wb.createSheet(sheetName);
+        //打印设置
         PrintSetup printSetup = sheet.getPrintSetup();
+        //页面方向为横向，false为纵向
         printSetup.setLandscape(true);
+        //根据表格的宽度自动调整页面
         sheet.setFitToPage(true);
+        //水平居中
         sheet.setHorizontallyCenter(true);
 
         //title row
@@ -403,6 +426,7 @@ public class ExcelServiceImpl implements ExcelService {
 
         //header row
         Row headerRow = sheet.createRow(1);
+        //设置行高
         headerRow.setHeightInPoints(40);
         Cell headerCell;
         for (int i = 0; i < headers.length; i++) {
@@ -443,12 +467,12 @@ public class ExcelServiceImpl implements ExcelService {
 
     //创新分
     private int CreateInnovationScore(Workbook wb, Map<String, CellStyle> styles,
-                                    String[] headers,String model,List<String> pingweiStrList){
+                                    String[] headers,String model,List<String> pingweiStrList,int year){
         //所有作品的创新分
-        List<InnovationScore>innovationScoreList = scoreService.calculateInnovationScore(model);
+        List<InnovationScore>innovationScoreList = scoreService.calculateInnovationScore(model,year);
         ScoreUtil.sortInnovationScore(innovationScoreList);
         String sheetName = "创新分统计表("+model+")";
-        String titleName = "2018泛珠赛总决赛终评创新分统计表("+model+")";
+        String titleName = year+"泛珠赛总决赛终评创新分统计表("+model+")";
         Sheet sheet = wb.createSheet(sheetName);
         PrintSetup printSetup = sheet.getPrintSetup();
         printSetup.setLandscape(true);
@@ -508,12 +532,12 @@ public class ExcelServiceImpl implements ExcelService {
 
     //实用分
     private int CreateUsefulScore(Workbook wb, Map<String, CellStyle> styles,
-                                    String[] headers,String model,List<String> pingweiStrList){
+                                    String[] headers,String model,List<String> pingweiStrList,int year){
         //所有作品的创新分
-        List<InnovationScore>innovationScoreList = scoreService.calculateUsefulScore(model);
+        List<InnovationScore>innovationScoreList = scoreService.calculateUsefulScore(model,year);
         ScoreUtil.sortInnovationScore(innovationScoreList);
         String sheetName = "实用分统计表("+model+")";
-        String titleName = "2018泛珠赛总决赛终评实用分统计表("+model+")";
+        String titleName = year+"泛珠赛总决赛终评实用分统计表("+model+")";
 
         Sheet sheet = wb.createSheet(sheetName);
         PrintSetup printSetup = sheet.getPrintSetup();
@@ -571,8 +595,8 @@ public class ExcelServiceImpl implements ExcelService {
 
     //作品获奖表
     @Override
-    public String finalScoreExcel(String model) {
-        String excelName = "2018泛珠赛总决赛作品获奖表("+model+")";
+    public String finalScoreExcel(String model,int year) {
+        String excelName = year+"泛珠赛总决赛作品获奖表("+model+")";
 
         String[] headers = {
                 "序号","作品编号", "作品名称",
@@ -581,14 +605,14 @@ public class ExcelServiceImpl implements ExcelService {
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
 
-        List<Works> worksList = worksService.getSumUpAward(model);
-        CreateSumUpExcel(wb, styles,headers,model,"综合奖", worksList);
+        List<Works> worksList = worksService.getSumUpAward(model,year);
+        CreateSumUpExcel(wb, styles,headers,model,"综合奖", worksList,year);
 
-        worksList = worksService.getInnovationAward(model);
-        CreateSumUpExcel(wb, styles,headers,model,"创新奖", worksList);
+        worksList = worksService.getInnovationAward(model,year);
+        CreateSumUpExcel(wb, styles,headers,model,"创新奖", worksList,year);
 
-        worksList = worksService.getUsefulAward(model);
-        CreateSumUpExcel(wb, styles,headers,model,"实用奖", worksList);
+        worksList = worksService.getUsefulAward(model,year);
+        CreateSumUpExcel(wb, styles,headers,model,"实用奖", worksList,year);
         // Write the output to a file
         String file = excelName+".xls";
         FileOutputStream out = null;
@@ -608,7 +632,7 @@ public class ExcelServiceImpl implements ExcelService {
 
     private int CreateSumUpExcel(Workbook wb, Map<String, CellStyle> styles,
                                  String[] headers,String model,String typeName,
-                                 List<Works> worksList){
+                                 List<Works> worksList,int year){
         //按照序号排序
         Collections.sort(worksList,new Comparator() {
             @Override
@@ -632,7 +656,7 @@ public class ExcelServiceImpl implements ExcelService {
         Row titleRow = sheet.createRow(0);
         titleRow.setHeightInPoints(45);
         Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("2018泛珠赛总决赛作品获奖表("+model+typeName+")");
+        titleCell.setCellValue(year+"泛珠赛总决赛作品获奖表("+model+typeName+")");
         titleCell.setCellStyle(styles.get("title"));
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$J$1"));
 
@@ -661,7 +685,6 @@ public class ExcelServiceImpl implements ExcelService {
                     case 6: cell.setCellValue(worksList.get(i).getStudents());break;
                     case 7: cell.setCellValue(worksList.get(i).getFinalScore());break;
                     case 8: cell.setCellValue(worksList.get(i).getRanking());break;
-//                    case 6: cell.setCellValue(null);break;
                 }
             }
         }
@@ -679,17 +702,17 @@ public class ExcelServiceImpl implements ExcelService {
     }
     ////评分统计表，各个子项的平均分
     @Override
-    public String scoringSumUpExcel(String model) {
+    public String scoringSumUpExcel(String model,int year) {
         String[] headers = {
                 "序号","作品编号", "作品名称",
                 "选题\n(平均分)","科学性\n(平均分)","创新性\n(平均分)",
                 "难易度\n(平均分)","实用价值\n(平均分)","答辩效果\n(平均分)"
                 ,"相对分\n(平均分)","相对分排序","创新分排序","实用分排序"};
 
-        String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+")";
+        String excelName = year+"泛珠赛总决赛终评评委打分统计表("+model+")";
         Workbook wb = new HSSFWorkbook();
         Map<String, CellStyle> styles = createStyles(wb);
-        CreateSumUpAverage(wb, styles, headers, model);
+        CreateSumUpAverage(wb, styles, headers, model,year);
         // Write the output to a file
         String file = excelName+".xls";
         FileOutputStream out = null;
@@ -708,13 +731,13 @@ public class ExcelServiceImpl implements ExcelService {
     }
 
     private int CreateSumUpAverage(Workbook wb, Map<String, CellStyle> styles,
-                                   String[] headers, String model){
+                                   String[] headers, String model,int year){
         //所有作品的相对分
         List<RelativeScore>relativeScoreList =
-                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model);
+                scoreService.calculteRelativeScoreAverageAndMaxAndMin(model,year);
         //按照总分的平均分排序
         ScoreUtil.sortRelativeScore(relativeScoreList);
-        String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+")";
+        String excelName = year+"泛珠赛总决赛终评评委打分统计表("+model+")";
 
         Sheet sheet = wb.createSheet(excelName);
         PrintSetup printSetup = sheet.getPrintSetup();

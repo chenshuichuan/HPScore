@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by:Ricardo
  * Description:
@@ -50,7 +48,6 @@ public class ScoreControllerTest {
         session = new MockHttpSession();
         User user =userRepository.findByName("chen");
         session.setAttribute("user",user); //拦截器那边会判断用户是否登录，所以这里注入一个用户
-
     }
     @Test
     public void selectByPidAndProIdAndModel() throws Exception {
@@ -62,7 +59,7 @@ public class ScoreControllerTest {
 
     @Test
     public void countAward() throws Exception {
-        String url = "/score/countAward?model="+model1;
+        String url = "/score/countAward?model="+model1+"&year=2018";
         mvc.perform(MockMvcRequestBuilders.get(url)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .session(session))
@@ -72,7 +69,7 @@ public class ScoreControllerTest {
 
     @Test
     public void countScore() throws Exception {
-        String url = "/score/countScore?model="+model1+"&editor=chen";
+        String url = "/score/countScore?model="+model1+"&editor=chen&year=2018";
         mvc.perform(MockMvcRequestBuilders.get(url)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .session(session))

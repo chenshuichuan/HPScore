@@ -5,7 +5,6 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
-import com.alibaba.fastjson.JSONObject;
 import hpscore.domain.Score;
 import hpscore.domain.User;
 import hpscore.repository.UserRepository;
@@ -13,14 +12,12 @@ import hpscore.service.LogInfoService;
 import hpscore.service.PingweiService;
 import hpscore.service.ScoreService;
 import hpscore.service.WorksService;
-import hpscore.tools.ScoreUtil;
-import hpscore.tools.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -69,12 +66,14 @@ public class ScoreController2 {
         String option5Str = request.getParameter("option5");
         String option6Str = request.getParameter("option6");
         String model = request.getParameter("model");
+        String year1 = request.getParameter("year");
         int option1 = Integer.parseInt(option1Str);
         int option2 = Integer.parseInt(option2Str);
         int option3 = Integer.parseInt(option3Str);
         int option4 = Integer.parseInt(option4Str);
         int option5 = Integer.parseInt(option5Str);
         int option6 = Integer.parseInt(option6Str);
+        int year=Integer.parseInt(year1);
 
         String editor = request.getParameter("editor");//编辑者
 
@@ -87,14 +86,15 @@ public class ScoreController2 {
                 +",p1="+option1Str+",p2="+option2Str+",p3="+option3Str+",p4="+option4Str+
                 ",p5="+option5Str+",p6="+option6Str+
                 ",model ="+model;
-        Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
+        //获取当前评委对该作品分数
+        Score score = scoreService.selectByPidAndProIdAndModelAndYear(pid,proId,model,year);
         if(score!=null){
             logger.info("---更新评分数据，正在写入数据库-----"+score.getEditor1());
 
             int editTimes = score.getEditTimes();
             Score temp = new Score(pid,proId,
                     option1, option2, option3, option4, option5, option6,
-                    editTimes+1,model);
+                    editTimes+1,model,year);
             temp.setId(score.getId());
             temp.setEditor1(score.getEditor1());
             temp.setEditor2(score.getEditor2());
@@ -103,7 +103,6 @@ public class ScoreController2 {
             if (editor.equals(score.getEditor1()))
                 temp.setEditor1(editor);
             //本次editor是第二位editor
-                //本次editor是第二位editor
             else temp.setEditor2(editor);
 
 //            else if (score.getEditor2()==null||
@@ -149,12 +148,15 @@ public class ScoreController2 {
         String option5Str = request.getParameter("option5");
         String option6Str = request.getParameter("option6");
         String model = request.getParameter("model");
+        String year1 = request.getParameter("year");
+
         int option1 = Integer.parseInt(option1Str);
         int option2 = Integer.parseInt(option2Str);
         int option3 = Integer.parseInt(option3Str);
         int option4 = Integer.parseInt(option4Str);
         int option5 = Integer.parseInt(option5Str);
         int option6 = Integer.parseInt(option6Str);
+        int year = Integer.parseInt(year1);
 
         String editor = request.getParameter("editor");//编辑者
 
@@ -168,14 +170,14 @@ public class ScoreController2 {
                 ",p5="+option5Str+",p6="+option6Str+
                 ",model ="+model;
 
-        Score score = scoreService.selectByPidAndProIdAndModel(pid,proId,model);
+        Score score = scoreService.selectByPidAndProIdAndModelAndYear(pid,proId,model,year);
         if(score ==null){
             logger.info("---添加评分数据，正在写入数据库-----");
 
             int editTimes = 0;
             Score temp = new Score(pid,proId,
                     option1, option2, option3, option4, option5, option6,
-                    editTimes+1,model);
+                    editTimes+1,model,year);
             temp.setEditor1(editor);
             scoreService.add(temp);
 
@@ -191,7 +193,17 @@ public class ScoreController2 {
         return map;
     }
 
+<<<<<<< HEAD
 
+=======
+    /**
+     * @Author haien
+     * @Description 前端请求下载Excel表格，返回一个输出流
+     * @Date 11:34 2018/7/22
+     * @Param [request, response]
+     * @return void
+     **/
+>>>>>>> add_year
     @RequestMapping(value = "/getExcel1")
     @ResponseBody
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

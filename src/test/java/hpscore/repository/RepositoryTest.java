@@ -12,13 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
 
 /**
  * Created by:Ricardo
@@ -40,7 +36,7 @@ public class RepositoryTest {
     public void ScoreRepositoryTest() throws Exception {
         Score score = new Score("pid","proid",
                 10,20,30,4,5,6,
-                1, "本科组");
+                1, "本科组",2018);
         Score score1 = scoreRepository.save(score);
         Assert.assertThat(score1,notNullValue());
         Score score2 = scoreRepository.findOne(score1.getId());

@@ -6,14 +6,18 @@ import hpscore.domain.Pingwei;
 import java.util.List;
 
 /**
- * Created by tengj on 2017/4/7.
- */
+ * @Author haien
+ * @Description 对评委的增删查改
+ * @Date 22:01 2018/7/20
+ * @Param
+ * @return
+ **/
 public interface PingweiService {
     int add(Pingwei pingwei);
     int update(Pingwei pingwei);
     int delete(Pingwei pingwei);
 
-    List<Pingwei> selectAll();
-    List<String> selectAllName();
-    List<String> selectAllCodeByModel(String model);
+    List<Pingwei> selectAll(int year);
+    List<String> selectAllName(int year);
+    List<String> selectAllCodeByModelAndYear(String model,int year);
 }

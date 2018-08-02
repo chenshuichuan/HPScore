@@ -40,6 +40,31 @@ public class StringUtil {
 		
 		return match.matches();
 	}
+
+	/**
+	 * 正则验证用户名是否合格
+	 * @param userName
+	 * @return
+	 */
+	public static boolean isUserName(String userName) {
+		Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FA5\\w]{1,}$");
+		Matcher match = pattern.matcher(userName);
+
+		return match.matches();
+	}
+
+	/**
+	 * 正则验证密码是否合格
+	 * @param password
+	 * @return
+	 */
+	public static boolean isPassword(String password) {
+		Pattern pattern = Pattern.compile("^\\w+$");
+		Matcher match = pattern.matcher(password);
+
+		return match.matches();
+	}
+
     /** 
      * 将一个长整数转换位字节数组(8个字节)，b[0]存储高位字符，大端 
      *  

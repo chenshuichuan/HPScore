@@ -10,9 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.Assert.*;
 
 /**
  * Created by:Ricardo
@@ -35,13 +33,13 @@ public class ScoreRepositoryTest {
     @Test
     public void findByEditor1AndModel() throws Exception {
 
-        List<Score> scores = scoreRepository.findByEditor1AndModel("ricardo","本科组");
+        List<Score> scores = scoreRepository.findByEditor1AndModelAndYear("ricardo","本科组",2018);
         Assert.assertThat(scores.size(),greaterThan(5));
     }
 
     @Test
     public void findByEditor2AndModel() throws Exception {
-        List<Score> scores = scoreRepository.findByEditor2AndModel("record2","高职高专组");
+        List<Score> scores = scoreRepository.findByEditor2AndModelAndYear("record2","高职高专组",2018);
         Assert.assertThat(scores.size(),greaterThan(5));
     }
 

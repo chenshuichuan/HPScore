@@ -6,7 +6,6 @@ package hpscore.controller;/**
  */
 
 import hpscore.domain.PingweiScore;
-import hpscore.domain.Score;
 import hpscore.repository.UserRepository;
 import hpscore.service.PingweiScoreService;
 import hpscore.service.PingweiService;
@@ -15,7 +14,10 @@ import hpscore.service.WorksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,11 +50,13 @@ public class PingweiScoreController {
     @RequestMapping(value = "/selectByPidAndModel",method = RequestMethod.GET)
     public Map<String,Object> selectByPidAndModel(
             @RequestParam("pid")String pid,
-            @RequestParam("model")String model){
+            @RequestParam("model")String model,
+            @RequestParam("year")String year1){
 
+        int year=Integer.parseInt(year1);
         Map<String,Object> map =new HashMap<String,Object>();
-        List<PingweiScore> pingweiScoreList = pingweiScoreService.selectByPidAndModel(pid,model);
-        //为查找到数据是score为null
+        List<PingweiScore> pingweiScoreList = pingweiScoreService.selectByPidAndModelAndYear(pid,model,year);
+        //未查找到数据是score为null
         if (pingweiScoreList.size()>0) {
             System.out.println("selectByPidAndModel size="+pingweiScoreList.size());
             map.put("result",1);
@@ -73,11 +77,13 @@ public class PingweiScoreController {
     public Map<String,Object> selectByPidAndEditorAndModel(
             @RequestParam("pid")String pid,
             @RequestParam("editor")String editor,
-            @RequestParam("model")String model){
+            @RequestParam("model")String model,
+            @RequestParam("year")String year1){
 
+        int year = Integer.parseInt(year1);
         Map<String,Object> map =new HashMap<String,Object>();
         List<PingweiScore> pingweiScoreList =
-                pingweiScoreService.selectByPidAndEditorAndModel(pid,editor,model);
+                pingweiScoreService.selectByPidAndEditorAndModelAndYear(pid,editor,model,year);
         //为查找到数据是score为null
         if (pingweiScoreList.size()>0) {
             System.out.println("selectByPidAndModel size="+pingweiScoreList.size());

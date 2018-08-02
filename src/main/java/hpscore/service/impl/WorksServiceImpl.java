@@ -4,7 +4,6 @@ package hpscore.service.impl;
 import hpscore.controller.CountController;
 import hpscore.domain.Award;
 import hpscore.domain.InnovationScore;
-import hpscore.domain.PingweiScore;
 import hpscore.domain.Works;
 import hpscore.repository.AwardRepository;
 import hpscore.repository.WorksRepository;
@@ -60,14 +59,14 @@ public class WorksServiceImpl implements WorksService {
     }
 
     @Override
-    public List<Works> selectAll() {
-        return worksRepository.findAll();
+    public List<Works> selectAll(int year) {
+        return worksRepository.findByYear(year);
     }
 
     @Override
-    public List<String> selectAllName() {
+    public List<String> selectAllName(int year) {
         List<String> stringList = new ArrayList<>();
-        List<Works> worksList = worksRepository.findAll();
+        List<Works> worksList = worksRepository.findByYear(year);
         //按照作品编号排序
         Collections.sort(worksList,new Comparator() {
             @Override
@@ -88,9 +87,9 @@ public class WorksServiceImpl implements WorksService {
     }
 
     @Override
-    public List<String> selectAllCodeByModel(String model) {
+    public List<String> selectAllCodeByModelAndYear(String model,int year) {
         List<String> stringList = new ArrayList<>();
-        List<Works> worksList = worksRepository.findByModel(model);
+        List<Works> worksList = worksRepository.findByModelAndYear(model,year);
         for (Works works: worksList){
             stringList.add(works.getCode());
         }
@@ -105,7 +104,7 @@ public class WorksServiceImpl implements WorksService {
         List<Works> worksList = new ArrayList<>();
         for (Award award: awardList){
             Works works = worksRepository.findOne(award.getWorksId());
-            if(works!=null&&works.getModel().equals(award.getModel())){
+            if(works!=null&&works.getModel().equals(award.getModel())&&works.getYear()==(award.getYear())){
                 Works works1 = new Works(works);
                 works1.setRanking(award.getRanking());
                 works1.setFinalScore(award.getScore());
@@ -118,8 +117,8 @@ public class WorksServiceImpl implements WorksService {
 
     //获取相对分的works作品表，
     @Override
-    public List<Works> selectFinalScoreRanking(String model){
-        List<Works> worksList = worksRepository.findByModel(model);
+    public List<Works> selectFinalScoreRanking(String model,int year){
+        List<Works> worksList = worksRepository.findByModelAndYear(model,year);
 
         if (worksList!=null&&worksList.size()>=2){
             //按照平均分排序
@@ -129,14 +128,14 @@ public class WorksServiceImpl implements WorksService {
     }
     //获得综合奖列表 按照相对分平均分排序
     @Override
-    public List<Works> getSumUpAward(String model){
-        return selectFinalScoreRanking(model);
+    public List<Works> getSumUpAward(String model,int year){
+        return selectFinalScoreRanking(model,year);
     }
 
     //获得创新奖列表 按照平均分排序
     @Override
-    public List<Works> getInnovationAward(String model){
-        List<Award> awardList = awardRepository.findByModelAndScoreType(model,"创新分");
+    public List<Works> getInnovationAward(String model,int year){
+        List<Award> awardList = awardRepository.findByModelAndScoreTypeAndYear(model,"创新分",year);
         List<Works> worksList =  awardToWorks(awardList);
         //按照平均分排序
         ScoreUtil.sortWorks(worksList);
@@ -144,30 +143,32 @@ public class WorksServiceImpl implements WorksService {
     }
     //获得实用奖列表 按照平均分排序
     @Override
-    public List<Works> getUsefulAward(String model){
-        List<Award> awardList = awardRepository.findByModelAndScoreType(model,"实用分");
+    public List<Works> getUsefulAward(String model,int year){
+        List<Award> awardList = awardRepository.findByModelAndScoreTypeAndYear(model,"实用分",year);
         List<Works> worksList =  awardToWorks(awardList);
         //按照平均分排序
         ScoreUtil.sortWorks(worksList);
         return worksList;
     }
 
+    //更新作品排名
     @Override
-    public int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType) {
+    public int saveAsAward(List<InnovationScore> innovationScoreList, String scoreType,int year) {
         for (InnovationScore innovationScore: innovationScoreList){
-            Works works = worksRepository.findByCodeAndModel(innovationScore.getProId(),
-                    innovationScore.getModel());
+            Works works = worksRepository.findByCodeAndModelAndYear(innovationScore.getProId(),
+                    innovationScore.getModel(),year);
             if (works!=null){
                 Award award = awardRepository.findByWorksIdAndModelAndScoreType(works.getId()
                 ,works.getModel(),scoreType);
                 if (award==null){
                     award = new Award(works.getId(),innovationScore.getModel(),innovationScore.getAverage(),
-                            scoreType);
+                            scoreType,works.getYear());
                 }
                 else {
                     award.setScore(innovationScore.getAverage());
                 }
                 award.setRanking(innovationScore.getRanking());
+                //更新作品记录
                 awardRepository.save(award);
             }
             else logger.error("saveAsAward:作品code="+innovationScore.getProId()+"不存在！");

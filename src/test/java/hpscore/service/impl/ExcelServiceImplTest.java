@@ -1,29 +1,16 @@
 package hpscore.service.impl;
 
-import hpscore.domain.User;
 import hpscore.repository.UserRepository;
 import hpscore.service.ExcelService;
 import hpscore.service.ScoreService;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
 
 /**
  * Created by:Ricardo
@@ -42,29 +29,30 @@ public class ExcelServiceImplTest {
     private ScoreService scoreService;
     //private String model1="本科组";
     private String model1="高职高专组";
+    private int year =2018;
 
     @Test
     public void reviewExcel() throws Exception {
-        String result = excelService.reviewExcel(model1);
+        String result = excelService.reviewExcel(model1,year);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void reviewTransferExcel() throws Exception {
-        String result = excelService.reviewTransferExcel(model1);
+        String result = excelService.reviewTransferExcel(model1,year);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void relativeScoreExcel() throws Exception {
-        String result = excelService.relativeScoreExcel(model1);
+        String result = excelService.relativeScoreExcel(model1,year);
         Assert.assertThat(result,notNullValue());
     }
 
     @Test
     public void finalScoreExcel() throws Exception {
 
-        String result = excelService.finalScoreExcel(model1);
+        String result = excelService.finalScoreExcel(model1,year);
         Assert.assertThat(result,notNullValue());
     }
 
@@ -72,7 +60,7 @@ public class ExcelServiceImplTest {
     @Test
     public void scoringSumUpExcel() throws Exception {
 
-        String result = excelService.scoringSumUpExcel(model1);
+        String result = excelService.scoringSumUpExcel(model1,year);
         Assert.assertThat(result,notNullValue());
     }
 }

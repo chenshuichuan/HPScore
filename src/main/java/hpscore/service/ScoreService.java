@@ -1,12 +1,11 @@
 package hpscore.service;
 
 
-import hpscore.domain.*;
-import hpscore.repository.PingweiRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import hpscore.domain.InnovationScore;
+import hpscore.domain.RelativeScore;
+import hpscore.domain.Score;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by tengj on 2017/4/7.
@@ -16,18 +15,18 @@ public interface ScoreService {
     int update(Score score);
     int delete(Score score);
 
-    List<Score> selectAll();
-    List<Score> selectByEditorAndModel(String editor,String model);
-    List<Score> selectByModel(String model);
-    Score selectByPidAndProIdAndModel(String pid, String proId,String model);
+    List<Score> selectAll(int year);
+    List<Score> selectByEditorAndModelAndYear(String editor,String model,int year);
+    List<Score> selectByModelAndYear(String model,int year);
+    Score selectByPidAndProIdAndModelAndYear(String pid, String proId,String model,int year);
 
-    int checkIfAllTheSameTimes(String model,List<String> pingweiList);
-    int calculateRelativeScore(String model,List<String> pingweiList);
-    int calculateByCodeAndModel(String code,String model);
+    int checkIfAllTheSameTimes(String model,List<String> pingweiList,int year);
+    int calculateRelativeScore(String model,List<String> pingweiList,int year);
+    int calculateByCodeAndModel(String code,String model,int year);
 
     //计算相对分的平均分、最大分、最小分,
-    List<RelativeScore>  calculteRelativeScoreAverageAndMaxAndMin(String model);
-    List<InnovationScore> calculateInnovationScore(String model);
-    List<InnovationScore> calculateUsefulScore(String model);
+    List<RelativeScore>  calculteRelativeScoreAverageAndMaxAndMin(String model,int yaer);
+    List<InnovationScore> calculateInnovationScore(String model,int year);
+    List<InnovationScore> calculateUsefulScore(String model,int year);
 
 }

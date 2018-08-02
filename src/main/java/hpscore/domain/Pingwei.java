@@ -20,13 +20,15 @@ public class Pingwei {
     private int maxScore;
     private int minScore;
     private String model;
+    private int year;
 
     public Pingwei() {
     }
-    public Pingwei(String name, String code, String model) {
+    public Pingwei(String name, String code, String model,int year) {
         this.name = name;
         this.code = code;
         this.model = model;
+        this.year=year;
     }
 
     public int getMaxScore() {
@@ -75,5 +77,13 @@ public class Pingwei {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 }

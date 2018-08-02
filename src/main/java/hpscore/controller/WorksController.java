@@ -5,13 +5,15 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
+import hpscore.domain.Award;
+import hpscore.domain.Score;
 import hpscore.domain.User;
 import hpscore.domain.Works;
+import hpscore.repository.AwardRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.repository.WorksRepository;
 import hpscore.service.LogInfoService;
-import hpscore.service.WorksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,14 +45,20 @@ public class WorksController {
     @Autowired
     private ScoreRepository scoreRepository;
     @Autowired
+    private AwardRepository awardRepository;
+    @Autowired
     private LogInfoService logInfoService;
 
     //根据作品code和model查询该作品是否已经存在，并返回
     @RequestMapping(value = "/getWorksByCodeAndModel",method = RequestMethod.GET)
     public Map<String,Object> getWorksByCodeAndModel(
-            @RequestParam("code")String code, @RequestParam("model")String model){
+            @RequestParam("code")String code,
+            @RequestParam("model")String model,
+            @RequestParam("year")String year1){
+
+        int year=Integer.parseInt(year1);
         Map<String,Object> map =new HashMap<String,Object>();
-        Works works = worksRepository.findByCodeAndModel(code,model);
+        Works works = worksRepository.findByCodeAndModelAndYear(code,model,year);
 
         if (works!=null) {
             map.put("result",1);
@@ -70,6 +79,8 @@ public class WorksController {
             HttpServletRequest request, HttpServletResponse response,
             @RequestParam("id")String id){
         int idInt = Integer.parseInt(id);
+        String year1=(String)request.getSession().getAttribute("year");
+        int year=Integer.parseInt(year1);
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
@@ -85,6 +96,14 @@ public class WorksController {
         //为查找到数据是score为null
         if (works!=null) {
             worksRepository.delete(idInt);
+
+            //同时删除award表数据
+            List<Award> awards=awardRepository.findByWorksId(works.getId());
+            awardRepository.delete(awards);
+            //同时删除score表数据
+            List<Score> scores=scoreRepository.findByProIdAndModelAndYear(works.getCode(),works.getModel(),year);
+            scoreRepository.delete(scores);
+
             action+=",成功删除"+works.getName()+"作品";
             map.put("result",1);
             map.put("message","成功删除"+works.getName()+"作品");
@@ -98,7 +117,7 @@ public class WorksController {
         return map;
     }
 
-    //更新user数据
+    //更新作品数据
     @RequestMapping(value = "/update")
     @ResponseBody
     public Map<String,Object> update(HttpServletRequest request, HttpServletResponse response){
@@ -143,19 +162,13 @@ public class WorksController {
         }else{
             action+=",更改作品信息失败！";
             map.put("result",0);
-            map.put("message","更改作品作品信息！请检查数据是否已存在！");
+            map.put("message","更改作品作品信息失败！请检查数据是否已存在！");
         }
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
 
     //添加作品数据
-    /**
-     *@Author: Ricardo
-     *@Description:
-     *@Date: 23:43 2018/6/9
-     *@param:
-     **/
     @RequestMapping(value = "/add")
     @ResponseBody
     public Map<String,Object> add(HttpServletRequest request, HttpServletResponse response){
@@ -168,6 +181,9 @@ public class WorksController {
         String teachers = request.getParameter("teachers");
         String students = request.getParameter("students");
         String model = request.getParameter("model");
+        String year1 = request.getParameter("year");
+
+        int year=Integer.parseInt(year1);
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
@@ -180,7 +196,7 @@ public class WorksController {
                 ", partName="+partName+",school="+school+
                 ", teachers="+teachers+",students="+students+",model="+model;
 
-        Works works = worksRepository.findByCodeAndModel(code,model);
+        Works works = worksRepository.findByCodeAndModelAndYear(code,model,year);
         if(works==null){
             logger.info("---添加works数据，正在写入数据库-----");
             works = new Works(name,code,model);
@@ -189,6 +205,7 @@ public class WorksController {
             works.setSchool(school);
             works.setTeachers(teachers);
             works.setStudents(students);
+            works.setYear(year);
             worksRepository.save(works);
 
             action+=",成功添加作品信息！";
