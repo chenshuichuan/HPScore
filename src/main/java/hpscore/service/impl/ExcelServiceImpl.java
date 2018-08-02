@@ -140,7 +140,6 @@ public class ExcelServiceImpl implements ExcelService {
                 switch (j){
                     case 0: cell.setCellValue(pingweiScoreList.get(i).getProId());break;
                     case 1: cell.setCellValue(pingweiScoreList.get(i).getBianHao());break;
-
                     case 2: cell.setCellValue(pingweiScoreList.get(i).getProName());break;
                     case 3: cell.setCellValue(pingweiScoreList.get(i).getOption1());break;
                     case 4: cell.setCellValue(pingweiScoreList.get(i).getOption2());break;

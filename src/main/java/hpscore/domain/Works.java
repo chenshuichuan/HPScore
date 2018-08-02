@@ -49,7 +49,7 @@ public class Works {
     public Works() {
     }
     public Works(Works works) {
-       this.id=works.id;
+        this.id=works.id;
         this.name=works.name;
         this.code=works.code;
         this.bianHao=works.bianHao;

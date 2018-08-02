@@ -141,7 +141,7 @@ public class ScoreController {
    @RequestMapping(value = "/countAward")
    @ResponseBody
    public Map<String,Object> countAward(
-           HttpServletRequest request, HttpServletResponse response,
+           HttpServletRequest request, HttpServletRequest response,
            @RequestParam("model")String model,@RequestParam("year")String year1){
 
         int year = Integer.parseInt(year1);
