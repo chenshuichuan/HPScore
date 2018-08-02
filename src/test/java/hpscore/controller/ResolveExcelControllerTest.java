@@ -1,6 +1,5 @@
 package hpscore.controller;
 
-import hpscore.Util.TransferMpF;
 import hpscore.domain.BusinessException;
 import hpscore.domain.User;
 import hpscore.repository.UserRepository;
@@ -16,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 
@@ -32,29 +31,26 @@ public class ResolveExcelControllerTest {
     private MockMvc mvc;
     private MockHttpSession session;
 
-    @Autowired
-    private TransferMpF tsfmpf;
-    private File file=new File("D:/myDocuments/2018泛珠赛总决赛作品获奖表%28本科组%29.xls");
-    MultipartFile multipartFile=null;
-
     @Before
     public void setUp() throws Exception {
         mvc=MockMvcBuilders.webAppContextSetup(wac).build();//初始化MockMvc对象
         session=new MockHttpSession();
         User user=userRepository.findByName("chen");
         session.setAttribute("user",user); //注册用户，通过拦截器
-        //multipartFile=tsfmpf.fileToMpF(file);
     }
 
     @Test
+    @Transactional(rollbackFor = Exception.class) //开启事务，则自动回滚，数据库无变动（不加rollbackFor也一样）
     public void uploadTest() throws BusinessException {
+        File file=new File("./data/zuoping.xls");
         try{
             String result=mvc.perform(
                     MockMvcRequestBuilders
-                        .fileUpload("/resolve/upload")
+                        .fileUpload("/resolve/upload?year=2019&cover=yes") //接口注意带上参数
                         .file(
-                                new MockMultipartFile("作品表.xls","./作品表.xls","multipart/form-data","hello upload".getBytes("utf-8"))
-                        )
+                                new MockMultipartFile("file","zuoping.xls",
+                                        "multipart/form-data",new FileInputStream(file))
+                        )       //name：转换后的文件名称(但是不知何故只能写file) originalFilename：原文件名称 contentType：转换后文件类型 FileInputStream：文件输入流
                         .session(session)
             ).andExpect(MockMvcResultMatchers.status().isOk())
              .andReturn().getResponse().getContentAsString();

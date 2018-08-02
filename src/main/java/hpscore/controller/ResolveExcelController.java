@@ -45,16 +45,21 @@ public class ResolveExcelController {
         if (null == works || works.size() == 0 || cover.equals("yes")) {
             try {
                 logger.info("---导入作品表，正在写入数据库---");
+
                 //cover有值，证明访问过一次，因数据库有数据而返回；再回来，清空
                 if (cover.equals("yes")) {
-                    worksRepository.deleteAll();
+                    List<Works> wl=worksRepository.findByYear(year);
+                    worksRepository.delete(wl);
                 }
                 //解析Excel
                 worksList = resolveExcelService.resolveExcel(file);
                 //写入数据库
                 Iterator<Works> it = worksList.iterator();
+                Works w=null;
                 while(it.hasNext()) {
-                    worksRepository.save(it.next());
+                    w=it.next();
+                    w.setYear(year);
+                    worksRepository.save(w);
                 }
                 map.put("result", 1);
                 map.put("message", "导入数据成功！");

@@ -3,6 +3,7 @@ package hpscore.controller;
 import hpscore.domain.User;
 import hpscore.repository.UserRepository;
 import hpscore.service.LogInfoService;
+import hpscore.tools.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,24 @@ public class LoginController {
         String userName=request.getParameter("userName");
         String password=request.getParameter("passWord");
         String model=request.getParameter("model");
+
+        //表单验证
+        if(StringUtil.isNull(userName)||StringUtil.isNull(password)){
+            map.put("result",0);
+            map.put("message","用户名或密码为空");
+            return map;
+        }
+        if(!StringUtil.isUserName(userName)){
+            map.put("result",0);
+            map.put("message","用户名请输入中文、字母、数字或下划线");
+            return map;
+        }
+        if(!StringUtil.isPassword(password)){
+            map.put("result",0);
+            map.put("message","密码请输入字母、数字或下划线");
+            return map;
+        }
+
         User user = userRepository.findByNameAndPassword(userName,password);
         String ip = request.getRemoteAddr();
         long startTime = System.currentTimeMillis();

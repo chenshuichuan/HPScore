@@ -5,8 +5,11 @@ package hpscore.controller;/**
  * Time: 21:29
  */
 
+import hpscore.domain.Award;
+import hpscore.domain.Score;
 import hpscore.domain.User;
 import hpscore.domain.Works;
+import hpscore.repository.AwardRepository;
 import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.repository.WorksRepository;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +44,8 @@ public class WorksController {
     private WorksRepository worksRepository;
     @Autowired
     private ScoreRepository scoreRepository;
+    @Autowired
+    private AwardRepository awardRepository;
     @Autowired
     private LogInfoService logInfoService;
 
@@ -73,6 +79,8 @@ public class WorksController {
             HttpServletRequest request, HttpServletResponse response,
             @RequestParam("id")String id){
         int idInt = Integer.parseInt(id);
+        String year1=(String)request.getSession().getAttribute("year");
+        int year=Integer.parseInt(year1);
 
         //日志
         User user1 = (User)request.getSession().getAttribute("user");
@@ -88,6 +96,14 @@ public class WorksController {
         //为查找到数据是score为null
         if (works!=null) {
             worksRepository.delete(idInt);
+
+            //同时删除award表数据
+            List<Award> awards=awardRepository.findByWorksId(works.getId());
+            awardRepository.delete(awards);
+            //同时删除score表数据
+            List<Score> scores=scoreRepository.findByProIdAndModelAndYear(works.getCode(),works.getModel(),year);
+            scoreRepository.delete(scores);
+
             action+=",成功删除"+works.getName()+"作品";
             map.put("result",1);
             map.put("message","成功删除"+works.getName()+"作品");

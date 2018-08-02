@@ -18,5 +18,4 @@ public interface WorksRepository extends JpaRepository<Works,Integer>{
     List<Works> findByModelAndYear(String model,int year);
     Works findByNameAndModelAndYear(String name,String model,int year);
     Works findByCodeAndModelAndYear(String code,String model,int year);
-
 }

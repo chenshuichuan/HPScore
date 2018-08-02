@@ -17,4 +17,5 @@ public interface AwardRepository extends JpaRepository<Award,Integer>{
     List<Award> findByModelAndScoreTypeAndYear(String model,String scoreType,int year);
     //不需要再加一个model吧？
     Award findByWorksIdAndModelAndScoreType(int worksId, String model,String scoreType);
+    List<Award> findByWorksId(int worksId);
 }

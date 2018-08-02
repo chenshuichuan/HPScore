@@ -59,7 +59,7 @@ public class ScoreControllerTest {
 
     @Test
     public void countAward() throws Exception {
-        String url = "/score/countAward?model="+model1;
+        String url = "/score/countAward?model="+model1+"&year=2018";
         mvc.perform(MockMvcRequestBuilders.get(url)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .session(session))
@@ -69,7 +69,7 @@ public class ScoreControllerTest {
 
     @Test
     public void countScore() throws Exception {
-        String url = "/score/countScore?model="+model1+"&editor=chen";
+        String url = "/score/countScore?model="+model1+"&editor=chen&year=2018";
         mvc.perform(MockMvcRequestBuilders.get(url)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .session(session))
