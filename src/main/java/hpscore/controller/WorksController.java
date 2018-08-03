@@ -155,7 +155,7 @@ public class WorksController {
             works.setStudents(students);
             works.setTeachers(teachers);
             works.setModel(model);
-
+            //年份一般是不会改的
             action+=",成功更改作品信息！";
             map.put("result",1);
             map.put("message","成功更改作品信息！");

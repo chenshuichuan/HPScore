@@ -84,60 +84,6 @@ public class ScoreController {
         return map;
     }
 
-
-    /**
-     *@Author: Ricardo
-     *@Description: 已经废弃
-     *@Date: 21:01 2018/7/13
-     *@param:
-     **/
-<<<<<<< HEAD
-=======
-    @RequestMapping(value = "/add_get")
-    @ResponseBody
-    public Map<String,Object> add(
-            @RequestParam("pid")String pid,
-            @RequestParam("proId")String proId,
-            @RequestParam("option1")String option1Str,
-            @RequestParam("option2")String option2Str,
-            @RequestParam("option3")String option3Str,
-            @RequestParam("option4")String option4Str,
-            @RequestParam("option5")String option5Str,
-            @RequestParam("option6")String option6Str,
-            @RequestParam("model")String model,
-            @RequestParam("editor")String editor,
-            @RequestParam("year")String year1){
-
-        Map<String,Object> map =new HashMap<String,Object>();
-
-        int option1 = Integer.parseInt(option1Str);
-        int option2 = Integer.parseInt(option2Str);
-        int option3 = Integer.parseInt(option3Str);
-        int option4 = Integer.parseInt(option4Str);
-        int option5 = Integer.parseInt(option5Str);
-        int option6 = Integer.parseInt(option6Str);
-        int year=Integer.parseInt(year1);
-
-        Score score = scoreService.selectByPidAndProIdAndModelAndYear(pid,proId,model,year);
-        if(score ==null){
-            logger.info("---添加评分数据，正在写入数据库-----");
-
-            int editTimes = 0;
-            Score temp = new Score(pid,proId,
-                    option1, option2, option3, option4, option5, option6,
-                    editTimes+1,model,year);
-            temp.setEditor1(editor);
-
-            scoreService.add(temp);
-            map.put("result",1);
-            map.put("message","成功添加评分记录！");
-        }else{
-            map.put("result",0);
-            map.put("message","添加评分记录失败！请检查数据是否已存在！");
-        }
-        return map;
-    }
->>>>>>> add_year
    //计算获奖作品表请求
    @RequestMapping(value = "/countAward")
    @ResponseBody
@@ -239,42 +185,6 @@ public class ScoreController {
         logInfoService.addLoginInfo(userName,ip,startTime,action,model);
         return map;
     }
-<<<<<<< HEAD
-    /**
-     *@Author: Ricardo
-     *@Description: 已经弃用了
-     *@Date: 21:10 2018/7/13
-     *@param: 
-     **/
-    //根据model查询作品的所有相对评分记录，并返回
-    @RequestMapping(value = "/selectRelativeScoreByModel",method = RequestMethod.GET)
-    public Map<String,Object> selectRelativeScoreByModel(
-            @RequestParam("model")String model){
-
-        Map<String,Object> map =new HashMap<String,Object>();
-        List<RelativeScore> relativeScores = null;
-                //relativeScoreRepository.findByModel(model);
-        //为查找到数据是score为null
-        if (relativeScores!=null) {
-
-            //按照作品编号排序
-            ScoreUtil.sortRelativeScore(relativeScores);
-
-            map.put("result",1);
-            map.put("relativeScores",relativeScores);
-            map.put("message","找到相对评分数据");
-        }
-        else{
-            map.put("result",0);
-            map.put("score",null);
-            map.put("message","未找到相对评分数据");
-        }
-
-        return map;
-    }
-
-=======
->>>>>>> add_year
 
     //计算相对分平均分
     @RequestMapping(value = "/calculteRelativeScoreAverageAndMaxAndMin",method = RequestMethod.GET)

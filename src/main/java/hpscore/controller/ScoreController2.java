@@ -105,15 +105,6 @@ public class ScoreController2 {
             //本次editor是第二位editor
             else temp.setEditor2(editor);
 
-//            else if (score.getEditor2()==null||
-//                    editor == score.getEditor2())
-//                temp.setEditor2(editor);
-//
-//            //既不是第一位editor也不是第二位editor，即超过两次的都作为第二位editor
-//            else if (editTimes>=2)
-//                temp.setEditor2(editor);
-//            else logger.info("editor 写入失败！editor="+score.getEditor1());
-
             scoreService.update(temp);
 
             action+=",成功更改评分记录！";
@@ -193,9 +184,6 @@ public class ScoreController2 {
         return map;
     }
 
-<<<<<<< HEAD
-
-=======
     /**
      * @Author haien
      * @Description 前端请求下载Excel表格，返回一个输出流
@@ -203,7 +191,6 @@ public class ScoreController2 {
      * @Param [request, response]
      * @return void
      **/
->>>>>>> add_year
     @RequestMapping(value = "/getExcel1")
     @ResponseBody
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

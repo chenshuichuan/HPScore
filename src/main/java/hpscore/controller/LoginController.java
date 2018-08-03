@@ -71,10 +71,6 @@ public class LoginController {
         String ip = request.getRemoteAddr();
         long startTime = System.currentTimeMillis();
         String action = this.getClass().getName()+".login,";
-<<<<<<< HEAD
-=======
-
->>>>>>> add_year
         if(user!=null){
 
             request.getSession().setAttribute("user",user);

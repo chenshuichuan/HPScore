@@ -62,15 +62,10 @@ public class RecordController {
 
     //本科组评分录入
     @RequestMapping(value = "/record1")
-<<<<<<< HEAD
-    public ModelAndView record1(@RequestParam("model")String model){
-=======
-    public ModelAndView record1(@RequestParam("editor")String editor,
-                                @RequestParam("model")String model,
+    public ModelAndView record1(@RequestParam("model")String model,
                                 @RequestParam("year")String year1){
 
         int year=Integer.parseInt(year1);
->>>>>>> add_year
         ModelAndView modelAndView = new ModelAndView("record1");
 
         modelAndView.addObject("worksList", worksService.selectAllCodeByModelAndYear(model,year));
@@ -92,7 +87,6 @@ public class RecordController {
     @RequestMapping(value = "/total_final")
     public ModelAndView total_final(){
 
-        //generateExcelThreadService.executeGenerateAward();
         ModelAndView modelAndView = new ModelAndView("total_final");
         return modelAndView;
     }
@@ -102,8 +96,6 @@ public class RecordController {
     @RequestMapping(value = "/log_infor.html")
     public ModelAndView log_infor(HttpServletRequest request, HttpServletResponse response){
         String model = (String)request.getSession().getAttribute("model");
-        String year1 = (String)request.getSession().getAttribute("year");
-        int year = Integer.parseInt(year1);
         ModelAndView modelAndView = new ModelAndView("log_infor");
 
         List<LogInfo> logInfoList = logInfoRepository.findByModel(model);
