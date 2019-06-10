@@ -12,10 +12,7 @@ import hpscore.repository.ScoreRepository;
 import hpscore.repository.UserRepository;
 import hpscore.service.*;
 import hpscore.service.impl.GenerateExcelThreadServiceImpl;
-import hpscore.tools.FileUtil;
-import hpscore.tools.ScoreUtil;
-import hpscore.tools.ServletUtil;
-import hpscore.tools.StringUtil;
+import hpscore.tools.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -287,28 +284,28 @@ public class ScoreController {
         Map<String,Object> map =new HashMap<String,Object>();
         String fileName = null;
         if(file.equals("打分审核表")){
-            String excelName = "2018泛珠赛全国总决赛终评评委打分审核表("+model+").xls";
+            String excelName = DateUtil.getNowYear()+ "泛珠赛全国总决赛终评评委打分审核表("+model+").xls";
             if(FileUtil.FileExists(excelName))fileName=excelName;
             else fileName = excelService.reviewExcel(model);
         }
         if(file.equals("打分转换表")){
-            String excelName = "2018泛珠赛全国总决赛终评评委打分转换表("+model+").xls";
+            String excelName = DateUtil.getNowYear()+ "泛珠赛全国总决赛终评评委打分转换表("+model+").xls";
             if(FileUtil.FileExists(excelName))fileName=excelName;
             else
                 fileName = excelService.reviewTransferExcel(model);
         }
         if(file.equals("打分统计表")){
-            String excelName = "2018泛珠赛总决赛终评评委打分统计表("+model+").xls";
+            String excelName = DateUtil.getNowYear()+ "泛珠赛总决赛终评评委打分统计表("+model+").xls";
             if(FileUtil.FileExists(excelName))fileName=excelName;
             else fileName = excelService.scoringSumUpExcel(model);
         }
         if(file.equals("平均分统计表")){
-            String excelName = "2018泛珠赛全国总决赛终评平均分统计表("+model+").xls";
+            String excelName = DateUtil.getNowYear()+ "泛珠赛全国总决赛终评平均分统计表("+model+").xls";
             if(FileUtil.FileExists(excelName))fileName=excelName;
             else fileName = excelService.relativeScoreExcel(model);
         }
         if(file.equals("作品获奖表")){
-            String excelName = "2018泛珠赛总决赛作品获奖表("+model+").xls";
+            String excelName = DateUtil.getNowYear()+ "泛珠赛总决赛作品获奖表("+model+").xls";
             if(FileUtil.FileExists(excelName))fileName=excelName;
             else  fileName = excelService.finalScoreExcel(model);
         }

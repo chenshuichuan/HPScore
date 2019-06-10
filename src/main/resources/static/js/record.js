@@ -1,4 +1,4 @@
-
+var inputNum = 20;
 // $.ajaxSettings.async = false;
 $.ajaxSetup({
     async:false
@@ -100,7 +100,7 @@ function checkInt(str)
 //根据model检查数据合法性
 function IsDataOk(options,model) {
     var benke = [10,15,20,20,20,15];
-    var gaozhi = [10,15,10,25,25,15];
+    var gaozhi = [10,20,10,20,25,15];
     var temp = [];
     var result = 1;
 
@@ -175,7 +175,7 @@ function generateEditTable() {
     var header2="<tr>" +
         "<th>作品序号</th>" +
         "<th>选题</th>" +
-        "<th>技术性</th>" +
+        "<th>科学性</th>" +
         "<th>创新性</th>" +
         "<th>难/易程度</th>" +
         "<th>实用价值及效果</th>" +
@@ -197,7 +197,7 @@ function generateEditTable() {
     var header6="<tr>" +
         "<th>作品序号</th>" +
         "<th>选题</th>" +
-        "<th>技术性</th>" +
+        "<th>科学性</th>" +
         "<th>创新性</th>" +
         "<th>难/易程度</th>" +
         "<th>实用价值及效果</th>" +
@@ -222,7 +222,7 @@ function generateEditTable() {
         "<th>评委</th>" +
         "<th>作品</th>" +
         "<th>选题</th>" +
-        "<th>技术性</th>" +
+        "<th>科学性</th>" +
         "<th>创新性</th>" +
         "<th>难/易程度</th>" +
         "<th>实用价值及效果</th>" +
@@ -232,7 +232,7 @@ function generateEditTable() {
     if(model==="本科组")$("#modal-header").append(header3);
     else $("#modal-header").append(header4);
 
-    for (var i=1; i<=24;i++){
+    for (var i=1; i<=inputNum;i++){
         var strId="input"+i;
         var proId="<tr>\n" +
             "    <td id='"+strId+0+"' style=\"color: rgba(180,49,133,1);font-size: 18px;\">" +
@@ -267,7 +267,7 @@ function generateEditTable() {
 
 //生成保存按钮监听
 function generateSaveListener() {
-    for (var i=1; i<=24;i++){
+    for (var i=1; i<=inputNum;i++){
         var strId="#input"+i;
         var btId = strId+7;
         $(btId).click().on("click", function() {
@@ -313,7 +313,7 @@ function generateSaveListener() {
 
 //添加输入值改变监听
 function generateInputChangeListener() {
-    for (var i=1; i<=24;i++){
+    for (var i=1; i<=inputNum;i++){
         var strId="#input"+i;
 
         for (var j =1;j<7;j++){
@@ -329,7 +329,7 @@ function generateInputChangeListener() {
 //重设所有输入框
 function resetAllInput() {
     $("#reset-bt").click().on("click", function() {
-        for (var i=1; i<=24;i++){
+        for (var i=1; i<=inputNum;i++){
             var strId="#input"+i;
             for (var j =1;j<7;j++){
                 var myId=strId+j;
