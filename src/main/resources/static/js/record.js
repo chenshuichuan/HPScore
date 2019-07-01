@@ -175,7 +175,7 @@ function generateEditTable() {
     var header2="<tr>" +
         "<th>作品序号</th>" +
         "<th>选题</th>" +
-        "<th>科学性</th>" +
+        "<th>技术性</th>" +
         "<th>创新性</th>" +
         "<th>难/易程度</th>" +
         "<th>实用价值及效果</th>" +
@@ -197,7 +197,7 @@ function generateEditTable() {
     var header6="<tr>" +
         "<th>作品序号</th>" +
         "<th>选题</th>" +
-        "<th>科学性</th>" +
+        "<th>技术性</th>" +
         "<th>创新性</th>" +
         "<th>难/易程度</th>" +
         "<th>实用价值及效果</th>" +

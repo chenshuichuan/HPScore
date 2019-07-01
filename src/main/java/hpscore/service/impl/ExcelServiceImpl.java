@@ -49,8 +49,8 @@ public class ExcelServiceImpl implements ExcelService {
     } else {
       String[] header2 = {
               "序号", "作品编号", "作品名称",
-              "选题\n(10分)", "科学性\n(15分)", "创新性\n(10分)",
-              "难易度\n(25分)", "实用价值\n(25分)", "答辩效果\n(15分)"
+              "选题\n(10分)", "技术性\n(20分)", "创新性\n(10分)",
+              "难易度\n(20分)", "实用价值\n(25分)", "答辩效果\n(15分)"
               , "总分"};
       headers = header2;
     }
@@ -199,7 +199,7 @@ public class ExcelServiceImpl implements ExcelService {
     } else {
       String[] header2 = {
               "序号", "作品编号", "作品名称",
-              "选题\n(10分)", "科学性\n(20分)", "创新性\n(10分)",
+              "选题\n(10分)", "技术性\n(20分)", "创新性\n(10分)",
               "难易度\n(20分)", "实用价值\n(25分)", "答辩效果\n(15分)"
               , "总分\n(原分)", "相对分"};
       headers = header2;
@@ -552,7 +552,7 @@ public class ExcelServiceImpl implements ExcelService {
     List<InnovationScore> innovationScoreList = scoreService.calculateUsefulScore(model);
     ScoreUtil.sortInnovationScore(innovationScoreList);
     String sheetName = "实用分统计表(" + model + ")";
-    String titleName = "2018泛珠赛总决赛终评实用分统计表(" + model + ")";
+    String titleName = DateUtil.getNowYear()+"泛珠赛总决赛终评实用分统计表(" + model + ")";
 
     Sheet sheet = wb.createSheet(sheetName);
     PrintSetup printSetup = sheet.getPrintSetup();
@@ -735,15 +735,28 @@ public class ExcelServiceImpl implements ExcelService {
   ////评分统计表，各个子项的平均分
   @Override
   public String scoringSumUpExcel(String model) {
-    String[] headers = {
-            "序号", "作品编号", "作品名称",
-            "选题\n(平均分)", "科学性\n(平均分)", "创新性\n(平均分)",
-            "难易度\n(平均分)", "实用价值\n(平均分)", "答辩效果\n(平均分)"
-            , "相对分\n(平均分)", "相对分排序", "创新分排序", "实用分排序"};
 
-    String excelName = DateUtil.getNowYear()+ "泛珠赛总决赛终评评委打分统计表(" + model + ")";
+
+    String[] headers = null;
     Workbook wb = new HSSFWorkbook();
     Map<String, CellStyle> styles = createStyles(wb);
+
+    if (model.equals("本科组")) {
+      String[] header1 = {
+              "序号", "作品编号", "作品名称",
+              "选题\n(平均分)", "科学性\n(平均分)", "创新性\n(平均分)",
+              "难易度\n(平均分)", "实用价值\n(平均分)", "答辩效果\n(平均分)"
+              , "相对分\n(平均分)", "相对分排序", "创新分排序", "实用分排序"};
+      headers = header1;
+    } else{
+      String[] header2 = {
+              "序号", "作品编号", "作品名称",
+              "选题\n(平均分)", "技术性\n(平均分)", "创新性\n(平均分)",
+              "难易度\n(平均分)", "实用价值\n(平均分)", "答辩效果\n(平均分)"
+              , "相对分\n(平均分)", "相对分排序", "创新分排序", "实用分排序"};
+      headers = header2;
+    }
+    String excelName = DateUtil.getNowYear()+ "泛珠赛总决赛终评评委打分统计表(" + model + ")";
     CreateSumUpAverage(wb, styles, headers, model);
     // Write the output to a file
     String file = excelName + ".xls";
